@@ -1,0 +1,29 @@
+README.md
+  s_11d104d6f8bf6c::t_2035b64fec186e 1-83
+backend/probe_live.py
+  s_11d104d6f8bf6c::t_cf30441b0497af 1-46
+backend/test_data_chain.py
+  s_11d104d6f8bf6c::t_54ed89e63ad083 1-78
+docs/architecture.md
+  s_11d104d6f8bf6c::t_6d018e0cb5c674 1-83
+docs/assets.md
+  s_11d104d6f8bf6c::t_d192fd0eeec5bd 1-9
+start.ps1
+  s_11d104d6f8bf6c::t_35cd9a49b48248 1-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "6ff513370af4ba5a0096f67a1b2c71a4a31ba581",
+  "prompts": {},
+  "sessions": {
+    "s_11d104d6f8bf6c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c6ce-8ae5-71d2-b337-6b9371c0caf3",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

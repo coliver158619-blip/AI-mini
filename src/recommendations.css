@@ -1,0 +1,18 @@
+.recommendation-page{min-height:100dvh;width:100%;max-width:480px;margin:0 auto;padding:24px 20px 40px;background:radial-gradient(ellipse at 100% 0,#f7e8cb70,transparent 52%),#fcf8f1;color:#564631}
+.recommendation-header{display:flex;align-items:center;gap:12px;margin-bottom:26px;min-height:48px}
+.recommendation-header h1{font-size:23px;line-height:1.35;font-weight:650;white-space:nowrap}
+.recommendation-back{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#fffdf8;border:1px solid #f1e8d7;flex-shrink:0}
+.recommendation-change{display:flex;align-items:center;gap:5px;margin-left:auto;font-size:13px;min-height:44px;color:#a58147;white-space:nowrap}
+.recommendation-context{display:flex;align-items:center;gap:9px;width:100%;padding:16px 13px;border:1px solid #ecdfc6;border-radius:16px;background:#fffaf0;color:#98753f;text-align:left;font-size:14px;min-height:58px}
+.recommendation-context>span{min-width:0;flex:1;line-height:1.5}.recommendation-context small{font-size:10px;color:#9e8b6b;white-space:nowrap}
+.recommendation-moods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
+.recommendation-moods button{min-height:66px;display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 8px;background:#fffcf7;border:1px solid #eadfc9;border-radius:16px;font-size:15px}
+.recommendation-moods button>span{font-size:23px;color:#bf964b}.recommendation-moods button[aria-pressed=true]{background:#f6e7c5;border-color:#cfa757;box-shadow:0 3px 10px #b6924820}
+.recommendation-cards{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.recommendation-song{display:grid;grid-template-columns:60px minmax(0,1fr);align-items:center;column-gap:14px;row-gap:8px;border:1px solid #efe3cf;background:#fffdf9;border-radius:20px;padding:19px;box-shadow:0 7px 22px #97773e08}
+.recommendation-cover{height:60px;width:60px;border-radius:17px;display:grid;place-items:center;color:#fff9e8;box-shadow:inset 1px 1px 2px #fff8}
+.recommendation-song-info h2{font-size:17px;line-height:1.5;overflow-wrap:anywhere;font-weight:650}.recommendation-song-info p{font-size:13px;color:#a08d70;line-height:1.5;margin-top:5px}
+.recommendation-song-actions{grid-column:2;display:flex;justify-content:flex-end;align-items:center;gap:10px;color:#ba9570}.recommendation-song-actions button{display:grid;place-items:center;width:42px;height:42px;border-radius:50%}.recommendation-play{border:1px solid #e2d2b4;background:#fbf5e8}
+.recommendation-state{display:flex;align-items:center;flex-direction:column;text-align:center;gap:18px;padding:65px 18px;color:#b1966b}.recommendation-state p{font-size:15px;line-height:1.8}.recommendation-state button{padding:12px 24px;min-height:46px;font-size:14px;border:1px solid #dec799;background:#f6e9ce;border-radius:24px;color:#927038}
+.recommendation-loading{margin-top:28px}.recommendation-loading>span{display:flex;align-items:center;gap:8px;font-size:14px;color:#a1875e;margin-bottom:18px}.recommendation-skeleton{height:143px;background:#fffaf2;border:1px solid #eee4d1;border-radius:20px;margin-bottom:14px;display:flex;gap:15px;padding:20px;align-items:flex-start}.recommendation-skeleton>i{width:60px;height:60px;border-radius:16px;background:#ede3d1}.recommendation-skeleton>div{flex:1;padding-top:5px}.recommendation-skeleton>div i{display:block;border-radius:5px;height:13px;background:#eee6d9;margin-bottom:13px}.recommendation-skeleton>div i:last-child{width:60%}
+@media(max-width:359px){.recommendation-page{padding:20px 15px 32px}.recommendation-header{gap:8px}.recommendation-header h1{font-size:21px}.recommendation-change{font-size:12px}.recommendation-context{font-size:13px}.recommendation-song{padding:15px;column-gap:11px}}

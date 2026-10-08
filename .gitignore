@@ -1,0 +1,13 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+backend/data/
+*.sqlite3*
+.env
+test-results/
+playwright-report/
+.python-deps/
+.npm-cache/
+*.tsbuildinfo

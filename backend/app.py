@@ -86,6 +86,9 @@ def init_db(app):
                 song_id TEXT PRIMARY KEY REFERENCES songs(id), created_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS diary_notes (date TEXT PRIMARY KEY, note TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS conversations (
+                id TEXT PRIMARY KEY, title TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS diary_stories (
                 date TEXT PRIMARY KEY, text TEXT NOT NULL DEFAULT '', context_hash TEXT,
                 updated_at TEXT, attempt_id TEXT, pending_until TEXT
@@ -115,10 +118,19 @@ def init_db(app):
             db.execute("ALTER TABLE plays ADD COLUMN session_id TEXT")
         if "origin" not in {column[1] for column in db.execute("PRAGMA table_info(recommendation_requests)")}:
             db.execute("ALTER TABLE recommendation_requests ADD COLUMN origin TEXT NOT NULL DEFAULT 'manual'")
+        if "conversation_id" not in {column[1] for column in db.execute("PRAGMA table_info(messages)")}:
+            db.execute("ALTER TABLE messages ADD COLUMN conversation_id TEXT REFERENCES conversations(id)")
+        db.execute("CREATE INDEX IF NOT EXISTS messages_conversation ON messages(conversation_id, id)")
         db.execute("INSERT OR IGNORE INTO hourly_recommendation(id) VALUES (1)")
         for id_, title, color, tags, seed in CATALOG:
             db.execute("INSERT OR IGNORE INTO songs VALUES (?, ?, ?, ?, ?, ?)", (id_, title, "陪伴音乐室", color, json.dumps(tags, ensure_ascii=False), seed))
         db.execute("INSERT OR IGNORE INTO app_meta VALUES ('chat_session_id', ?)", (str(uuid.uuid4()),))
+        legacy = db.execute("SELECT value FROM app_meta WHERE key='chat_session_id'").fetchone()[0]
+        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('legacy_chat_session_id', ?)", (legacy,))
+        legacy = db.execute("SELECT value FROM app_meta WHERE key='legacy_chat_session_id'").fetchone()[0]
+        first, last = db.execute("SELECT MIN(created_at), MAX(created_at) FROM messages").fetchone()
+        db.execute("INSERT OR IGNORE INTO conversations VALUES (?, ?, ?, ?)", (legacy, "历史对话" if first else "新对话", first or now().isoformat(), last or now().isoformat()))
+        db.execute("UPDATE messages SET conversation_id=? WHERE conversation_id IS NULL", (legacy,))
         if db.execute("SELECT 1 FROM app_meta WHERE key = 'initialized'").fetchone():
             return
         today = now().date()
@@ -145,6 +157,19 @@ def song_dict(row):
     if row["audio_seed"] is not None:
         result.update(audioUrl=f"/api/audio/{row['id']}.wav", audioLabel="原创演示音乐", duration=32)
     return result
+
+
+def conversation_id(value=None):
+    id_ = value if value is not None else get_db().execute("SELECT value FROM app_meta WHERE key='chat_session_id'").fetchone()[0]
+    if not isinstance(id_, str) or not get_db().execute("SELECT 1 FROM conversations WHERE id=?", (id_,)).fetchone():
+        raise ValueError("这段对话不存在，请重新选择历史对话")
+    return id_
+
+
+def conversation_messages(id_):
+    rows = get_db().execute("""SELECT * FROM messages WHERE COALESCE(conversation_id,
+        (SELECT value FROM app_meta WHERE key='legacy_chat_session_id'))=? ORDER BY id""", (id_,)).fetchall()
+    return [{"id": row["id"], "role": row["role"], "content": clean_assistant_text(row["content"]) if row["role"] == "assistant" else row["content"], "songs": json.loads(row["songs"]), "createdAt": row["created_at"], "source": row["source"]} for row in rows]
 
 
 def all_songs():
@@ -518,8 +543,33 @@ def create_app(test_config=None):
 
     @app.get("/api/messages")
     def messages():
-        rows = get_db().execute("SELECT * FROM (SELECT * FROM messages ORDER BY id DESC LIMIT 80) ORDER BY id").fetchall()
-        return jsonify(messages=[{"id": row["id"], "role": row["role"], "content": clean_assistant_text(row["content"]) if row["role"] == "assistant" else row["content"], "songs": json.loads(row["songs"]), "createdAt": row["created_at"], "source": row["source"]} for row in rows])
+        id_ = conversation_id(request.args.get("conversationId"))
+        return jsonify(conversationId=id_, messages=conversation_messages(id_))
+
+    @app.get("/api/conversations")
+    def conversations():
+        rows = get_db().execute("""SELECT c.*, (SELECT COUNT(*) FROM messages m WHERE m.conversation_id=c.id) message_count,
+            (SELECT content FROM messages m WHERE m.conversation_id=c.id ORDER BY m.id DESC LIMIT 1) preview
+            FROM conversations c ORDER BY c.updated_at DESC, c.id""").fetchall()
+        return jsonify(activeConversationId=conversation_id(), conversations=[{
+            "id": row["id"], "title": row["title"], "createdAt": row["created_at"], "updatedAt": row["updated_at"],
+            "messageCount": row["message_count"], "preview": clean_assistant_text(row["preview"] or "还没有消息，聊聊今天吧")[:80]
+        } for row in rows])
+
+    @app.post("/api/conversations")
+    def new_conversation():
+        id_, at = str(uuid.uuid4()), now().isoformat()
+        with get_db() as db:
+            db.execute("INSERT INTO conversations VALUES (?, '新对话', ?, ?)", (id_, at, at))
+            db.execute("UPDATE app_meta SET value=? WHERE key='chat_session_id'", (id_,))
+        return jsonify(conversationId=id_, messages=[]), 201
+
+    @app.post("/api/conversations/<id_>/select")
+    def select_conversation(id_):
+        id_ = conversation_id(id_)
+        with get_db() as db:
+            db.execute("UPDATE app_meta SET value=? WHERE key='chat_session_id'", (id_,))
+        return jsonify(conversationId=id_, messages=conversation_messages(id_))
 
     @app.get("/api/recommendations")
     def saved_recommendations():
@@ -579,6 +629,7 @@ def create_app(test_config=None):
     @app.post("/api/chat")
     def chat():
         body = json_body()
+        session_id = conversation_id(body.get("conversationId"))
         message = valid_text(body.get("message"), "消息", 1000)
         scene = valid_text(body.get("scene", ""), "场景", 40, True)
         result = recommend(message, scene) if upstream.local_mode else {"mood": infer_mood(scene or message)}
@@ -589,11 +640,10 @@ def create_app(test_config=None):
                 if weather_context:
                     status = "历史缓存，不代表当前天气" if weather_context.get("cached") else "最近获取的天气"
                     query += f"（用户已分享的天气背景：{weather_context['city']}，{weather_context['condition']}，{weather_context['temperature']}°C，天气获取于{weather_context['updatedAt']}，{status}。请按需结合天气关怀和推荐音乐。）"
-                history = [dict(row) for row in get_db().execute("SELECT role, content FROM (SELECT id, role, content FROM messages WHERE source = 'kugou' ORDER BY id DESC LIMIT 10) ORDER BY id")]
+                history = [dict(row) for row in get_db().execute("SELECT role, content FROM (SELECT id, role, content FROM messages WHERE source = 'kugou' AND conversation_id=? ORDER BY id DESC LIMIT 10) ORDER BY id", (session_id,))]
                 for item in history:
                     if item["role"] == "assistant":
                         item["content"] = clean_assistant_text(item["content"])
-                session_id = get_db().execute("SELECT value FROM app_meta WHERE key = 'chat_session_id'").fetchone()[0]
                 remote = upstream.chat(query, history=history, session_id=session_id, recommend=bool(scene) or bool(re.search("推荐|想听|放首|来首|听歌|音乐|歌曲|歌单", message)))
                 remote["reply"] = clean_assistant_text(remote["reply"])
                 if not remote["reply"]:
@@ -607,8 +657,11 @@ def create_app(test_config=None):
                 return jsonify(error=error.public_message, source="kugou-error", integration=upstream.integration()), 503
         at = now().isoformat()
         with get_db() as db:
-            db.execute("INSERT INTO messages(role, content, created_at, source) VALUES ('user', ?, ?, ?)", (message, at, result["source"]))
-            cursor = db.execute("INSERT INTO messages(role, content, songs, created_at, source) VALUES ('assistant', ?, ?, ?, ?)", (result["reply"], json.dumps(result["songs"], ensure_ascii=False), at, result["source"]))
+            first_message = not db.execute("SELECT 1 FROM messages WHERE conversation_id=?", (session_id,)).fetchone()
+            db.execute("INSERT INTO messages(role, content, created_at, source, conversation_id) VALUES ('user', ?, ?, ?, ?)", (message, at, result["source"], session_id))
+            cursor = db.execute("INSERT INTO messages(role, content, songs, created_at, source, conversation_id) VALUES ('assistant', ?, ?, ?, ?, ?)", (result["reply"], json.dumps(result["songs"], ensure_ascii=False), at, result["source"], session_id))
+            db.execute("UPDATE conversations SET updated_at=?, title=CASE WHEN ? THEN ? ELSE title END WHERE id=?", (at, first_message, message[:24], session_id))
+            result["conversationId"] = session_id
             result["messageId"] = cursor.lastrowid
         return jsonify({**result, "integration": upstream.integration()})
 

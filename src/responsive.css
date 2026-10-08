@@ -26,10 +26,14 @@
   width: 100%; max-width: none; min-width: 0; min-height: var(--page-height);
 }
 .home-page, .diary-screen, .report-page, .recommendation-page, .weather-page { container-type: inline-size; }
-.app-shell .weather-details { padding-top: 16px; padding-bottom: 18px; }
+/* Both views occupy one grid cell, so home content defines the same H5 frame. */
+.home-weather-frame { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; min-width: 0; min-height: var(--page-height); }
+.home-weather-frame > :is(.home-page, .weather-page) { grid-area: 1 / 1; width: 100%; min-width: 0; max-width: none; min-height: var(--page-height); }
+.home-weather-frame.weather-is-open > .home-page { visibility: hidden; pointer-events: none; }
+.app-shell .weather-details { --weather-block-space: clamp(28px, 4dvh, 40px); padding-block: var(--weather-block-space); }
 .app-shell .weather-sheet { padding-bottom: 32px; }
 /* Weather uses the same H5 viewport as home, including client insets/player. */
-.weather-details .weather-detail-content { min-height: calc(var(--page-height) - 34px); }
+.weather-details .weather-detail-content { min-height: calc(var(--page-height) - 2 * var(--weather-block-space)); }
 .weather-details .weather-overview { padding-top: clamp(12px, 2.4dvh, 26px); }
 .weather-details .weather-scene-caption { padding-top: clamp(24px, 5dvh, 52px); }
 .weather-details .weather-scene-sky { background: radial-gradient(ellipse at 83% 18%, #ffffff0f, transparent 45%), linear-gradient(180deg, var(--scene-top), var(--scene-middle) 65%, var(--scene-bottom)); }
@@ -38,8 +42,6 @@
 .weather-details .weather-scene-precipitation, .weather-details .weather-scene-lightning { height: 100%; }
 .weather-details .weather-scene-bottom { top: 78%; }
 @media (max-height: 700px) {
-  .app-shell .weather-details { padding-block: 10px; }
-  .weather-details .weather-detail-content { min-height: calc(var(--page-height) - 20px); }
   .weather-details .weather-overview { padding-top: 8px; }
   .weather-details .weather-temperature { font-size: 64px; }
   .weather-details .weather-temperature > span { font-size: 42px; }

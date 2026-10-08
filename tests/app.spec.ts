@@ -1,5 +1,40 @@
 import { test, expect, type Page } from '@playwright/test';
 
+test('新对话和历史会话切换，保留草稿并在刷新后恢复', async ({ page }) => {
+ await page.goto('/');
+ await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: 'AI聊天', exact: true }).click();
+ await page.getByRole('button', { name: '开启新对话', exact: true }).click();
+ const input = page.getByRole('textbox', { name: '对搭子说点什么' });
+ await expect(input).toBeEnabled();
+ await input.fill('想聊这天的散步');
+ await page.getByRole('button', { name: '发送消息', exact: true }).click();
+ await expect(page.locator('.typing-dots')).toHaveCount(0);
+ await expect(page.locator('.chat-message.user')).toHaveText('想聊这天的散步');
+ await input.fill('这一段还没写完');
+ await page.getByRole('button', { name: '开启新对话', exact: true }).click();
+ await expect(input).toHaveValue('');
+ await expect(page.locator('.chat-message.user')).toHaveCount(0);
+ await input.fill('第二段聊明天');
+ await page.getByRole('button', { name: '发送消息', exact: true }).click();
+ await expect(page.locator('.typing-dots')).toHaveCount(0);
+ await page.getByRole('button', { name: '选择历史对话', exact: true }).click();
+ const panel = page.getByRole('region', { name: '历史对话', exact: true });
+ await expect(panel.getByRole('button', { name: /想聊这天的散步/ })).toBeVisible();
+ await expect(panel.getByRole('button', { name: /第二段聊明天/ })).toHaveAttribute('aria-current', 'true');
+ await page.screenshot({ path: 'docs/preview-chat-history.png', fullPage: true });
+ await panel.getByRole('button', { name: /想聊这天的散步/ }).click();
+ await expect(input).toHaveValue('这一段还没写完');
+ await expect(page.locator('.chat-message.user')).toHaveText('想聊这天的散步');
+ await page.reload();
+ await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: 'AI聊天', exact: true }).click();
+ await expect(page.locator('.chat-message.user')).toHaveText('想聊这天的散步');
+ await page.setViewportSize({ width: 320, height: 568 });
+ expect(await page.locator('.chat-session-actions').evaluate(el => el.getBoundingClientRect().right <= innerWidth)).toBe(true);
+ expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test('日记自动写专属回忆，保存新心情后更新，失败保留原文并可重试', async ({ page }) => {
  const memory = '那首《月亮来信》陪你放慢了脚步，你又告诉我项目终于完成了。今天，我们把这份终于能够松口气的快乐，留在这一页。';
  const updated = '想念朋友的此刻，那首《月亮来信》有了新的分量。我会陪你收好这份惦念，让这一页记住那些认真在意过的人。';
@@ -237,7 +272,7 @@ test('HTTP定位说明明确，手动选城后保留天气详情和城市景观'
  await expect(page.locator('.weather-metrics>section')).toHaveCount(2);
  await expect(page.locator('.weather-page')).not.toContainText('风速');
  await expect(page.locator('.weather-page')).not.toContainText('当前降水');
- expect(await page.locator('.weather-metrics').evaluate(el => el.getBoundingClientRect().bottom <= innerHeight)).toBeTruthy();
+ expect(await page.locator('.weather-metrics').evaluate(el => el.getBoundingClientRect().bottom <= document.querySelector('.weather-details')!.getBoundingClientRect().bottom - 28)).toBeTruthy();
  await expect(page.locator('.weather-page')).not.toContainText('Open-Meteo');
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-weather-shanghai-night.png', fullPage: true });
  for (const width of [320, 390, 1200]) {
@@ -399,8 +434,19 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 
   await checkPage('.diary-screen');
   await expect(page.locator('.diary-paper')).toBeVisible();
   await page.getByRole('button', { name: '返回首页', exact: true }).click();
+  const homeBounds = await page.locator('.home-page').boundingBox();
   await page.locator('.weather-pill').click();
   await checkPage('.weather-details');
+  const weatherBounds = await page.locator('.weather-details').boundingBox();
+  expect(weatherBounds!.width).toBeCloseTo(homeBounds!.width, 1);
+  expect(weatherBounds!.height).toBeCloseTo(homeBounds!.height, 1);
+  await expect(page.locator('.home-page')).toHaveAttribute('inert', '');
+  expect(await page.locator('.weather-details').evaluate(el => {
+   const frame = el.getBoundingClientRect();
+   return el.querySelector('.weather-header')!.getBoundingClientRect().top - frame.top >= 28
+    && frame.bottom - el.querySelector('.weather-metrics')!.getBoundingClientRect().bottom >= 28;
+  })).toBe(true);
+  if (viewport.width === 390) await page.screenshot({ path: 'docs/preview-weather-matched.png', fullPage: true, animations: 'disabled' });
   await page.getByRole('button', { name: '切换城市' }).click();
   await checkPage('.weather-sheet');
   await page.getByRole('button', { name: '返回上一页', exact: true }).click();

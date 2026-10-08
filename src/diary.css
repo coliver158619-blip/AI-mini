@@ -104,3 +104,6 @@
 .diary-calendar-list button > span > span { font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 360px) { .diary-paper, .diary-turn-front { padding-left: 25px; padding-right: 18px; } .diary-entry-title { font-size: 19px; } .diary-date-detail > span:last-child { font-size: 7px; } .diary-note-actions > span { font-size: 7px; } }
 @media (prefers-reduced-motion: reduce) { .diary-screen *, .diary-screen *::before, .diary-screen *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+.diary-story-status { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 14px 0; color: #9d8863; font-size: 12px; line-height: 1.7; }
+.diary-story-status svg { flex-shrink: 0; }

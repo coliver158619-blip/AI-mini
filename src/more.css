@@ -9,13 +9,13 @@
     linear-gradient(135deg, #fff9ef 0%, #fcf4f7 63%, #f8f2fd 100%);
 }
 
-/* Keep the reference proportions at the home page's compact type and icon scale. */
+/* Keep compact type and artwork sizes independent of the full-width card layout. */
 .more-content {
-  --more-layout-width: min(100cqw, clamp(300px, 86cqw, 352px));
-  --more-unit: calc(var(--more-layout-width) / 877);
-  width: var(--more-layout-width);
+  --more-scale-width: min(100cqw, clamp(300px, 86cqw, 352px));
+  --more-unit: calc(var(--more-scale-width) / 877);
+  width: 100%;
   margin-inline: auto;
-  padding: max(calc(120 * var(--more-unit)), env(safe-area-inset-top)) calc(48 * var(--more-unit)) max(calc(100 * var(--more-unit)), env(safe-area-inset-bottom));
+  padding: max(calc(120 * var(--more-unit)), env(safe-area-inset-top)) clamp(12px, 3.3cqw, 16px) max(calc(100 * var(--more-unit)), env(safe-area-inset-bottom));
 }
 .more-header { display: flex; align-items: center; gap: calc(25 * var(--more-unit)); height: calc(82 * var(--more-unit)); margin-bottom: calc(70 * var(--more-unit)); }
 .more-header h1 { font-size: calc(43 * var(--more-unit)); font-weight: 750; line-height: 1.25; letter-spacing: calc(1 * var(--more-unit)); }

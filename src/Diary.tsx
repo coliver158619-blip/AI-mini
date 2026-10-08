@@ -18,6 +18,7 @@ type DiaryEntry = {
   note: string;
   isDemo?: boolean;
   weather?: WeatherData | null;
+  story?: { text: string; updatedAt: string | null; stale: boolean; canGenerate: boolean; version: string };
 };
 
 type Props = { onBack: () => void; onPlay: (song: Song) => void };
@@ -73,7 +74,7 @@ function EntryContent({ entry, onPlay }: { entry: DiaryEntry; onPlay?: (song: So
         <span className="diary-song-play"><Play size={16} fill="currentColor" /></span>
       </button>
     </div>}
-    <div className="diary-companion-note"><Sparkles size={17} /><p>{entry.minutes > 0 ? '每一首认真听过的歌，都是你生活里的一小束光。很开心，今天也陪在你身旁。' : '有音乐的时候陪你听歌，安静的时候陪你发呆。今天的故事，我们慢慢写。'}</p><span>— 你的小小音乐搭子</span></div>
+    {entry.story?.text && <div className="diary-companion-note"><Sparkles size={17} /><p>写给这一天的我们</p><span>— 你的小小音乐搭子</span></div>}
   </>;
 }
 
@@ -92,6 +93,9 @@ export default function Diary({ onBack, onPlay }: Props) {
   const [speechAvailable, setSpeechAvailable] = useState(false);
   const [speechError, setSpeechError] = useState('');
   const [navigationMessage, setNavigationMessage] = useState('');
+  const [storyStatus, setStoryStatus] = useState({ date: '', loading: false, error: '' });
+  const [storyRetry, setStoryRetry] = useState(0);
+  const storyRequests = useRef(new Map<string, Promise<{ entry: DiaryEntry }>>());
   const turnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pointer = useRef<{ id: number; x: number; y: number; moved: boolean; selecting: boolean } | null>(null);
   const suppressClick = useRef(false);
@@ -123,6 +127,33 @@ export default function Diary({ onBack, onPlay }: Props) {
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, [retry]);
+
+  const storyDate = entry?.date;
+  const storyVersion = entry?.story?.version;
+  const needsStory = Boolean(entry?.story?.canGenerate && entry.story.stale);
+  useEffect(() => {
+    if (!storyDate || !storyVersion || !needsStory) return;
+    let active = true;
+    const key = `${storyDate}:${storyVersion}:${storyRetry}`;
+    let pending = storyRequests.current.get(key);
+    if (!pending) {
+      pending = fetch(`/api/diary/${encodeURIComponent(storyDate)}/story`, { method: 'POST' })
+        .then(async response => {
+          if (!response.ok) throw new Error(await errorMessage(response));
+          return response.json();
+        });
+      storyRequests.current.set(key, pending);
+    }
+    setStoryStatus({ date: storyDate, loading: true, error: '' });
+    pending.then(data => {
+      if (!active) return;
+      setEntries(current => current.map(item => item.date === storyDate && item.story?.version === storyVersion ? data.entry : item));
+      setStoryStatus({ date: storyDate, loading: false, error: '' });
+    }).catch(cause => {
+      if (active) setStoryStatus({ date: storyDate, loading: false, error: cause instanceof Error ? cause.message : '回忆暂未写好，请再试一次。' });
+    });
+    return () => { active = false; };
+  }, [storyDate, storyVersion, needsStory, storyRetry]);
 
   useEffect(() => {
     setSpeechAvailable('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window);
@@ -259,6 +290,9 @@ export default function Diary({ onBack, onPlay }: Props) {
         <article className="diary-paper" aria-label={dateParts(entry.date).full}>
           <span className="diary-bookmark" aria-hidden="true"><Music2 size={15} /></span>
           <EntryContent entry={entry} onPlay={onPlay} />
+          {storyStatus.date === entry.date && (storyStatus.loading || storyStatus.error) && <div className="diary-story-status" role="status">
+            {storyStatus.loading ? <><LoaderCircle size={14} className="diary-spinner" /><span>{entry.story?.text ? '正在把新的心情写进回忆…' : '正在从今天的歌单和心情，写下我们的回忆…'}</span></> : <><span>{storyStatus.error}</span><button type="button" className="diary-retry" onClick={() => setStoryRetry(value => value + 1)}>重试回忆</button></>}
+          </div>}
           <div className="diary-personal-note">
             <label htmlFor="diary-note"><PenLine size={15} /> 留一句话给今天</label>
             <textarea id="diary-note" value={note} maxLength={4000} rows={3} placeholder="此刻的心情，或一件值得记住的小事…" onChange={event => {

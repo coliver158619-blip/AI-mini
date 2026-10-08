@@ -1,0 +1,130 @@
+:root {
+  --app-max-width: 480px;
+  --screen-height: 100vh;
+  --frame-gap: 0px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+@supports (height: 100dvh) { :root { --screen-height: 100dvh; } }
+@media (min-width: 700px) { :root { --frame-gap: 50px; } }
+
+/* One H5 shell owns safe-area spacing; every page fills its available width. */
+#root { width: 100%; min-width: 0; }
+.app-shell {
+  --player-space: 0px;
+  --page-height: calc(var(--screen-height) - var(--frame-gap) - var(--safe-top) - var(--safe-bottom) - var(--player-space));
+  width: 100%; max-width: var(--app-max-width); min-width: 0;
+  min-height: calc(var(--screen-height) - var(--frame-gap));
+  padding: var(--safe-top) var(--safe-right) calc(var(--safe-bottom) + var(--player-space)) var(--safe-left);
+}
+.app-shell.with-player { --player-space: 85px; }
+.app-shell > :is(.home-page, .more-page, .diary-screen, .report-page, .recommendation-page, .weather-page, .connection-state) {
+  width: 100%; max-width: none; min-width: 0; min-height: var(--page-height);
+}
+.home-page, .diary-screen, .report-page, .recommendation-page, .weather-page { container-type: inline-size; }
+.app-shell .weather-details { padding-top: 16px; padding-bottom: 18px; }
+.app-shell .weather-sheet { padding-bottom: 32px; }
+/* Weather uses the same H5 viewport as home, including client insets/player. */
+.weather-details .weather-detail-content { min-height: calc(var(--page-height) - 34px); }
+.weather-details .weather-overview { padding-top: clamp(12px, 2.4dvh, 26px); }
+.weather-details .weather-scene-caption { padding-top: clamp(24px, 5dvh, 52px); }
+.weather-details .weather-scene-sky { background: radial-gradient(ellipse at 83% 18%, #ffffff0f, transparent 45%), linear-gradient(180deg, var(--scene-top), var(--scene-middle) 65%, var(--scene-bottom)); }
+.weather-details .weather-scene-landscape { top: auto; bottom: clamp(140px, 22%, 240px); height: clamp(240px, 75cqw, 360px); }
+.weather-details .weather-scene-stars { height: 58%; }
+.weather-details .weather-scene-precipitation, .weather-details .weather-scene-lightning { height: 100%; }
+.weather-details .weather-scene-bottom { top: 78%; }
+@media (max-height: 700px) {
+  .app-shell .weather-details { padding-block: 10px; }
+  .weather-details .weather-detail-content { min-height: calc(var(--page-height) - 20px); }
+  .weather-details .weather-overview { padding-top: 8px; }
+  .weather-details .weather-temperature { font-size: 64px; }
+  .weather-details .weather-temperature > span { font-size: 42px; }
+  .weather-details .weather-scene-caption { padding-top: 12px; }
+  .weather-details .weather-today-card { padding: 12px; }
+  .weather-details .weather-today-card p { font-size: 14px; line-height: 1.55; }
+  .weather-details .weather-metrics > section { min-height: 76px; padding: 10px 12px; }
+}
+.more-content { padding-top: calc(120 * var(--more-unit)); padding-bottom: calc(100 * var(--more-unit)); }
+
+.home-nav { padding-inline: clamp(18px, 5.2cqw, 25px); }
+.home-page { display: flex; flex-direction: column; }
+.home-content { flex-shrink: 0; }
+.room-scene { display: flex; flex-direction: column; flex: 1 0 auto; height: auto; min-height: clamp(558px, calc(125cqw + 118px), 646px); background-size: cover; }
+.companion-stage { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 38px 0 24px; }
+.companion-stage .companion { position: relative; left: auto; bottom: auto; height: clamp(285px, 78cqw, 366px); flex-shrink: 0; }
+.companion-stage .speech-bubble { position: relative; top: auto; bottom: auto; right: auto; width: min(230px, calc(100% - 140px)); flex-shrink: 0; border-radius: 19px; }
+.companion-stage .speech-bubble::before { left: 42%; bottom: -9px; border: 0; width: 16px; height: 16px; background: #fffef9; transform: rotate(45deg); }
+.companion-stage .companion-caption { position: relative; bottom: auto; left: auto; }
+.hot-activities { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 12px 16px; margin-top: 12px; background: #fffdf8; border: 1px solid #fff; border-radius: 18px; box-shadow: 0 4px 20px #a07c3210; color: #967743; font-size: 13px; font-weight: 600; }
+.hot-activities > span { flex: 1; text-align: left; }
+.hot-activities > svg:first-child { color: #eab044; }
+.recommendation-song-info, .chat-song > span, .report-insight > div { min-width: 0; overflow-wrap: anywhere; }
+.chat-song strong, .chat-song small { overflow-wrap: anywhere; }
+.weather-header h1, .sheet-heading > div { min-width: 0; }
+.chat-context { flex-wrap: wrap; }
+.recommendation-context small { flex-shrink: 0; }
+
+/* Visual viewport tracks the keyboard in WebViews that leave 100dvh unchanged. */
+.sheet-backdrop {
+  top: var(--visible-top, 0px); bottom: auto;
+  height: var(--visible-height, var(--screen-height));
+  padding: max(8px, var(--safe-top)) var(--safe-right) 0 var(--safe-left);
+}
+.bottom-sheet {
+  max-width: var(--app-max-width);
+  max-height: 100%; min-height: 0; margin-bottom: 0;
+  padding-bottom: var(--safe-bottom);
+}
+.chat-sheet { height: min(760px, calc(var(--visible-height, var(--screen-height)) * .89)); }
+.sheet-content, .chat-messages { min-height: 0; overscroll-behavior-y: contain; }
+.chat-messages { flex: 1 1 0; }
+.sheet-handle, .chat-context, .chat-form { flex-shrink: 0; }
+.sheet-heading .icon-button { flex-shrink: 0; }
+.report-modal-backdrop { top: var(--visible-top, 0px); bottom: auto; height: var(--visible-height, var(--screen-height)); padding: max(16px, var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom)) max(16px, var(--safe-left)); }
+.report-modal { max-height: 100%; min-width: 0; }
+.diary-date-dialog { max-height: calc(var(--visible-height, var(--screen-height)) - 40px - var(--safe-top) - var(--safe-bottom)); }
+.mini-player { max-width: calc(var(--app-max-width) - 28px); bottom: max(12px, var(--safe-bottom)); }
+.toast, .report-toast { max-width: min(calc(100% - 40px), calc(var(--app-max-width) - 40px)); overflow-wrap: anywhere; bottom: max(100px, calc(var(--safe-bottom) + 85px)); }
+
+/* Component width also covers a narrow host container inside a wider client window. */
+@container (max-width: 374px) {
+  .home-status { max-width: calc(100% - 45px); }
+  .streak-pill { gap: 6px; padding-right: 9px; }
+  .streak-avatar { width: 27px; height: 27px; }
+  .streak-copy strong { font-size: 12px; }
+  .streak-copy small { font-size: 8px; max-width: 98px; }
+  .streak-count > span { font-size: 20px; }
+  .streak-count b { font-size: 14px; }
+}
+@container (max-width: 360px) {
+  .recommendation-page, .weather-page { padding-inline: 16px; }
+  .recommendation-header { gap: 8px; }
+  .recommendation-header h1 { font-size: 21px; }
+  .recommendation-change { font-size: 12px; }
+  .report-content { padding-inline: 16px; }
+  .report-intro h2 { font-size: 25px; }
+  .report-intro-art { width: 90px; }
+  .report-card { padding-inline: 15px; }
+  .report-heat-grid { gap: 5px; }
+}
+@media (max-height: 500px) {
+  .sheet-heading { padding: 10px 18px; }
+  .sheet-heading h2 { margin-top: 0; font-size: 18px; }
+  .chat-context { padding-bottom: 6px; }
+  .chat-quick-actions { padding-block: 6px; }
+  .chat-form { padding-bottom: 10px; }
+}
+@media (pointer: coarse) {
+  :root { --frame-gap: 0px; }
+  body { padding: 0; }
+  .app-shell { border: 0; border-radius: 0; }
+  .bottom-sheet { margin-bottom: 0; border-radius: 28px 28px 0 0; }
+}
+/* iOS zooms small editable text on focus; keep the rest of the design unchanged. */
+@supports (-webkit-touch-callout: none) {
+  .chat-form input, .settings-form > input, .diary-personal-note textarea, .report-modal textarea { font-size: 16px; }
+}

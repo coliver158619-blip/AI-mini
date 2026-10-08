@@ -1,5 +1,37 @@
 import { test, expect, type Page } from '@playwright/test';
 
+test('日记自动写专属回忆，保存新心情后更新，失败保留原文并可重试', async ({ page }) => {
+ const memory = '那首《月亮来信》陪你放慢了脚步，你又告诉我项目终于完成了。今天，我们把这份终于能够松口气的快乐，留在这一页。';
+ const updated = '想念朋友的此刻，那首《月亮来信》有了新的分量。我会陪你收好这份惦念，让这一页记住那些认真在意过的人。';
+ let entry = { date: '2026-10-08', title: '今天的音乐记忆', body: '当天的听歌记录', minutes: 5, songCount: 1, mood: '放松', note: '', topSong: null,
+  story: { text: '', updatedAt: null as string | null, stale: true, canGenerate: true, version: 'one' } };
+ let attempts = 0;
+ await page.route('**/api/diary', route => route.fulfill({ json: { entries: [entry], total: 1 } }));
+ await page.route('**/api/diary/2026-10-08', async route => {
+  entry = { ...entry, note: route.request().postDataJSON().note, story: { ...entry.story, stale: true, version: 'two' } };
+  await route.fulfill({ json: { entry } });
+ });
+ await page.route('**/api/diary/2026-10-08/story', async route => {
+  attempts++;
+  if (attempts === 2) { await route.fulfill({ status: 503, json: { error: '专属回忆暂未写好，原有记录已保留。' } }); return; }
+  const text = attempts === 1 ? memory : updated;
+  entry = { ...entry, body: text, story: { ...entry.story, text, updatedAt: '2026-10-08T12:00:00+08:00', stale: false } };
+  await route.fulfill({ json: { entry } });
+ });
+ await page.goto('/');
+ await page.getByRole('button', { name: '日记', exact: true }).click();
+ await expect(page.locator('.diary-body')).toHaveText(memory);
+ await page.getByLabel('留一句话给今天').fill('现在有一点想念朋友');
+ await page.getByRole('button', { name: '保存心情', exact: true }).click();
+ await expect(page.getByRole('button', { name: '重试回忆' })).toBeVisible();
+ await expect(page.locator('.diary-body')).toHaveText(memory);
+ await page.getByRole('button', { name: '重试回忆' }).click();
+ await expect(page.locator('.diary-body')).toHaveText(updated);
+ await expect(page.getByLabel('留一句话给今天')).toHaveValue('现在有一点想念朋友');
+ expect(attempts).toBe(3);
+ await page.screenshot({ path: 'docs/preview-diary-memory.png', fullPage: true });
+});
+
 const selectedWeather = { city: '广州', condition: '多云', temperature: 26, code: 3, greeting: '今天也有音乐相伴。', updatedAt: new Date().toISOString(), latitude: 23.12, longitude: 113.26, cached: false };
 async function modelCardsFixture(page: Page, withWeather = true) {
  const requests: { scene: string; message: string }[] = [];
@@ -25,7 +57,10 @@ test('首页小人可互动，手机没有横向溢出', async ({ page }) => {
  await expect(page.locator('.bubble-copy')).toContainText('被你发现');
  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
  await page.screenshot({ animations: 'disabled', timeout: 10000, path: 'docs/preview-home.png', fullPage: true });
- await expect(page.locator('.home-content > *')).toHaveCount(1);
+ await expect(page.locator('.home-content > *')).toHaveCount(2);
+ await page.getByRole('button', { name: '热门活动', exact: true }).click();
+ await expect(page.getByRole('heading', { name: '运营活动', exact: true })).toBeInViewport();
+ await page.getByRole('button', { name: '返回首页', exact: true }).click();
  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
  await expect(page.getByRole('heading', { name: '更多玩法' })).toBeVisible();
  await expect(page.getByRole('button', { name: 'AI聊天', exact: true })).toBeVisible();
@@ -207,7 +242,7 @@ test('HTTP定位说明明确，手动选城后保留天气详情和城市景观'
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-weather-shanghai-night.png', fullPage: true });
  for (const width of [320, 390, 1200]) {
   await page.setViewportSize({ width, height: 844 });
-  expect(await page.locator('.weather-page').evaluate(el => ({ width: el.clientWidth, available: el.parentElement!.clientWidth, overflow: document.documentElement.scrollWidth > innerWidth }))).toEqual({ width: width > 700 ? 478 : width, available: width > 700 ? 478 : width, overflow: false });
+  expect(await page.locator('.weather-page').evaluate(el => ({ width: el.clientWidth, available: el.parentElement!.clientWidth, overflow: document.documentElement.scrollWidth > innerWidth }))).toEqual({ width: Math.min(width, 480), available: Math.min(width, 480), overflow: false });
  }
  await page.getByRole('button', { name: '返回上一页', exact: true }).click();
  await expect(page.locator('.weather-pill')).toContainText('上海 多云 22°');
@@ -330,3 +365,102 @@ test('推荐接口失败时不展示演示卡片，支持重新推荐', async ({
  await expect(page.getByRole('button', { name: '重新推荐' })).toBeVisible();
  await expect(page.locator('.chat-sheet')).toHaveCount(0);
 });
+
+for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 }, { width: 430, height: 932 }, { width: 844, height: 390 }, { width: 768, height: 1024 }]) {
+ test(`响应式页面与弹层 ${viewport.width}×${viewport.height}`, async ({ page }) => {
+  await page.setViewportSize(viewport);
+  await modelCardsFixture(page);
+  const checkPage = async (selector: string) => {
+   await expect(page.locator(selector)).toBeVisible();
+   const bounds = await page.locator(selector).evaluate(el => ({
+    width: el.getBoundingClientRect().width, available: el.parentElement!.clientWidth,
+    overflow: document.documentElement.scrollWidth > innerWidth,
+   }));
+   expect(bounds.overflow).toBe(false);
+   expect(bounds.width).toBe(bounds.available);
+  };
+  await page.goto('/');
+  await checkPage('.home-page');
+  expect(await page.locator('.home-page').evaluate(el => el.getBoundingClientRect().height >= innerHeight - 1)).toBe(true);
+  expect(await page.locator('.speech-bubble').evaluate(el => el.getBoundingClientRect().bottom <= document.querySelector('.companion')!.getBoundingClientRect().top)).toBe(true);
+  if (viewport.height >= 932) {
+   expect(await page.locator('.hot-activities').evaluate(el => {
+    const rect = el.getBoundingClientRect(); return rect.bottom <= innerHeight && rect.bottom >= innerHeight - 40;
+   })).toBe(true);
+  }
+  for (const selector of ['.energy-card', '.room-shortcuts button:last-child', '.companion-caption > button']) {
+   await page.locator(selector).click();
+   await expect.poll(() => page.locator('.bottom-sheet').evaluate(el => {
+    const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight + 1;
+   })).toBe(true);
+   await page.getByRole('button', { name: '关闭面板', exact: true }).click();
+  }
+  await page.getByRole('button', { name: '日记', exact: true }).click();
+  await checkPage('.diary-screen');
+  await expect(page.locator('.diary-paper')).toBeVisible();
+  await page.getByRole('button', { name: '返回首页', exact: true }).click();
+  await page.locator('.weather-pill').click();
+  await checkPage('.weather-details');
+  await page.getByRole('button', { name: '切换城市' }).click();
+  await checkPage('.weather-sheet');
+  await page.getByRole('button', { name: '返回上一页', exact: true }).click();
+  await page.getByRole('button', { name: '返回上一页', exact: true }).click();
+  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+  await checkPage('.more-page');
+  expect(await page.locator('.more-card-chat').evaluate(el => {
+   const card = el.getBoundingClientRect(), shell = document.querySelector('.more-page')!.getBoundingClientRect();
+   return card.left - shell.left <= 17 && shell.right - card.right <= 17;
+  })).toBe(true);
+  await page.getByRole('button', { name: 'AI聊天', exact: true }).click();
+  const input = page.getByRole('textbox', { name: '对搭子说点什么' });
+  await expect(input).toBeVisible();
+  await expect.poll(() => input.evaluate(el => { const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })).toBe(true);
+  await page.getByRole('button', { name: '关闭面板', exact: true }).click();
+  for (const label of ['心情选歌', '为你推荐']) {
+   await page.getByRole('button', { name: label, exact: true }).click();
+   await checkPage('.recommendation-page');
+   if (label === '心情选歌') await page.getByRole('button', { name: '放松一下', exact: true }).click();
+   await expect(page.locator('.recommendation-song')).toHaveCount(3);
+   await page.getByRole('button', { name: '返回更多玩法', exact: true }).click();
+  }
+  await page.getByRole('button', { name: '音乐报告', exact: true }).click();
+  await checkPage('.report-page');
+  for (const name of ['周报', '月报', '年报']) {
+   await page.getByRole('tab', { name, exact: true }).click();
+   await expect(page.locator('.report-loading')).toHaveCount(0);
+   await checkPage('.report-page');
+  }
+ });
+}
+
+test('WebView安全区及软键盘可视高度适配', async ({ page }) => {
+ await modelCardsFixture(page);
+ await page.goto('/');
+ await page.evaluate(() => {
+  document.documentElement.style.setProperty('--safe-top', '44px');
+  document.documentElement.style.setProperty('--safe-bottom', '34px');
+ });
+ await expect(page.locator('.home-nav')).toBeVisible();
+ expect(await page.locator('.home-nav').evaluate(el => el.getBoundingClientRect().top >= 44)).toBe(true);
+ expect(await page.locator('.energy-card').evaluate(el => el.getBoundingClientRect().bottom <= innerHeight - 34)).toBe(true);
+ await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: 'AI聊天', exact: true }).click();
+ await page.evaluate(() => {
+  Object.defineProperty(window.visualViewport!, 'height', { configurable: true, get: () => 360 });
+  Object.defineProperty(window.visualViewport!, 'offsetTop', { configurable: true, get: () => 30 });
+  window.visualViewport!.dispatchEvent(new Event('resize'));
+ });
+ await expect.poll(() => page.getByRole('textbox', { name: '对搭子说点什么' }).evaluate(el => {
+  const r = el.getBoundingClientRect(); return r.top >= 30 && r.bottom <= 390 - 34;
+ })).toBe(true);
+ expect(await page.locator('.chat-messages').evaluate(el => el.clientHeight > 0)).toBe(true);
+ await page.getByRole('textbox', { name: '对搭子说点什么' }).fill('键盘适配检查');
+ await page.evaluate(() => {
+  delete (window.visualViewport! as unknown as { height?: number }).height;
+  delete (window.visualViewport! as unknown as { offsetTop?: number }).offsetTop;
+  window.visualViewport!.dispatchEvent(new Event('resize'));
+ });
+ await expect.poll(() => page.locator('.sheet-backdrop').evaluate(el => Math.round(el.getBoundingClientRect().height))).toBe(844);
+ await expect(page.getByRole('textbox', { name: '对搭子说点什么' })).toHaveValue('键盘适配检查');
+});
+

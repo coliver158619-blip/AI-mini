@@ -33,5 +33,9 @@ if ($LASTEXITCODE -ne 0) {
 & npm.cmd run build
 if ($LASTEXITCODE -ne 0) { throw 'Frontend build failed.' }
 Write-Host "This computer: http://127.0.0.1:$($env:PORT)"
-& python -c 'from backend.network import lan_access; [print("Same Wi-Fi / LAN: " + url) for url in lan_access()["urls"]]'
+@'
+from backend.network import lan_access
+for url in lan_access()["urls"]:
+    print("Same Wi-Fi / LAN: " + url)
+'@ | & python -
 & python -m backend.app

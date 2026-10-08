@@ -8,6 +8,7 @@ import Recommendations from './Recommendations';
 import Weather, { WeatherIcon, type WeatherData } from './Weather';
 import { api, ApiError, createId, post } from './api';
 import { useHourlyRecommendation } from './useHourlyRecommendation';
+import { useVisualViewport } from './useVisualViewport';
 import type { Bootstrap, Integration, Message, Profile, Song } from './types';
 
 const scenes = [{ name: '放松一下', icon: '☕', query: '有点累，想放松一下' }, { name: '开心加倍', icon: '☀', query: '今天很开心，推荐轻快的音乐' }, { name: '专注时刻', icon: '✎', query: '我要专注工作，推荐适合学习的音乐' }, { name: '陪我入睡', icon: '☾', query: '准备睡觉了，想听助眠音乐' }, { name: '有点难过', icon: '♡', query: '今天有点难过，陪陪我吧' }];
@@ -23,11 +24,13 @@ function MessageText({ text }: { text: string }) {
 }
 
 export default function App() {
+ useVisualViewport();
  const [data, setData] = useState<Bootstrap | null>(null);
  const [error, setError] = useState('');
  const [page, setPage] = useState<Page>('home');
  const [drawer, setDrawer] = useState<Drawer>(null);
  const weatherReturn = useRef<Page>('home');
+ const openActivities = useRef(false);
  const [weather, setWeather] = useState<WeatherData | null>(null);
  const [bubble, setBubble] = useState('');
  const [wiggle, setWiggle] = useState(0);
@@ -90,7 +93,12 @@ export default function App() {
  }, [weather?.latitude, weather?.longitude, weather?.city]);
  useEffect(() => { if (toast) { const t = setTimeout(() => setToast(''), 3500); return () => clearTimeout(t); } }, [toast]);
  useEffect(() => { chatBottom.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [messages, sending, drawer]);
- useEffect(() => { window.scrollTo({ top: 0 }); }, [page]);
+ useEffect(() => {
+  if (page === 'more' && openActivities.current) {
+   openActivities.current = false;
+   document.getElementById('more-events-title')?.scrollIntoView({ block: 'start' });
+  } else window.scrollTo({ top: 0 });
+ }, [page]);
  useEffect(() => {
   if (!drawer) return;
   const previous = document.activeElement as HTMLElement | null;
@@ -224,16 +232,19 @@ export default function App() {
      <button className="icon-button frosted" aria-label="更多玩法" onClick={() => setPage('more')}><MoreHorizontal size={22}/></button>
     </header>
     <div className="room-shortcuts"><button onClick={() => setPage('diary')} className="room-shortcut"><BookHeart size={23}/><span>日记</span><i/></button><button onClick={() => setDrawer('favorites')} className="room-shortcut"><Heart size={23}/><span>收藏</span></button></div>
-    <button key={wiggle} className={`companion ${wiggle ? 'wiggle' : ''}`} onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><img src="/assets/companion.png" alt="穿黄色西装的音乐搭子和小狗" draggable={false}/></button>
+    <div className="companion-stage">
     <div className={`speech-bubble${hourlySong ? ' has-hourly-song' : ''}`}>
      <button className="bubble-chat" onClick={() => setDrawer('chat')} aria-label="和音乐搭子聊天"><span className="bubble-caption"><span className="online-dot"/>你的音乐搭子 <Sparkles size={12}/></span><span className="bubble-copy">{bubble}</span></button>
      {hourlySong && <div className="hourly-song" aria-label="搭子每小时推荐" aria-live="polite"><button className="hourly-song-main" onClick={() => play(hourlySong)} aria-label={`播放${hourlySong.title}`}><Disc3 size={24}/><span><strong>{hourlySong.title}</strong><small>{hourlySong.artist}</small></span>{playing && current?.id === hourlySong.id ? <Pause size={15}/> : <Play size={15}/>}</button><button className="hourly-song-heart" onClick={() => void favorite(hourlySong)} aria-label={`${favorites.includes(hourlySong.id) ? '取消收藏' : '收藏'}${hourlySong.title}`}><Heart size={17} fill={favorites.includes(hourlySong.id) ? 'currentColor' : 'none'}/></button></div>}
     </div>
+    <button key={wiggle} className={`companion ${wiggle ? 'wiggle' : ''}`} onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><img src="/assets/companion.png" alt="穿黄色西装的音乐搭子和小狗" draggable={false}/></button>
     <div className="companion-caption"><button onClick={() => setDrawer('settings')}>{data.profile.name}<Pencil size={12}/></button><span>已经陪你走过 <b>{data.profile.days}</b> 天 <Heart size={11}/></span></div>
+    </div>
    </section>
    <section className="home-content">
     <button className="energy-card" onClick={() => setDrawer('energy')}><span className="energy-symbol"><Zap size={24} fill="currentColor"/></span><div className="energy-body"><div><strong>我们的陪伴能量</strong><span>{data.profile.energy}<i> / {data.profile.energyMax}</i></span></div><span className="energy-track"><span style={{ width: `${Math.min(100, data.profile.energy / data.profile.energyMax * 100)}%` }}/></span></div><ChevronRight size={16}/></button>
 
+    <button className="hot-activities" onClick={() => { openActivities.current = true; setPage('more'); }}><Flame size={20}/><span>热门活动</span><ChevronRight size={16}/></button>
    </section>
   </main>}
   {current && <aside className="mini-player" aria-label="音乐播放器"><div className="player-progress" style={{ width: `${progress}%` }}/><Cover song={current} small/><div className="player-meta"><strong>{current.title}</strong><small>{playing ? '正在播放' : '已暂停'} · {current.audioLabel || current.artist}</small></div><button className="icon-button" onClick={() => void favorite(current)} aria-label="收藏当前歌曲"><Heart size={19} fill={favorites.includes(current.id) ? 'currentColor' : 'none'}/></button><button className="player-toggle" aria-label={playing ? '暂停播放' : '继续播放'} onClick={() => play(current)}>{playing ? <Pause size={19} fill="currentColor"/> : <Play size={19} fill="currentColor"/>}</button><button className="icon-button player-close" aria-label="关闭播放器" onClick={() => { audio.current?.pause(); flush(); setCurrent(null); livePlayback.current.id = ''; }}><X size={16}/></button></aside>}

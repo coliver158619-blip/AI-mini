@@ -1,0 +1,41 @@
+backend/test_conversations.py
+  s_0e1b72cfc48ec0::t_185ce695018702 1-90
+src/responsive.css
+  s_0e1b72cfc48ec0::t_1f97620b002266 29-32
+  s_0e1b72cfc48ec0::t_7dc73773481c70 33,36
+src/ChatHistory.tsx
+  s_0e1b72cfc48ec0::t_8da84eaf735151 1-54
+src/App.tsx
+  s_0e1b72cfc48ec0::t_4b6326ffac849d 4
+  s_0e1b72cfc48ec0::t_83f8b7d88fbeac 39-41,67-68,178,183,226,254,258
+tests/app.spec.ts
+  s_0e1b72cfc48ec0::t_7dc73773481c70 36
+  s_0e1b72cfc48ec0::t_d6c8d7d173b620 3-35
+  s_0e1b72cfc48ec0::t_ede8f1f0456365 37
+  s_0e1b72cfc48ec0::t_fa734ac0f758e6 275,437,440-449
+backend/app.py
+  s_0e1b72cfc48ec0::t_a58bb54fdc27b5 89-91,121-123,128-133,162-174,546-572,632,643,660-664
+src/chat-history.css
+  s_0e1b72cfc48ec0::t_8da84eaf735151 1-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "c1559c1847544b740a907e514b3a8212a8510f11",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_0e1b72cfc48ec0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c940-ac0c-70f2-a11f-4050aa73f9da",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

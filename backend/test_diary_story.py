@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from backend.app import create_app, get_db, get_profile, now
+from backend.app import create_app, get_db, get_profile, now, publish_daily_diary
 from backend.diary_story import context_for_day
 from backend.kugou import RemoteError
 
@@ -46,97 +46,82 @@ class DiaryStoryTest(unittest.TestCase):
     def entry(self):
         return next(e for e in self.client.get('/api/diary').json['entries'] if e['date'] == self.day)
 
-    def test_context_generation_and_persistence_without_extra_calls(self):
+    def publish(self, at):
+        with patch('backend.app.now', return_value=at), self.app.app_context():
+            return publish_daily_diary()
+
+    def test_only_twenty_two_oclock_publishes_once_and_restart_preserves_it(self):
         self.seed_day()
-        self.assertTrue(self.entry()['story']['stale'])
-        self.model.assert_not_called()  # Listing all dates never calls the model.
-        response = self.client.post(self.url)
-        self.assertEqual(response.status_code, 200)
-        query = self.model.call_args.args[0]
-        with self.app.app_context():
-            context = context_for_day(get_db(), now().date(), get_profile()['name'])
-        self.assertEqual(len(context['listenedSongs']), 2)
-        self.assertEqual(context['listenedSongs'][0]['plays'], 1)
-        self.assertEqual(context['listenedSongs'][0]['seconds'], 120)
-        self.assertEqual(context['userWords'], ['项目终于完成了'])
-        self.assertEqual(context['personalNote'], '想记住这份开心')
-        self.assertEqual(context['recommendedOnly'][0]['songs'][0]['title'], '安静的森林')
-        self.assertEqual(context['weatherRecords'][0]['conditions'], ['雷雨'])
-        for value in ('窗边的晴天', '月亮来信', '听1次、2.0分钟', '项目终于完成了', '想记住这份开心', '雷雨'):
-            self.assertIn(value, query)
-        self.assertNotIn('昨天的秘密', query)
-        self.assertFalse(self.model.call_args.kwargs['recommend'])
-        self.assertEqual(response.json['entry']['body'], MEMORY)
-        self.assertFalse(response.json['entry']['story']['stale'])
+        at = now().replace(hour=22, minute=0, second=0, microsecond=0)
+        original = self.entry()
+        self.assertFalse(self.publish(at - timedelta(minutes=1)))
         self.client.post(self.url)
+        self.model.assert_not_called()
+        self.assertTrue(self.publish(at))
+        self.assertEqual(self.entry()['body'], MEMORY)
+        self.assertFalse(self.publish(at + timedelta(seconds=20)))
+        self.assertFalse(self.publish(at + timedelta(hours=1)))
         self.assertEqual(self.model.call_count, 1)
+        self.assertNotEqual(original['body'], MEMORY)
         restarted = create_app(self.config).test_client()
         saved = next(e for e in restarted.get('/api/diary').json['entries'] if e['date'] == self.day)
         self.assertEqual(saved['body'], MEMORY)
-        self.assertEqual(saved['note'], '想记住这份开心')
+        self.assertFalse(saved['story']['canGenerate'])
 
-    def test_new_note_invalidates_and_failure_keeps_previous_memory(self):
+    def test_context_still_uses_playlist_weather_and_emotion(self):
         self.seed_day()
+        self.publish(now().replace(hour=22, minute=0))
+        query = self.model.call_args.args[0]
+        for value in ('窗边的晴天', '月亮来信', '听1次、2.0分钟', '项目终于完成了', '想记住这份开心', '雷雨'):
+            self.assertIn(value, query)
+        self.assertNotIn('昨天的秘密', query)
+
+    def test_notes_plays_and_weather_do_not_rewrite_published_content(self):
+        self.seed_day()
+        self.publish(now().replace(hour=22, minute=0))
+        before = self.entry()
+        self.client.put(f'/api/diary/{self.day}', json={'note': '想念朋友'})
+        self.client.post('/api/play', json={'songId': 'moon-letter', 'seconds': 30, 'sessionId': 'new', 'eventId': 'new'})
         self.client.post(self.url)
-        entry = self.client.put(f'/api/diary/{self.day}', json={'note': '现在有一点想念朋友'}).json['entry']
-        self.assertTrue(entry['story']['stale'])
-        self.assertEqual(entry['body'], MEMORY)
+        after = self.entry()
+        self.assertEqual(after['body'], before['body'])
+        self.assertEqual(after['minutes'], before['minutes'])
+        self.assertEqual(after['note'], '想念朋友')
+        self.assertEqual(self.model.call_count, 1)
+        with patch('backend.app.now', return_value=now() + timedelta(days=1)):
+            saved = self.entry()
+            self.assertTrue(saved['locked'])
+            self.assertEqual(saved['note'], '想念朋友')
+            self.assertEqual(self.client.put(f'/api/diary/{self.day}', json={'note': '改写'}).status_code, 409)
+            self.client.post(self.url)
+        self.assertEqual(self.model.call_count, 1)
+
+    def test_failure_keeps_old_edition_and_does_not_retry_outside_schedule(self):
+        self.seed_day()
+        before = self.entry()['body']
         self.model.side_effect = RemoteError('chat', 'timeout')
-        self.assertEqual(self.client.post(self.url).status_code, 503)
-        self.assertEqual(self.entry()['body'], MEMORY)
-        self.model.side_effect = None
-        self.model.return_value = {'reply': MEMORY + '这份想念，也可以放在我们的歌里。'}
-        self.assertEqual(self.client.post(self.url).status_code, 200)
-        self.assertFalse(self.entry()['story']['stale'])
-        self.assertIn('现在有一点想念朋友', self.model.call_args.args[0])
-
-    def test_empty_day_and_recommendation_are_not_listening(self):
-        self.assertFalse(self.entry()['story']['canGenerate'])
+        at = now().replace(hour=22, minute=0)
+        self.assertTrue(self.publish(at))
+        self.assertFalse(self.publish(at + timedelta(seconds=20)))
         self.client.post(self.url)
-        self.model.assert_not_called()
-        self.client.put(f'/api/diary/{self.day}', json={'note': '今天生日，想听开心的歌'})
-        self.model.return_value = {'reply': '今天的生日心情，被你认真写进这一页。虽然我们还没有一起播放歌曲，我也想把祝福轻轻交给你。愿这一天可以按你喜欢的节奏展开，等你挑好旋律，我们再一起为这份快乐留一个小小的位置。'}
+        self.assertEqual(self.entry()['body'], before)
+        self.assertEqual(self.model.call_count, 1)
+
+    def test_historical_and_empty_entries_never_call_model_on_open(self):
         self.client.post(self.url)
-        with self.app.app_context():
-            context = context_for_day(get_db(), now().date(), get_profile()['name'])
-        self.assertEqual(context['listenedSongs'], [])
-        self.assertEqual(self.entry()['songCount'], 0)
-
-    def test_concurrent_lease_and_expired_lease(self):
-        self.seed_day()
-        with sqlite3.connect(self.path) as db:
-            db.execute("INSERT INTO diary_stories(date,pending_until) VALUES (?,?)", (self.day, (now() + timedelta(minutes=1)).isoformat()))
-        self.assertEqual(self.client.post(self.url).status_code, 409)
+        yesterday = (now() - timedelta(days=1)).date().isoformat()
+        self.client.post(f'/api/diary/{yesterday}/story')
+        self.publish(now().replace(hour=22, minute=0))
         self.model.assert_not_called()
-        with sqlite3.connect(self.path) as db:
-            db.execute("UPDATE diary_stories SET pending_until=?", ((now() - timedelta(minutes=1)).isoformat(),))
-        self.assertEqual(self.client.post(self.url).status_code, 200)
+        with patch('backend.app.now', return_value=now() + timedelta(days=1)):
+            self.assertTrue(self.entry()['locked'])
 
-    def test_invalid_output_is_not_saved_and_dates_validated(self):
+    def test_invalid_output_keeps_saved_edition(self):
         self.seed_day()
-        self.model.return_value = {'reply': '```json\n{"text": "internal"}\n```'}
-        self.assertEqual(self.client.post(self.url).status_code, 503)
-        self.assertEqual(self.entry()['story']['text'], '')
+        before = self.entry()['body']
+        self.model.return_value = {'reply': MEMORY + '再听一首《不在记录里的歌》。'}
+        self.publish(now().replace(hour=22, minute=0))
+        self.assertEqual(self.model.call_count, 2)
+        self.assertEqual(self.entry()['body'], before)
         for day in ('bad', '2026-02-30', '1999-01-01', (now().date() + timedelta(days=1)).isoformat()):
             self.assertEqual(self.client.post(f'/api/diary/{day}/story').status_code, 400)
-
-    def test_additional_play_invalidates_cache(self):
-        self.seed_day()
-        self.client.post(self.url)
-        self.client.post('/api/play', json={'songId': 'moon-letter', 'seconds': 30, 'sessionId': 'new-play', 'eventId': 'new-event'})
-        self.assertTrue(self.entry()['story']['stale'])
-        self.client.post(self.url)
-        self.assertEqual(self.model.call_count, 2)
-
-    def test_off_topic_song_or_invented_event_is_retried_and_not_saved(self):
-        self.seed_day()
-        for bad in ('今天你生日，' + MEMORY, MEMORY + '再听一首《不在记录里的歌》。', MEMORY + '你想听吗？'):
-            self.model.return_value = {'reply': bad}
-            before = self.model.call_count
-            self.assertEqual(self.client.post(self.url).status_code, 503)
-            self.assertEqual(self.model.call_count - before, 2)
-            self.assertEqual(self.entry()['story']['text'], '')
-        self.model.side_effect = [{'reply': '```code```'}, {'reply': MEMORY}]
-        self.assertEqual(self.client.post(self.url).json['entry']['body'], MEMORY)
-
-

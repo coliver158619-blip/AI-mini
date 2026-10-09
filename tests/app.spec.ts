@@ -35,36 +35,30 @@ test('新对话和历史会话切换，保留草稿并在刷新后恢复', async
  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
-test('日记自动写专属回忆，保存新心情后更新，失败保留原文并可重试', async ({ page }) => {
+test('日记仅展示已发布正文，保存心情不重写，往日日记只读', async ({ page }) => {
  const memory = '那首《月亮来信》陪你放慢了脚步，你又告诉我项目终于完成了。今天，我们把这份终于能够松口气的快乐，留在这一页。';
- const updated = '想念朋友的此刻，那首《月亮来信》有了新的分量。我会陪你收好这份惦念，让这一页记住那些认真在意过的人。';
- let entry = { date: '2026-10-08', title: '今天的音乐记忆', body: '当天的听歌记录', minutes: 5, songCount: 1, mood: '放松', note: '', topSong: null,
-  story: { text: '', updatedAt: null as string | null, stale: true, canGenerate: true, version: 'one' } };
+ let entry = { date: '2026-10-09', title: '今天的音乐记忆', body: memory, minutes: 5, songCount: 1, mood: '放松', note: '', topSong: null, locked: false,
+  story: { text: memory, updatedAt: '2026-10-09T22:00:00+08:00', stale: false, canGenerate: false, version: 'one' } };
  let attempts = 0;
  await page.route('**/api/diary', route => route.fulfill({ json: { entries: [entry], total: 1 } }));
- await page.route('**/api/diary/2026-10-08', async route => {
-  entry = { ...entry, note: route.request().postDataJSON().note, story: { ...entry.story, stale: true, version: 'two' } };
-  await route.fulfill({ json: { entry } });
+ await page.route('**/api/diary/2026-10-09', route => {
+  entry = { ...entry, note: route.request().postDataJSON().note };
+  return route.fulfill({ json: { entry } });
  });
- await page.route('**/api/diary/2026-10-08/story', async route => {
-  attempts++;
-  if (attempts === 2) { await route.fulfill({ status: 503, json: { error: '专属回忆暂未写好，原有记录已保留。' } }); return; }
-  const text = attempts === 1 ? memory : updated;
-  entry = { ...entry, body: text, story: { ...entry.story, text, updatedAt: '2026-10-08T12:00:00+08:00', stale: false } };
-  await route.fulfill({ json: { entry } });
- });
+ await page.route('**/api/diary/*/story', route => { attempts++; return route.fulfill({ json: { entry } }); });
  await page.goto('/');
  await page.getByRole('button', { name: '日记', exact: true }).click();
  await expect(page.locator('.diary-body')).toHaveText(memory);
  await page.getByLabel('留一句话给今天').fill('现在有一点想念朋友');
  await page.getByRole('button', { name: '保存心情', exact: true }).click();
- await expect(page.getByRole('button', { name: '重试回忆' })).toBeVisible();
+ await expect(page.getByRole('button', { name: '已保存', exact: true })).toBeVisible();
  await expect(page.locator('.diary-body')).toHaveText(memory);
- await page.getByRole('button', { name: '重试回忆' }).click();
- await expect(page.locator('.diary-body')).toHaveText(updated);
- await expect(page.getByLabel('留一句话给今天')).toHaveValue('现在有一点想念朋友');
- expect(attempts).toBe(3);
- await page.screenshot({ path: 'docs/preview-diary-memory.png', fullPage: true });
+ await expect(page.getByText('正文每天 22:00 更新，心情可以随时记录')).toBeVisible();
+ entry = { ...entry, locked: true };
+ await page.getByRole('button', { name: '返回首页', exact: true }).click();
+ await page.getByRole('button', { name: '日记', exact: true }).click();
+ await expect(page.getByLabel('留一句话给今天')).toHaveAttribute('readonly', '');
+ expect(attempts).toBe(0);
 });
 
 const selectedWeather = { city: '广州', condition: '多云', temperature: 26, code: 3, greeting: '今天也有音乐相伴。', updatedAt: new Date().toISOString(), latitude: 23.12, longitude: 113.26, cached: false };
@@ -74,6 +68,7 @@ async function modelCardsFixture(page: Page, withWeather = true) {
   const response = await route.fetch();
   await route.fulfill({ json: { ...await response.json(), weather: selectedWeather } });
  });
+ await page.route('**/api/recommendations?*', route => route.fulfill({ json: { songs: [], source: 'kugou' } }));
  await page.route('**/api/recommendations', async route => {
   requests.push(route.request().postDataJSON());
   const bootstrap = await (await page.request.get('/api/bootstrap')).json();
@@ -174,6 +169,46 @@ test('心情选歌生成卡片且不进入聊天，收藏刷新后保留', async
  await expect(page.locator('.recommendation-song')).toHaveCount(3);
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-recommendations.png', fullPage: true });
  expect(await page.locator('.recommendation-page').evaluate(el => el.getBoundingClientRect().width)).toBe(390);
+});
+
+test('两种推歌分别恢复旧结果，刷新等待和失败不清空卡片', async ({ page }) => {
+ await modelCardsFixture(page);
+ const song = { id: 'sunny-window', title: '上次的推荐', artist: '测试歌手', color: '#E8BD6E', tags: [] };
+ const saved = { personal: { source: 'kugou', songs: [song], context: { scene: '' } }, mood: { source: 'kugou', songs: [{ ...song, title: '上次的心情歌' }], context: { scene: '有点难过' } } };
+ await page.route('**/api/recommendations?*', route => route.fulfill({ json: saved[new URL(route.request().url()).searchParams.get('mode') as 'mood' | 'personal'] }));
+ let calls = 0;
+ let complete: (() => void) | undefined;
+ await page.route('**/api/recommendations', async route => {
+  calls++;
+  await new Promise<void>(resolve => { complete = resolve; });
+  if (calls === 1) return route.fulfill({ status: 503, json: { error: '推荐暂时不可用' } });
+  saved.personal.songs = [{ ...song, title: '新推荐' }];
+  await route.fulfill({ json: saved.personal });
+ });
+ await page.goto('/');
+ await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: '心情选歌', exact: true }).click();
+ await expect(page.locator('.recommendation-song h2')).toHaveText('上次的心情歌');
+ await expect(page.getByRole('button', { name: '有点难过', exact: true })).toHaveAttribute('aria-pressed', 'true');
+ await page.getByRole('button', { name: '返回更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: '为你推荐', exact: true }).click();
+ await expect(page.locator('.recommendation-song h2')).toHaveText('上次的推荐');
+ expect(calls).toBe(0);
+ await page.getByRole('button', { name: '换一换', exact: true }).click();
+ await expect.poll(() => calls).toBe(1);
+ await expect(page.locator('.recommendation-song h2')).toHaveText('上次的推荐');
+ await expect(page.locator('.recommendation-skeleton')).toHaveCount(0);
+ complete!();
+ await expect(page.getByRole('alert')).toContainText('推荐暂时不可用');
+ await expect(page.locator('.recommendation-song h2')).toHaveText('上次的推荐');
+ await page.getByRole('button', { name: '重新推荐', exact: true }).click();
+ await expect.poll(() => calls).toBe(2); complete!();
+ await expect(page.locator('.recommendation-song h2')).toHaveText('新推荐');
+ await page.reload();
+ await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: '为你推荐', exact: true }).click();
+ await expect(page.locator('.recommendation-song h2')).toHaveText('新推荐');
+ expect(calls).toBe(2);
 });
 
 test('日记编辑持久化，轻点纸页自然翻阅', async ({ page }) => {

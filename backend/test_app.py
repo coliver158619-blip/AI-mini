@@ -104,7 +104,8 @@ class AppTest(unittest.TestCase):
         self.assertEqual(report["summary"]["activeDays"], 1)
         self.assertEqual(report["topSongs"][0]["plays"], 1)
         self.assertFalse(report["isDemo"])
-        self.assertEqual(self.client.get("/api/diary").json["entries"][0]["minutes"], 1)
+        # Reports are live; the diary keeps its first saved edition until 22:00.
+        self.assertEqual(self.client.get("/api/diary").json["entries"][0]["minutes"], 0)
         self.assertEqual(create_app(self.config).test_client().get("/api/reports?period=year").json["summary"]["minutes"], 1)
 
     def test_play_validation_and_session_conflict(self):

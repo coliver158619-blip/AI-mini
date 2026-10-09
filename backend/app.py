@@ -13,6 +13,7 @@ from pathlib import Path
 import random
 import re
 import sqlite3
+import threading
 import uuid
 
 from flask import Flask, current_app, g, jsonify, request, send_file, send_from_directory
@@ -92,6 +93,9 @@ def init_db(app):
             CREATE TABLE IF NOT EXISTS diary_stories (
                 date TEXT PRIMARY KEY, text TEXT NOT NULL DEFAULT '', context_hash TEXT,
                 updated_at TEXT, attempt_id TEXT, pending_until TEXT
+            );
+            CREATE TABLE IF NOT EXISTS diary_editions (
+                date TEXT PRIMARY KEY, entry TEXT NOT NULL, attempted_at TEXT
             );
             CREATE TABLE IF NOT EXISTS feed_events (date TEXT PRIMARY KEY, created_at TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS weather_snapshots (
@@ -373,7 +377,7 @@ def minutes(seconds):
     return round(seconds / 60)
 
 
-def diary_entry(day):
+def live_diary_entry(day):
     rows = plays_between(day, day)
     songs = {s["id"]: s for s in all_songs()}
     counts = Counter(song for song, _ in {(r["song_id"], play_identity(r)) for r in rows})
@@ -408,6 +412,65 @@ def diary_entry(day):
     context = context_for_day(get_db(), day, get_profile()["name"])
     story = story_state(get_db(), context, upstream.enabled and not upstream.local_mode)
     return {"date": day.isoformat(), "title": title, "body": story["text"] or body, "story": story, "mood": mood, "minutes": length, "songCount": len(counts), "topSong": top, "note": note[0] if note else "", "isDemo": any(r["is_demo"] for r in rows), "weather": weather}
+
+
+def diary_entry(day):
+    db = get_db()
+    row = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day.isoformat(),)).fetchone()
+    if not row:
+        entry = live_diary_entry(day)
+        entry['story'].update(canGenerate=False, stale=False)
+        with db:
+            db.execute("INSERT OR IGNORE INTO diary_editions(date,entry) VALUES (?,?)", (day.isoformat(), json.dumps(entry, ensure_ascii=False)))
+        row = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day.isoformat(),)).fetchone()
+    entry = json.loads(row['entry'])
+    entry['locked'] = day < now().date()
+    # Today's handwritten note remains editable without rewriting the published memory.
+    if not entry['locked']:
+        note = db.execute("SELECT note FROM diary_notes WHERE date=?", (day.isoformat(),)).fetchone()
+        entry['note'] = note[0] if note else ''
+    return entry
+
+
+def publish_daily_diary():
+    at = now()
+    if at.hour != 22 or at.minute != 0:
+        return False
+    day = at.date()
+    previous = diary_entry(day)
+    db = get_db()
+    # Durable claim also prevents duplicate model calls after a restart or across workers.
+    with db:
+        claimed = db.execute("UPDATE diary_editions SET attempted_at=? WHERE date=? AND attempted_at IS NULL", (at.isoformat(), day.isoformat())).rowcount
+    if not claimed:
+        return False
+    upstream = current_app.extensions['kugou']
+    context = context_for_day(db, day, get_profile()['name'])
+    try:
+        state = story_state(db, context, upstream.enabled and not upstream.local_mode)
+        if state['canGenerate']:
+            generate_story(db, upstream, context, at)
+        entry = live_diary_entry(day)
+        entry['story'].update(canGenerate=False, stale=False)
+    except (RemoteError, OSError, ValueError, TypeError, KeyError, AttributeError):
+        current_app.logger.warning('Daily diary generation failed; keeping the saved edition.')
+        entry = previous
+    # Keep the handwritten note at publication time for the immutable historical edition.
+    with db:
+        db.execute("UPDATE diary_editions SET entry=? WHERE date=?", (json.dumps(entry, ensure_ascii=False), day.isoformat()))
+    return True
+
+
+def start_diary_clock(app):
+    def run():
+        while True:
+            try:
+                with app.app_context():
+                    publish_daily_diary()
+            except Exception:
+                app.logger.exception('Daily diary scheduler failed')
+            threading.Event().wait(20)
+    threading.Thread(target=run, name='daily-diary', daemon=True).start()
 
 
 def report_data(period, offset):
@@ -574,7 +637,10 @@ def create_app(test_config=None):
     @app.get("/api/recommendations")
     def saved_recommendations():
         scene = valid_text(request.args.get("scene", ""), "场景", 40, True)
-        row = get_db().execute("SELECT * FROM recommendation_requests WHERE scene = ? AND origin = 'manual' ORDER BY id DESC LIMIT 1", (scene,)).fetchone()
+        if request.args.get("mode") == "mood" and not scene:
+            row = get_db().execute("SELECT * FROM recommendation_requests WHERE scene != '' AND origin = 'manual' ORDER BY id DESC LIMIT 1").fetchone()
+        else:
+            row = get_db().execute("SELECT * FROM recommendation_requests WHERE scene = ? AND origin = 'manual' ORDER BY id DESC LIMIT 1", (scene,)).fetchone()
         return jsonify(recommendation_payload(upstream, row))
 
     @app.post("/api/recommendations")
@@ -696,7 +762,7 @@ def create_app(test_config=None):
 
     @app.get("/api/diary")
     def diary():
-        dates = {row[0] for row in get_db().execute("SELECT DISTINCT substr(listened_at, 1, 10) FROM plays UNION SELECT date FROM diary_notes UNION SELECT date FROM weather_snapshots UNION SELECT substr(created_at, 1, 10) FROM messages UNION SELECT substr(created_at, 1, 10) FROM recommendation_requests UNION SELECT date FROM diary_stories")}
+        dates = {row[0] for row in get_db().execute("SELECT DISTINCT substr(listened_at, 1, 10) FROM plays UNION SELECT date FROM diary_notes UNION SELECT date FROM weather_snapshots UNION SELECT substr(created_at, 1, 10) FROM messages UNION SELECT substr(created_at, 1, 10) FROM recommendation_requests UNION SELECT date FROM diary_stories UNION SELECT date FROM diary_editions")}
         dates.add(now().date().isoformat())
         entries = [diary_entry(date.fromisoformat(day)) for day in sorted(dates, reverse=True)]
         return jsonify(entries=entries, total=len(entries))
@@ -708,17 +774,7 @@ def create_app(test_config=None):
         parsed = date.fromisoformat(day)
         if parsed > now().date() or parsed.year < 2000:
             raise ValueError("日记日期需为 2000 年以后且不能晚于今天")
-        entry = diary_entry(parsed)
-        if not entry["story"]["canGenerate"] or not entry["story"]["stale"]:
-            return jsonify(entry=entry)
-        context = context_for_day(get_db(), parsed, get_profile()["name"])
-        try:
-            if not generate_story(get_db(), upstream, context, now()):
-                return jsonify(error="这一天的回忆正在整理，请稍后再试。"), 409
-        except (RemoteError, OSError, ValueError, TypeError, KeyError, AttributeError) as cause:
-            error = cause if isinstance(cause, RemoteError) else RemoteError("chat", "response")
-            upstream.fail(error)
-            return jsonify(error="专属回忆暂未写好，原有记录已保留。" + error.public_message), 503
+        # Kept for older frontends: only the server's 22:00 job may rewrite a diary.
         return jsonify(entry=diary_entry(parsed))
 
     @app.put("/api/diary/<day>")
@@ -731,9 +787,16 @@ def create_app(test_config=None):
             raise ValueError("日记日期无效") from None
         if parsed > now().date() or parsed.year < 2000:
             raise ValueError("日记日期需为 2000 年以后且不能晚于今天")
+        if parsed < now().date():
+            return jsonify(error="往日日记已定稿，不能再修改。"), 409
         note = valid_text(json_body().get("note"), "日记", 4000, True)
         with get_db() as db:
             db.execute("INSERT INTO diary_notes VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET note=excluded.note", (day, note))
+            saved = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day,)).fetchone()
+            if saved:
+                edition = json.loads(saved['entry'])
+                edition['note'] = note
+                db.execute("UPDATE diary_editions SET entry=? WHERE date=?", (json.dumps(edition, ensure_ascii=False), day))
         return jsonify(entry=diary_entry(parsed))
 
     @app.get("/api/reports")
@@ -832,6 +895,8 @@ def create_app(test_config=None):
             return send_from_directory(dist, "index.html")
         return jsonify(message="后端已启动；开发预览请启动 npm run dev，或先运行 npm run build。"), 200
 
+    if not app.testing:
+        start_diary_clock(app)
     return app
 
 

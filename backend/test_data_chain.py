@@ -71,7 +71,8 @@ class DataChainTest(unittest.TestCase):
                 restarted = request("/api/reports?period=month")
                 self.assertEqual(restarted["trend"], month["trend"])
                 self.assertEqual(restarted["summary"], month["summary"])
-                self.assertEqual(request("/api/diary")["entries"][0]["minutes"], 3)
+                # The diary's saved edition is unchanged; reports include both chunks.
+                self.assertEqual(request("/api/diary")["entries"][0]["minutes"], 2)
 
 
 if __name__ == "__main__":

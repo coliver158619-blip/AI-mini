@@ -18,6 +18,7 @@ type DiaryEntry = {
   note: string;
   isDemo?: boolean;
   weather?: WeatherData | null;
+  locked?: boolean;
   story?: { text: string; updatedAt: string | null; stale: boolean; canGenerate: boolean; version: string };
 };
 
@@ -93,9 +94,6 @@ export default function Diary({ onBack, onPlay }: Props) {
   const [speechAvailable, setSpeechAvailable] = useState(false);
   const [speechError, setSpeechError] = useState('');
   const [navigationMessage, setNavigationMessage] = useState('');
-  const [storyStatus, setStoryStatus] = useState({ date: '', loading: false, error: '' });
-  const [storyRetry, setStoryRetry] = useState(0);
-  const storyRequests = useRef(new Map<string, Promise<{ entry: DiaryEntry }>>());
   const turnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pointer = useRef<{ id: number; x: number; y: number; moved: boolean; selecting: boolean } | null>(null);
   const suppressClick = useRef(false);
@@ -128,39 +126,25 @@ export default function Diary({ onBack, onPlay }: Props) {
     return () => controller.abort();
   }, [retry]);
 
-  const storyDate = entry?.date;
-  const storyVersion = entry?.story?.version;
-  const needsStory = Boolean(entry?.story?.canGenerate && entry.story.stale);
-  useEffect(() => {
-    if (!storyDate || !storyVersion || !needsStory) return;
-    let active = true;
-    const key = `${storyDate}:${storyVersion}:${storyRetry}`;
-    let pending = storyRequests.current.get(key);
-    if (!pending) {
-      pending = fetch(`/api/diary/${encodeURIComponent(storyDate)}/story`, { method: 'POST' })
-        .then(async response => {
-          if (!response.ok) throw new Error(await errorMessage(response));
-          return response.json();
-        });
-      storyRequests.current.set(key, pending);
-    }
-    setStoryStatus({ date: storyDate, loading: true, error: '' });
-    pending.then(data => {
-      if (!active) return;
-      setEntries(current => current.map(item => item.date === storyDate && item.story?.version === storyVersion ? data.entry : item));
-      setStoryStatus({ date: storyDate, loading: false, error: '' });
-    }).catch(cause => {
-      if (active) setStoryStatus({ date: storyDate, loading: false, error: cause instanceof Error ? cause.message : '回忆暂未写好，请再试一次。' });
-    });
-    return () => { active = false; };
-  }, [storyDate, storyVersion, needsStory, storyRetry]);
-
   useEffect(() => {
     setSpeechAvailable('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window);
     return () => {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       if (turnTimer.current) clearTimeout(turnTimer.current);
     };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      void fetch('/api/diary', { signal: controller.signal }).then(async response => {
+        if (!response.ok) return;
+        const data: { entries: DiaryEntry[] } = await response.json();
+        if (!controller.signal.aborted) setEntries(current => current.map(item => data.entries.find(updated => updated.date === item.date) || item));
+      }).catch(() => { /* Keep the saved pages when the connection is unavailable. */ });
+    }, 30_000);
+    return () => { clearInterval(timer); controller.abort(); };
   }, []);
 
   useEffect(() => {
@@ -290,16 +274,13 @@ export default function Diary({ onBack, onPlay }: Props) {
         <article className="diary-paper" aria-label={dateParts(entry.date).full}>
           <span className="diary-bookmark" aria-hidden="true"><Music2 size={15} /></span>
           <EntryContent entry={entry} onPlay={onPlay} />
-          {storyStatus.date === entry.date && (storyStatus.loading || storyStatus.error) && <div className="diary-story-status" role="status">
-            {storyStatus.loading ? <><LoaderCircle size={14} className="diary-spinner" /><span>{entry.story?.text ? '正在把新的心情写进回忆…' : '正在从今天的歌单和心情，写下我们的回忆…'}</span></> : <><span>{storyStatus.error}</span><button type="button" className="diary-retry" onClick={() => setStoryRetry(value => value + 1)}>重试回忆</button></>}
-          </div>}
           <div className="diary-personal-note">
             <label htmlFor="diary-note"><PenLine size={15} /> 留一句话给今天</label>
-            <textarea id="diary-note" value={note} maxLength={4000} rows={3} placeholder="此刻的心情，或一件值得记住的小事…" onChange={event => {
+            <textarea readOnly={entry.locked} id="diary-note" value={note} maxLength={4000} rows={3} placeholder="此刻的心情，或一件值得记住的小事…" onChange={event => {
               setDrafts(current => ({ ...current, [entry.date]: event.target.value }));
               setFeedback(current => ({ ...current, [entry.date]: { text: '', error: false } }));
             }} />
-            <div className="diary-note-actions"><span>{dirty ? '尚未保存' : '写下的心情，会一直留在这里'}</span><button type="button" onClick={saveNote} disabled={!dirty || savingDate !== null}>{savingDate === entry.date ? <LoaderCircle size={14} className="diary-spinner" /> : !dirty && note ? <Check size={14} /> : <PenLine size={13} />}{savingDate === entry.date ? '保存中' : !dirty && note ? '已保存' : '保存心情'}</button></div>
+            <div className="diary-note-actions"><span>{entry.locked ? '这一天已定稿，回忆好好收藏' : dirty ? '尚未保存' : '正文每天 22:00 更新，心情可以随时记录'}</span><button type="button" onClick={saveNote} disabled={entry.locked || !dirty || savingDate !== null}>{savingDate === entry.date ? <LoaderCircle size={14} className="diary-spinner" /> : !dirty && note ? <Check size={14} /> : <PenLine size={13} />}{savingDate === entry.date ? '保存中' : !dirty && note ? '已保存' : '保存心情'}</button></div>
             {feedback[entry.date]?.text && <p role="status" className={`diary-save-feedback${feedback[entry.date].error ? ' diary-feedback-error' : ''}`}>{feedback[entry.date].text}</p>}
           </div>
           <footer className="diary-page-footer"><span>{entry.isDemo ? '体验日记 · 示例听歌记录' : '与音乐一起，把平凡写成珍藏'}</span><span>{String(entries.length - index).padStart(2, '0')}</span></footer>

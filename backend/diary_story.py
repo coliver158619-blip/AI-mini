@@ -1,4 +1,4 @@
-"""Grounded, durable daily memories; model calls happen only for an opened page."""
+"""Grounded daily memories, called by the server's scheduled diary publisher."""
 from datetime import timedelta
 import hashlib
 import json

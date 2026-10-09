@@ -1,0 +1,54 @@
+src/Recommendations.tsx
+  s_0e1b72cfc48ec0::t_8f27407815bd7d 13-14,22-23,25,27-29,33-39,41-42,44-47,49-50,58
+  s_0e1b72cfc48ec0::t_96988c1960c001 40,43,48
+  s_0e1b72cfc48ec0::t_66a32ea678ba60 51-53
+  s_0e1b72cfc48ec0::t_2c3f700e1f1b22 57
+  s_0e1b72cfc48ec0::t_f2183335289de8 54,61,63-68,71-72,75-76,79,81-85
+backend/test_recommendations.py
+  s_0e1b72cfc48ec0::t_b8f799e7cd892d 91-101
+backend/test_diary_story.py
+  s_0e1b72cfc48ec0::t_d174a40a71d216 10,49-53,59-60,62-63,104-105
+  s_0e1b72cfc48ec0::t_b48aaf087f982a 55,61
+  s_0e1b72cfc48ec0::t_cc6837c550c78b 56-57
+  s_0e1b72cfc48ec0::t_d2ee04375fc525 101-103
+  s_0e1b72cfc48ec0::t_4a7894bc539281 106-108
+  s_0e1b72cfc48ec0::t_d30fa01f9a74b1 65,69,71,73-77,79-84,86-97,99,109-114,116-117,119,121-125
+backend/test_app.py
+  s_0e1b72cfc48ec0::t_96988c1960c001 107-108
+backend/diary_story.py
+  s_0e1b72cfc48ec0::t_96988c1960c001 1
+tests/app.spec.ts
+  s_0e1b72cfc48ec0::t_8a0253d4c8ed4e 38,40-41,44-46,48
+  s_0e1b72cfc48ec0::t_0d1b8ac7327776 54
+  s_0e1b72cfc48ec0::t_5794044415f345 56-61,71,174-213
+backend/app.py
+  s_0e1b72cfc48ec0::t_dd3ec6e296b3ac 16
+  s_0e1b72cfc48ec0::t_cbd335bbad7eb4 97-99,380,417-475,640-643,765,777,790-791,795-799,898-899
+backend/test_data_chain.py
+  s_0e1b72cfc48ec0::t_96988c1960c001 74-75
+src/App.tsx
+  s_0e1b72cfc48ec0::t_baa49c85cafc84 226
+src/Diary.tsx
+  s_0e1b72cfc48ec0::t_2e04952869570e 21,137-149,279,283
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "c24c14a0246c40587ca6800dce5db91686ef24f4",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_0e1b72cfc48ec0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c940-ac0c-70f2-a11f-4050aa73f9da",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

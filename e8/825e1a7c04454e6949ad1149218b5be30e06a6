@@ -1,0 +1,80 @@
+src/diary.css
+  s_0e1b72cfc48ec0::t_b549c7161a3af2 1-2,5-14,16-53,57-65,68-74,76-95
+  s_0e1b72cfc48ec0::t_7984a228280857 96-104
+src/reports.css
+  s_0e1b72cfc48ec0::t_2a69bea5b54185 91
+  s_0e1b72cfc48ec0::t_8ab348b6ad0f2e 4-90,94
+  s_0e1b72cfc48ec0::t_c2faada7a383f9 92-93
+src/ChatPanel.tsx
+  s_0e1b72cfc48ec0::t_d40f1dcf77a4fa 1-61
+backend/test_conversations.py
+  s_0e1b72cfc48ec0::t_1028100b5d7ac1 1-32
+tests/app.spec.ts
+  s_0e1b72cfc48ec0::t_ce96d3bc2a7929 3-8,10,12-13,15-19,22-43,172,179,210,216,223
+  s_0e1b72cfc48ec0::t_b04d0b96886e99 156-157
+  s_0e1b72cfc48ec0::t_197e5e0427c534 158-171,173-176,178,180-209,211-215,217-221,224-225,255-261,371,376-420
+src/Diary.tsx
+  s_0e1b72cfc48ec0::t_b549c7161a3af2 2,7-9,11-25,27-34,36-37,40-62,64-67,70-76,78-84,86-102,104,107-114,116-117,119-120
+  s_0e1b72cfc48ec0::t_f8123dad446988 121-122,124,126-129,131-143
+backend/test_diary_inputs.py
+  s_0e1b72cfc48ec0::t_5072504d5f82fd 1-163
+src/Reports.tsx
+  s_0e1b72cfc48ec0::t_bf6af42581179b 2
+  s_0e1b72cfc48ec0::t_763ad93f7d1e8d 50-51,53,57-58,76,98-99,139-159,180,182,205,225,232,235,245-247,252
+backend/diary_inputs.py
+  s_0e1b72cfc48ec0::t_5072504d5f82fd 30-31,85-86
+  s_0e1b72cfc48ec0::t_c64c0b5d48c0e3 90-93
+  s_0e1b72cfc48ec0::t_6bd99410f5eb03 1-29,32-84,87-89,94-126
+backend/app.py
+  s_0e1b72cfc48ec0::t_7685423a245abf 96,98-103
+  s_0e1b72cfc48ec0::t_799e8f6512e4dd 16,24,26
+  s_0e1b72cfc48ec0::t_dd3ec6e296b3ac 97
+  s_0e1b72cfc48ec0::t_c13de861983dc8 129-130,397-439,529-531,634,645,662-663,665-666,699,704,710-714,717-718,722,725-762,765-768,771-775,874
+backend/conversations.py
+  s_0e1b72cfc48ec0::t_1028100b5d7ac1 22-23,25,30,33
+  s_0e1b72cfc48ec0::t_92a0fa0489fb48 1-21,24,26-29,31-32,34-63
+src/App.tsx
+  s_0e1b72cfc48ec0::t_3de2fc26a90e6c 4
+  s_0e1b72cfc48ec0::t_39c50adecc162b 35-36,61-62,93,176,201-204,249-253
+backend/diary_story.py
+  s_0e1b72cfc48ec0::t_16bc74588a933f 1
+  s_87d3ffd7b0261e::t_4f330cc2aa9302 42-45,48,52,60-62,65-66,72,74-76,78-79,82,89,106-120,143-144,146
+src/chat.css
+  s_0e1b72cfc48ec0::t_d40f1dcf77a4fa 1-30,39-45
+  s_0e1b72cfc48ec0::t_884f5fb3560c5f 31-38
+backend/test_diary_story.py
+  s_0e1b72cfc48ec0::t_144b00a7c4c352 51,78,82,85,89,94,123,127,129
+src/main.tsx
+  s_0e1b72cfc48ec0::t_7194bfcdff28df 6
+backend/README.md
+  s_0e1b72cfc48ec0::t_35262cb1a44021 54-57,62,65-68,76-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "e8825e1a7c04454e6949ad1149218b5be30e06a6",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_0e1b72cfc48ec0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c940-ac0c-70f2-a11f-4050aa73f9da",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_87d3ffd7b0261e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1345d-be8a-7361-95d4-def32d90f461",
+        "model": "unknown"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, BookHeart, ChevronRight, CloudRain, Coffee, Disc3, Flame, Headphones, Heart, MapPin, MessageCircle, MoreHorizontal, Music2, Pause, Pencil, Play, Send, Sparkles, Sun, Volume2, X, Zap, RefreshCw } from 'lucide-react';
 import Diary from './Diary';
+import ChatPanel from './ChatPanel';
 import LanAccess from './LanAccess';
 import Reports from './Reports';
 import More from './More';
@@ -19,10 +20,6 @@ function Cover({ song, small = false }: { song: Song; small?: boolean }) {
  return <span className={`album-cover ${small ? 'small' : ''}`} style={{ background: `linear-gradient(145deg, ${song.color || '#e4af63'}, #fff5d5)` }}><Disc3 size={small ? 23 : 30}/><span className="cover-grain"/></span>;
 }
 
-function MessageText({ text }: { text: string }) {
- return <>{text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith('**') && part.endsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part)}</>;
-}
-
 export default function App() {
  useVisualViewport();
  const [data, setData] = useState<Bootstrap | null>(null);
@@ -35,6 +32,8 @@ export default function App() {
  const [bubble, setBubble] = useState('');
  const [wiggle, setWiggle] = useState(0);
  const [messages, setMessages] = useState<Message[]>([]);
+ const [conversationId, setConversationId] = useState('');
+ const chatDrafts = useRef<Record<string, string>>({});
  const [input, setInput] = useState('');
  const [sending, setSending] = useState(false);
  const [chatError, setChatError] = useState('');
@@ -50,7 +49,6 @@ export default function App() {
  const [saving, setSaving] = useState(false);
  const [favorites, setFavorites] = useState<string[]>([]);
  const audio = useRef<HTMLAudioElement>(null);
- const chatBottom = useRef<HTMLDivElement>(null);
  const livePlayback = useRef({ id: '', sessionId: '', seconds: 0, lastTime: 0 });
  const tapCount = useRef(0);
  const pendingPlays = useRef<{ songId: string; seconds: number; sessionId: string; eventId: string }[]>((() => { try { return JSON.parse(localStorage.getItem('music-pending-plays') || '[]'); } catch { return []; } })());
@@ -60,8 +58,8 @@ export default function App() {
  const load = useCallback(async () => {
   setError('');
   try {
-   const [bootstrap, history] = await Promise.all([api<Bootstrap & { weather?: WeatherData }>('/api/bootstrap'), api<{ messages: Message[] }>('/api/messages')]);
-   setData(bootstrap); setBubble(bootstrap.greeting); setMessages(history.messages); setRename(bootstrap.profile.name);
+   const [bootstrap, history] = await Promise.all([api<Bootstrap & { weather?: WeatherData }>('/api/bootstrap'), api<{ messages: Message[]; conversationId: string }>('/api/messages')]);
+   setData(bootstrap); setBubble(bootstrap.greeting); setMessages(history.messages); setConversationId(history.conversationId); setRename(bootstrap.profile.name);
    setFavorites(bootstrap.songs.filter(s => s.favorite).map(s => s.id));
    if (bootstrap.weather) setWeather(bootstrap.weather);
   } catch (e) { setError(e instanceof Error ? e.message : '连接失败'); }
@@ -92,7 +90,7 @@ export default function App() {
   return () => clearInterval(timer);
  }, [weather?.latitude, weather?.longitude, weather?.city]);
  useEffect(() => { if (toast) { const t = setTimeout(() => setToast(''), 3500); return () => clearTimeout(t); } }, [toast]);
- useEffect(() => { chatBottom.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [messages, sending, drawer]);
+ useEffect(() => { document.querySelector('.chat-bottom-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, [messages, sending, drawer]);
  useEffect(() => {
   if (page === 'more' && openActivities.current) {
    openActivities.current = false;
@@ -175,7 +173,7 @@ export default function App() {
   const userMessage: Message = { role: 'user', content: message.trim(), id: `pending-${Date.now()}` };
   setMessages(old => [...old, userMessage]);
   try {
-   const result = await post<{ reply: string; songs: Song[]; source: string; quickCommands?: string[]; integration?: Integration }>('/api/chat', { message: message.trim(), scene });
+   const result = await post<{ reply: string; songs: Song[]; source: string; quickCommands?: string[]; integration?: Integration }>('/api/chat', { message: message.trim(), scene, conversationId });
    setMessages(old => [...old, { role: 'assistant', content: result.reply, songs: result.songs, source: result.source }]);
    setQuickCommands(result.quickCommands || []);
    setData(old => old ? { ...old, mode: result.source === 'kugou' ? 'kugou' : old.mode, integration: result.integration || (result.source === 'kugou' && old.integration ? { ...old.integration, state: 'connected' } : old.integration) } : old);
@@ -200,10 +198,10 @@ export default function App() {
  };
  const openWeather = () => { weatherReturn.current = page; setPage('weather'); };
  const onWeather = (value: WeatherData) => { setWeather(value); setBubble(value.greeting); setWiggle(n => n + 1); };
- const integrationLabel = data?.integration?.state === 'error' ? '酷狗 AI · 连接异常'
-  : data?.mode === 'kugou' ? '酷狗 AI · 已连接'
-   : data?.mode === 'kugou-pending' ? '酷狗 AI · 待连接'
-    : data?.mode === 'unconfigured' ? '酷狗 AI · 未配置' : '本地演示模式';
+ const integrationLabel = data?.integration?.state === 'error' ? '融入AI · 连接异常'
+  : data?.mode === 'kugou' ? '融入AI · 已连接'
+   : data?.mode === 'kugou-pending' ? '融入AI · 待连接'
+    : data?.mode === 'unconfigured' ? '融入AI · 未配置' : '本地演示模式';
  const integrationError = chatError || (data?.integration?.state === 'error' ? data.integration.detail : '');
  const songRow = (song: Song, index?: number) => <div className="song-row" key={song.id}>
   {index !== undefined && <span className="song-index">0{index + 1}</span>}<Cover song={song}/><button className="song-meta" onClick={() => play(song)}><strong>{song.title}</strong><span>{song.artist} · {song.audioLabel || '推荐歌曲'}</span></button>
@@ -248,10 +246,11 @@ export default function App() {
    </section>
   </main>}
   {current && <aside className="mini-player" aria-label="音乐播放器"><div className="player-progress" style={{ width: `${progress}%` }}/><Cover song={current} small/><div className="player-meta"><strong>{current.title}</strong><small>{playing ? '正在播放' : '已暂停'} · {current.audioLabel || current.artist}</small></div><button className="icon-button" onClick={() => void favorite(current)} aria-label="收藏当前歌曲"><Heart size={19} fill={favorites.includes(current.id) ? 'currentColor' : 'none'}/></button><button className="player-toggle" aria-label={playing ? '暂停播放' : '继续播放'} onClick={() => play(current)}>{playing ? <Pause size={19} fill="currentColor"/> : <Play size={19} fill="currentColor"/>}</button><button className="icon-button player-close" aria-label="关闭播放器" onClick={() => { audio.current?.pause(); flush(); setCurrent(null); livePlayback.current.id = ''; }}><X size={16}/></button></aside>}
-  {drawer && <div className="sheet-backdrop" onClick={e => { if (e.target === e.currentTarget) setDrawer(null); }}>
-   <section className={`bottom-sheet ${drawer === 'chat' ? 'chat-sheet' : ''}`} role="dialog" aria-modal="true" aria-label={drawer === 'chat' ? '和音乐搭子聊天' : '小屋面板'}><div className="sheet-handle"/><header className="sheet-heading"><div><h2>{drawer === 'chat' ? '我在，慢慢说。' : drawer === 'favorites' ? '收藏的每一份心动' : drawer === 'energy' ? '陪伴，让能量满格' : drawer === 'lan' ? '局域网访问' : '我的音乐小屋'}</h2></div><button className="icon-button" onClick={() => setDrawer(null)} aria-label="关闭面板"><X size={21}/></button></header>
-    {drawer === 'chat' ? <><div className="chat-context"><span className="online-dot"/>{weather ? `${weather.city} · ${weather.condition}，我陪着你` : '说说今天，或聊聊你想听的歌'}<span>{integrationLabel}</span></div><div className="chat-messages"><div className="chat-message assistant"><span className="message-avatar"><Headphones size={17}/></span><div className="message-content"><p>{data?.greeting}</p></div></div>{messages.map((message, index) => <div className={`chat-message ${message.role}`} key={message.id || index}>{message.role === 'assistant' && <span className="message-avatar"><Headphones size={17}/></span>}<div className="message-content">{message.source?.startsWith('local') && <small className="message-source">历史演示回复</small>}<p><MessageText text={message.content}/></p>{message.songs?.map(song => <button className="chat-song" key={song.id} onClick={() => play(song)}><Cover song={song} small/><span><strong>{song.title}</strong><small>{song.artist}</small></span><Play size={16}/></button>)}</div></div>)}{sending && <div className="typing-dots"><span/><span/><span/> 正在认真听你说…</div>}{integrationError && <p className="inline-error" role="alert">{integrationError}，可以重新发送。</p>}<div ref={chatBottom}/></div><div className="chat-quick-actions">{quickCommands.length > 0 ? quickCommands.map(command => <button key={command} onClick={() => void send(command)} disabled={sending}>{command}</button>) : scenes.slice(0, 3).map(s => <button key={s.name} onClick={() => void send(s.query, s.name)} disabled={sending}>{s.icon} {s.name}</button>)}</div><form className="chat-form" onSubmit={e => { e.preventDefault(); void send(input); }}><input aria-label="对搭子说点什么" placeholder="聊聊心情，或告诉我想听的歌…" value={input} maxLength={500} onChange={e => setInput(e.target.value)} disabled={sending}/><button type="submit" disabled={!input.trim() || sending} aria-label="发送消息"><Send size={19}/></button></form></>  : drawer === 'lan' ? <div className="sheet-content lan-sheet"><LanAccess/></div> : drawer === 'favorites' ? <div className="sheet-content">{[...new Map([...(data?.songs || []), ...recommendations, ...messages.flatMap(m => m.songs || [])].map(s => [s.id, s])).values()].filter(s => favorites.includes(s.id)).map(s => songRow(s))}{favorites.length === 0 && <div className="empty-state"><Heart size={38}/><h3>喜欢的旋律，留在这里</h3><p>点击歌曲旁的爱心，下一次就能轻松找到。</p></div>}</div> : drawer === 'energy' ? <div className="sheet-content energy-detail"><span className="energy-large"><Zap size={46} fill="currentColor"/></span><h3>{data?.profile.energy}<small> / {data?.profile.energyMax}</small></h3><p>每一次听歌，都为我们的陪伴攒一点能量。</p><div className="energy-tip"><Headphones size={21}/><div><strong>听喜欢的歌</strong><span>真实播放时长会自动记录到音乐日记</span></div></div><div className="energy-tip"><Flame size={21}/><div><strong>陪伴已连续 {data?.profile.streak} 天</strong><span>细水长流的陪伴，也是一种浪漫</span></div></div><button className="primary-button" disabled={saving} onClick={async () => { setSaving(true); try { const result = await post<{profile: Profile;message:string}>('/api/feed', {}); setData(old => old ? { ...old, profile: result.profile } : old); notify(result.message); } catch (e) { notify(e instanceof Error ? e.message : '暂时喂食失败'); } finally { setSaving(false); } }}><Heart size={16}/> {saving ? '投喂中…' : '给小狗一份零食 · +40 能量'}</button></div> : <form className="sheet-content settings-form" onSubmit={async e => { e.preventDefault(); if (!rename.trim()) return; setSaving(true); try { const result = await post<{profile:Profile}>('/api/profile', { name: rename.trim() }); setData(old => old ? { ...old, profile: result.profile } : old); notify('新名字已经记住啦'); setDrawer(null); } catch (err) { notify(err instanceof Error ? err.message : '保存失败'); } finally { setSaving(false); } }}><label htmlFor="companion-name">给音乐搭子起个名字</label><input id="companion-name" value={rename} onChange={e => setRename(e.target.value)} maxLength={16} required/><button className="primary-button" disabled={saving}>{saving ? '保存中…' : '保存名字'}</button><div className="settings-note"><BookHeart size={20}/><p>你的聊天、日记、收藏和听歌记录，都会保存在这间小屋里。</p></div><p className="demo-note">当前为单用户体验版。初始报告含示例记录；本地曲库为原创演示音乐，真实收听记录会持续累积。</p><details className="data-credits"><summary>数据来源</summary><p>天气：<a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>（<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>）</p><p>城市定位：<a href="https://photon.komoot.io/" target="_blank" rel="noreferrer">Photon</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></p></details></form>}
-   </section>
+  {drawer && <div className={`sheet-backdrop${drawer === 'chat' ? ' chat-backdrop' : ''}`} onClick={e => { if (e.target === e.currentTarget) setDrawer(null); }}>
+   <section className={`bottom-sheet ${drawer === 'chat' ? 'chat-sheet' : ''}`} role="dialog" aria-modal="true" aria-label={drawer === 'chat' ? '和音乐搭子聊天' : '小屋面板'}>{drawer === 'chat' ? <ChatPanel messages={messages} input={input} sending={sending} error={integrationError} greeting={weather?.greeting || data?.greeting || ''} weather={weather ? `${weather.city} · ${weather.condition}，我陪着你` : '一直在线，随时听你说'} provider={integrationLabel} commands={quickCommands} conversationId={conversationId} onInput={setInput} onSend={(value, scene) => void send(value, scene)} onClose={() => setDrawer(null)} onPlay={play} onSelect={selection => { chatDrafts.current[conversationId] = input; setConversationId(selection.conversationId); setMessages(selection.messages); setInput(chatDrafts.current[selection.conversationId] || ''); setQuickCommands([]); setChatError(''); }}/> : <>
+<div className="sheet-handle"/><header className="sheet-heading"><div><h2>{drawer === 'favorites' ? '收藏的每一份心动' : drawer === 'energy' ? '陪伴，让能量满格' : drawer === 'lan' ? '局域网访问' : '我的音乐小屋'}</h2></div><button className="icon-button" onClick={() => setDrawer(null)} aria-label="关闭面板"><X size={21}/></button></header>
+    {drawer === 'lan' ? <div className="sheet-content lan-sheet"><LanAccess/></div> : drawer === 'favorites' ? <div className="sheet-content">{[...new Map([...(data?.songs || []), ...recommendations, ...messages.flatMap(m => m.songs || [])].map(s => [s.id, s])).values()].filter(s => favorites.includes(s.id)).map(s => songRow(s))}{favorites.length === 0 && <div className="empty-state"><Heart size={38}/><h3>喜欢的旋律，留在这里</h3><p>点击歌曲旁的爱心，下一次就能轻松找到。</p></div>}</div> : drawer === 'energy' ? <div className="sheet-content energy-detail"><span className="energy-large"><Zap size={46} fill="currentColor"/></span><h3>{data?.profile.energy}<small> / {data?.profile.energyMax}</small></h3><p>每一次听歌，都为我们的陪伴攒一点能量。</p><div className="energy-tip"><Headphones size={21}/><div><strong>听喜欢的歌</strong><span>真实播放时长会自动记录到音乐日记</span></div></div><div className="energy-tip"><Flame size={21}/><div><strong>陪伴已连续 {data?.profile.streak} 天</strong><span>细水长流的陪伴，也是一种浪漫</span></div></div><button className="primary-button" disabled={saving} onClick={async () => { setSaving(true); try { const result = await post<{profile: Profile;message:string}>('/api/feed', {}); setData(old => old ? { ...old, profile: result.profile } : old); notify(result.message); } catch (e) { notify(e instanceof Error ? e.message : '暂时喂食失败'); } finally { setSaving(false); } }}><Heart size={16}/> {saving ? '投喂中…' : '给小狗一份零食 · +40 能量'}</button></div> : <form className="sheet-content settings-form" onSubmit={async e => { e.preventDefault(); if (!rename.trim()) return; setSaving(true); try { const result = await post<{profile:Profile}>('/api/profile', { name: rename.trim() }); setData(old => old ? { ...old, profile: result.profile } : old); notify('新名字已经记住啦'); setDrawer(null); } catch (err) { notify(err instanceof Error ? err.message : '保存失败'); } finally { setSaving(false); } }}><label htmlFor="companion-name">给音乐搭子起个名字</label><input id="companion-name" value={rename} onChange={e => setRename(e.target.value)} maxLength={16} required/><button className="primary-button" disabled={saving}>{saving ? '保存中…' : '保存名字'}</button><div className="settings-note"><BookHeart size={20}/><p>你的聊天、日记、收藏和听歌记录，都会保存在这间小屋里。</p></div><p className="demo-note">当前为单用户体验版。初始报告含示例记录；本地曲库为原创演示音乐，真实收听记录会持续累积。</p><details className="data-credits"><summary>数据来源</summary><p>天气：<a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a>（<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>）</p><p>城市定位：<a href="https://photon.komoot.io/" target="_blank" rel="noreferrer">Photon</a> · © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></p></details></form>}
+   </>} </section>
   </div>}
   {toast && <div className="toast" role="status">{toast}</div>}
  </div>;

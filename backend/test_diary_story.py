@@ -48,7 +48,7 @@ class DiaryStoryTest(unittest.TestCase):
 
     def test_context_generation_and_persistence_without_extra_calls(self):
         self.seed_day()
-        self.assertTrue(self.entry()['story']['stale'])
+        self.assertFalse(self.entry()['story']['stale'])
         self.model.assert_not_called()  # Listing all dates never calls the model.
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 200)
@@ -75,23 +75,23 @@ class DiaryStoryTest(unittest.TestCase):
         self.assertEqual(saved['body'], MEMORY)
         self.assertEqual(saved['note'], '想记住这份开心')
 
-    def test_new_note_invalidates_and_failure_keeps_previous_memory(self):
+    def test_explicit_new_input_failure_keeps_previous_memory(self):
         self.seed_day()
         self.client.post(self.url)
         entry = self.client.put(f'/api/diary/{self.day}', json={'note': '现在有一点想念朋友'}).json['entry']
-        self.assertTrue(entry['story']['stale'])
+        self.assertFalse(entry['story']['stale'])
         self.assertEqual(entry['body'], MEMORY)
         self.model.side_effect = RemoteError('chat', 'timeout')
-        self.assertEqual(self.client.post(self.url).status_code, 503)
+        self.assertEqual(self.client.post(f'/api/diary/{self.day}/inputs', json={'note': '现在有一点想念朋友'}).status_code, 503)
         self.assertEqual(self.entry()['body'], MEMORY)
         self.model.side_effect = None
         self.model.return_value = {'reply': MEMORY + '这份想念，也可以放在我们的歌里。'}
-        self.assertEqual(self.client.post(self.url).status_code, 200)
+        self.assertEqual(self.client.post(f'/api/diary/{self.day}/inputs', json={'note': '现在有一点想念朋友'}).status_code, 200)
         self.assertFalse(self.entry()['story']['stale'])
         self.assertIn('现在有一点想念朋友', self.model.call_args.args[0])
 
     def test_empty_day_and_recommendation_are_not_listening(self):
-        self.assertFalse(self.entry()['story']['canGenerate'])
+        self.assertTrue(self.entry()['story']['canGenerate'])
         self.client.post(self.url)
         self.model.assert_not_called()
         self.client.put(f'/api/diary/{self.day}', json={'note': '今天生日，想听开心的歌'})
@@ -120,13 +120,13 @@ class DiaryStoryTest(unittest.TestCase):
         for day in ('bad', '2026-02-30', '1999-01-01', (now().date() + timedelta(days=1)).isoformat()):
             self.assertEqual(self.client.post(f'/api/diary/{day}/story').status_code, 400)
 
-    def test_additional_play_invalidates_cache(self):
+    def test_additional_play_does_not_rewrite_saved_diary(self):
         self.seed_day()
         self.client.post(self.url)
         self.client.post('/api/play', json={'songId': 'moon-letter', 'seconds': 30, 'sessionId': 'new-play', 'eventId': 'new-event'})
-        self.assertTrue(self.entry()['story']['stale'])
+        self.assertFalse(self.entry()['story']['stale'])
         self.client.post(self.url)
-        self.assertEqual(self.model.call_count, 2)
+        self.assertEqual(self.model.call_count, 1)
 
     def test_off_topic_song_or_invented_event_is_retried_and_not_saved(self):
         self.seed_day()

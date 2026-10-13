@@ -1,34 +1,46 @@
 import { test, expect, type Page } from '@playwright/test';
 
-test('日记自动写专属回忆，保存新心情后更新，失败保留原文并可重试', async ({ page }) => {
- const memory = '那首《月亮来信》陪你放慢了脚步，你又告诉我项目终于完成了。今天，我们把这份终于能够松口气的快乐，留在这一页。';
- const updated = '想念朋友的此刻，那首《月亮来信》有了新的分量。我会陪你收好这份惦念，让这一页记住那些认真在意过的人。';
- let entry = { date: '2026-10-08', title: '今天的音乐记忆', body: '当天的听歌记录', minutes: 5, songCount: 1, mood: '放松', note: '', topSong: null,
+test('日记打开不生成，输入优先改变天气心情字样，模型失败保留原文并可重试', async ({ page }) => {
+ const memory = '今天的疲惫被你轻轻写下，我陪你把脚步放慢。那首温柔的旋律，替我们收好了这个需要安慰的夜晚。';
+ const celebration = '今天值得庆祝，我们把这份快乐写进日记，让以后再翻到这一页时，还能想起此刻一起微笑的样子。';
+ let entry = { date: '2026-10-13', title: '今天的音乐记忆', body: '', minutes: 5, songCount: 1, mood: '', note: '', topSong: null, canEdit: true, isLocked: false,
+  weather: { city: '广州', condition: '晴天', code: 0, temperature: 25, greeting: '', updatedAt: '2026-10-13T12:00:00+08:00' },
+  inputs: { note: '', attachments: [], voiceTranscript: '', songId: null, song: null, location: null },
   story: { text: '', updatedAt: null as string | null, stale: true, canGenerate: true, version: 'one' } };
- let attempts = 0;
+ let attempts = 0, automaticCalls = 0;
  await page.route('**/api/diary', route => route.fulfill({ json: { entries: [entry], total: 1 } }));
- await page.route('**/api/diary/2026-10-08', async route => {
-  entry = { ...entry, note: route.request().postDataJSON().note, story: { ...entry.story, stale: true, version: 'two' } };
-  await route.fulfill({ json: { entry } });
- });
- await page.route('**/api/diary/2026-10-08/story', async route => {
+ await page.route('**/api/diary/*/story', route => { automaticCalls++; return route.fulfill({ json: { entry } }); });
+ await page.route('**/api/diary/2026-10-13/inputs', async route => {
   attempts++;
-  if (attempts === 2) { await route.fulfill({ status: 503, json: { error: '专属回忆暂未写好，原有记录已保留。' } }); return; }
-  const text = attempts === 1 ? memory : updated;
-  entry = { ...entry, body: text, story: { ...entry.story, text, updatedAt: '2026-10-08T12:00:00+08:00', stale: false } };
+  const inputs = route.request().postDataJSON();
+  entry = { ...entry, inputs, note: inputs.note, mood: '难过' };
+  if (attempts === 2) { await route.fulfill({ status: 503, json: { entry, error: '素材已收好，原有日记已保留，请重试。' } }); return; }
+  const text = attempts === 1 ? memory : celebration;
+  entry = { ...entry, body: text, story: { ...entry.story, text, updatedAt: '2026-10-13T15:00:00+08:00', stale: false } };
   await route.fulfill({ json: { entry } });
  });
- await page.goto('/');
- await page.getByRole('button', { name: '日记', exact: true }).click();
- await expect(page.locator('.diary-body')).toHaveText(memory);
- await page.getByLabel('留一句话给今天').fill('现在有一点想念朋友');
- await page.getByRole('button', { name: '保存心情', exact: true }).click();
- await expect(page.getByRole('button', { name: '重试回忆' })).toBeVisible();
- await expect(page.locator('.diary-body')).toHaveText(memory);
- await page.getByRole('button', { name: '重试回忆' }).click();
- await expect(page.locator('.diary-body')).toHaveText(updated);
- await expect(page.getByLabel('留一句话给今天')).toHaveValue('现在有一点想念朋友');
- expect(attempts).toBe(3);
+ await page.goto('/'); await page.getByRole('button', { name: '日记', exact: true }).click();
+ await expect(page.locator('.diary-paper .diary-day-label')).toHaveText('Sunny Day');
+ await expect(page.getByLabel('写下今天的故事')).toBeVisible();
+ expect(automaticCalls).toBe(0); expect(attempts).toBe(0);
+ await page.screenshot({ path: 'docs/preview-diary-blank.png', fullPage: true });
+ await page.getByLabel('写下今天的故事').fill('今天很累，需要一点安慰。');
+ await expect(page.locator('.diary-paper .diary-day-label')).toHaveText('Be Gentle');
+ await page.getByRole('button', { name: '把今天写进日记' }).click();
+ await page.getByRole('button', { name: '写进今天的日记' }).click();
+ await expect(page.locator('.diary-paper .diary-body')).toHaveText(memory);
+ await page.getByRole('button', { name: '位置', exact: true }).click();
+ await page.getByRole('textbox', { name: '今天想记住的事' }).fill('今天完成了项目，值得庆祝！');
+ await expect(page.locator('.diary-paper .diary-day-label')).toHaveText('Happy Day');
+ await page.getByRole('button', { name: '写进今天的日记' }).click();
+ await expect(page.getByRole('alert')).toContainText('原有日记已保留');
+ await expect(page.locator('.diary-paper .diary-body')).toHaveText(memory);
+ await page.getByRole('button', { name: '写进今天的日记' }).click();
+ await expect(page.locator('.diary-paper .diary-body')).toHaveText(celebration);
+ await page.reload(); await page.getByRole('button', { name: '日记', exact: true }).click();
+ await expect(page.locator('.diary-paper .diary-body')).toHaveText(celebration);
+ await expect(page.locator('.diary-paper .diary-day-label')).toHaveText('Happy Day');
+ expect(attempts).toBe(3); expect(automaticCalls).toBe(0);
  await page.screenshot({ path: 'docs/preview-diary-memory.png', fullPage: true });
 });
 
@@ -141,29 +153,76 @@ test('心情选歌生成卡片且不进入聊天，收藏刷新后保留', async
  expect(await page.locator('.recommendation-page').evaluate(el => el.getBoundingClientRect().width)).toBe(390);
 });
 
-test('日记编辑持久化，轻点纸页自然翻阅', async ({ page }) => {
+test('日记纸页中央上下掀纸，历史只读，照片拍照语音位置与歌曲素材传入模型', async ({ page }) => {
+ const memory = '今天的照片和声音一起留在了这一页。我们记住在珠江边分享音乐的时刻，也让那些没有说完的心事，有了温柔的落脚处。';
+ const base = { title: '音乐记忆', body: '', minutes: 0, songCount: 0, mood: '', note: '', topSong: null,
+  inputs: { note: '', attachments: [] as { id: string; kind: string; url: string; mimeType: string; name: string; caption: string }[], voiceTranscript: '', songId: null, song: null, location: null },
+  story: { text: '', updatedAt: null as string | null, stale: false, canGenerate: false, version: 'one' } };
+ let entry = { ...base, date: '2026-10-13', canEdit: true, isLocked: false, weather: { city: '广州', condition: '晴天', code: 0, temperature: 25, greeting: '', updatedAt: '' } };
+ const past = { ...base, date: '2026-10-12', canEdit: false, isLocked: true, weather: { ...entry.weather, condition: '小雨', code: 61 }, body: '昨天的小雨，也被音乐留在了这一页。' };
+ const inputCalls: any[] = [], uploadKinds: string[] = [], uploaded: any[] = [];
+ const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aemkAAAAASUVORK5CYII=', 'base64');
+ await page.route('**/api/diary', route => route.fulfill({ json: { entries: [entry, past], total: 2 } }));
+ await page.route('**/api/diary/2026-10-13/attachments', async route => {
+  const kind = /name="kind"\r\n\r\n([^\r]+)/.exec(route.request().postDataBuffer()!.toString())?.[1] || '';
+  uploadKinds.push(kind);
+  const attachment = { id: `photo-${uploadKinds.length}`, kind, url: `data:image/png;base64,${png.toString('base64')}`, mimeType: 'image/png', name: 'test.png', caption: '' }; uploaded.push(attachment);
+  await route.fulfill({ json: { attachment } });
+ });
+ await page.route('**/api/diary/2026-10-13/inputs', async route => {
+  const inputs = route.request().postDataJSON(); inputCalls.push(inputs);
+  entry = { ...entry, inputs: { ...inputs, attachments: inputs.attachments.map((item: { id: string; caption: string }) => ({ ...uploaded.find(upload => upload.id === item.id), ...item })) }, note: inputs.note, body: memory, story: { ...entry.story, text: memory } };
+  await route.fulfill({ json: { entry } });
+ });
  await page.goto('/'); await page.getByRole('button', { name: '日记', exact: true }).click();
- const note = page.getByPlaceholder('此刻的心情，或一件值得记住的小事…');
- const paper = page.locator('.diary-paper');
- await expect(paper).toBeVisible();
- const latestDate = (await paper.getAttribute('aria-label'))!;
- await note.fill('今天的旋律很温柔，记住这份小小的开心。');
- await page.getByRole('button', { name: '保存心情' }).click();
- await expect(page.getByRole('button', { name: '已保存' })).toBeVisible();
- await expect(paper).toHaveAttribute('aria-label', latestDate);
- await expect(page.getByRole('button', { name: /上一篇|下一篇/ })).toHaveCount(0);
- const width = (await paper.boundingBox())!.width;
- await paper.click({ position: { x: width * .8, y: 14 } });
- await expect(page.locator('.diary-book')).toHaveClass(/diary-is-turning/);
- await expect(paper).not.toHaveAttribute('aria-label', latestDate);
- await expect(page.locator('.diary-book')).not.toHaveClass(/diary-is-turning/);
- await paper.click({ position: { x: width * .2, y: 14 } });
- await expect(page.locator('.diary-book')).toHaveClass(/diary-is-turning/);
- await expect(paper).toHaveAttribute('aria-label', latestDate);
- await expect(note).toHaveValue('今天的旋律很温柔，记住这份小小的开心。');
+ const paper = page.locator('.diary-paper'), book = page.locator('.diary-book');
+ await expect(page.getByLabel('写下今天的故事')).toBeVisible();
+ const latest = await paper.getAttribute('aria-label');
+ // Start at the actual centre textarea, not the header or a page edge.
+ const area = (await page.getByLabel('写下今天的故事').boundingBox())!;
+ await page.mouse.move(area.x + area.width / 2, area.y + area.height / 2 + 40); await page.mouse.down();
+ await page.mouse.move(area.x + area.width / 2, area.y + area.height / 2 - 50, { steps: 8 }); await page.mouse.up();
+ await expect(page.locator('.diary-turn-older')).toBeVisible();
+ await expect(paper).not.toHaveAttribute('aria-label', latest!);
+ await expect(paper.locator('.diary-day-label')).toHaveText('Rainy Melody');
+ await expect(page.getByRole('button', { name: '照片', exact: true })).toBeDisabled();
+ await expect(page.getByLabel('写下今天的故事')).toHaveCount(0);
+ await expect(book).not.toHaveClass(/diary-is-turning/);
+ const older = (await paper.boundingBox())!;
+ await page.mouse.move(older.x + older.width / 2, older.y + older.height / 2 - 40); await page.mouse.down();
+ await page.mouse.move(older.x + older.width / 2, older.y + older.height / 2 + 50, { steps: 8 }); await page.mouse.up();
+ await expect(page.locator('.diary-turn-newer')).toBeVisible();
+ await expect(paper).toHaveAttribute('aria-label', latest!);
+ await expect(book).not.toHaveClass(/diary-is-turning/);
+ await expect(paper.locator('.diary-day-label')).toHaveText('Sunny Day');
+ for (const label of ['照片', '拍照']) {
+  const chooser = page.waitForEvent('filechooser'); await page.getByRole('button', { name: label, exact: true }).click();
+  await (await chooser).setFiles({ name: 'test.png', mimeType: 'image/png', buffer: png });
+  await expect(page.locator('.diary-input-attachment')).toHaveCount(label === '照片' ? 1 : 2);
+  await page.getByLabel('照片里的故事').last().fill('和朋友一起庆祝，留下这份快乐。');
+  await expect(paper.locator('.diary-day-label')).toHaveText('Happy Day');
+  await page.getByRole('button', { name: '关闭日记输入' }).click();
+ }
+ await page.getByRole('button', { name: '语音', exact: true }).click();
+ await page.getByRole('textbox', { name: '语音文字' }).fill('今天也有点疲惫，想让你陪我安静一会儿。');
+ await expect(paper.locator('.diary-day-label')).toHaveText('Be Gentle');
+ await page.getByRole('button', { name: '关闭日记输入' }).click();
+ await page.getByRole('button', { name: '位置', exact: true }).click();
+ await page.getByRole('textbox', { name: '日记位置' }).fill('广州 · 珠江边');
+ await page.getByRole('button', { name: '关闭日记输入' }).click();
+ await page.getByRole('button', { name: /选择一首歌/ }).click();
+ await page.locator('.diary-song-picker > button').first().click();
+ await page.getByRole('textbox', { name: '今天想记住的事' }).fill('我们一起留下了今天的回忆。');
+ await page.getByRole('button', { name: '写进今天的日记' }).click();
+ await expect(paper.locator('.diary-body')).toHaveText(memory);
+ expect(uploadKinds).toEqual(['photo', 'camera']); expect(inputCalls).toHaveLength(1);
+ expect(inputCalls[0].attachments).toHaveLength(2);
+ expect(inputCalls[0].attachments.every((item: { caption: string }) => item.caption.includes('庆祝'))).toBeTruthy();
+ expect(inputCalls[0].voiceTranscript).toContain('疲惫'); expect(inputCalls[0].location.text).toBe('广州 · 珠江边'); expect(inputCalls[0].songId).toBeTruthy();
  await page.reload(); await page.getByRole('button', { name: '日记', exact: true }).click();
- await expect(note).toHaveValue('今天的旋律很温柔，记住这份小小的开心。');
- await page.screenshot({ animations: 'disabled', timeout: 10000, path: 'docs/preview-diary.png', fullPage: true });
+ await expect(page.locator('.diary-paper .diary-body')).toHaveText(memory);
+ expect(inputCalls).toHaveLength(1);
+ await page.screenshot({ animations: 'disabled', path: 'docs/preview-diary.png', fullPage: true });
 });
 
 test('周月年报告表情随真实时长变化，支持点击和周期切换', async ({ page, request }) => {
@@ -193,6 +252,13 @@ test('周月年报告表情随真实时长变化，支持点击和周期切换',
  await tabs.nth(2).click(); await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
  await expect(page.locator('.report-loading')).toHaveCount(0);
  await expect(page.locator('.report-trend-point')).toHaveCount(5);
+ await page.screenshot({ animations: 'disabled', path: 'docs/preview-report-year.png', fullPage: true });
+ await page.getByText('更多音乐足迹', { exact: true }).click();
+ await expect(page.getByRole('button', { name: /分享/ })).toBeVisible();
+ await page.getByRole('button', { name: '选择报告日期' }).click();
+ await page.getByLabel('报告日期', { exact: true }).fill('2025-10-01');
+ await page.getByRole('button', { name: '查看报告' }).click();
+ await expect(page.locator('.report-date-nav')).toContainText('2025年');
  await tabs.nth(0).click(); await expect(tabs.nth(0)).toHaveAttribute('aria-selected', 'true');
  await page.screenshot({ animations: 'disabled', timeout: 10000, path: 'docs/preview-report-week.png', fullPage: true });
  await page.getByRole('button', { name: '返回更多玩法', exact: true }).click();
@@ -302,9 +368,54 @@ test('远程对话失败保留输入，重试成功展示真实来源与后续�
  await expect(page.locator('.chat-context')).toContainText('连接异常');
  await page.getByRole('button', { name: '发送消息' }).click();
  await expect(page.locator('.chat-message.assistant').last()).toContainText('今天哪件事');
- await expect(page.locator('.chat-context')).toContainText('酷狗 AI · 已连接');
+ await expect(page.locator('.chat-context')).toContainText('融入AI · 已连接');
  await expect(page.getByRole('button', { name: '聊聊工作', exact: true })).toBeVisible();
  await expect(page.getByRole('alert')).toHaveCount(0);
+});
+
+test('新对话与历史对话隔离，切换保留草稿并支持刷新恢复', async ({ page, request }) => {
+ const first = (await (await request.post('/api/conversations')).json()).conversationId;
+ await request.post('/api/chat', { data: { message: '记住这段聊天', conversationId: first } });
+ await page.goto('/');
+ await page.getByRole('button', { name: '和音乐搭子聊天' }).click();
+ const input = page.getByRole('textbox', { name: '对搭子说点什么' });
+ await expect(page.locator('.chat-message.user')).toContainText('记住这段聊天');
+ await input.fill('还没有发送的心情');
+ await page.getByRole('button', { name: '开启新对话' }).click();
+ await expect(page.locator('.chat-message.user')).toHaveCount(0);
+ await expect(input).toHaveValue('');
+ await input.fill('今天有点开心');
+ await page.getByRole('button', { name: '发送消息' }).click();
+ await expect(page.locator('.chat-message.user')).toHaveText('今天有点开心');
+ await page.getByRole('button', { name: '选择历史对话' }).click();
+ await page.getByRole('button', { name: /记住这段聊天.*条消息/ }).click();
+ await expect(page.locator('.chat-message.user')).toHaveText('记住这段聊天');
+ await expect(input).toHaveValue('还没有发送的心情');
+ await page.reload();
+ await page.getByRole('button', { name: '和音乐搭子聊天' }).click();
+ await expect(page.locator('.chat-message.user')).toHaveText('记住这段聊天');
+});
+
+test('对话参考布局展示及窄屏适配', async ({ page }) => {
+ await page.route('**/api/bootstrap', async route => {
+  const data = await (await route.fetch()).json();
+  await route.fulfill({ json: { ...data, mode: 'kugou', weather: { ...selectedWeather, condition: '阴天', greeting: '广州市现在是多云，24.2°C。不管窗外是什么颜色，我都在这里陪你听歌。' }, integration: { provider: '酷狗', configured: true, state: 'connected' } } });
+ });
+ await page.route('**/api/messages', route => route.fulfill({ json: { conversationId: 'preview', messages: [
+  { id: 1, role: 'user', content: '想下班了', songs: [] },
+  { id: 2, role: 'assistant', content: '老大，晚上好呀！广州今晚24度多，凉飕飕的，特别适合窝着听歌。今天忙了一天了吧，要不要我帮你挑首曲子放松一下？', songs: [] },
+  { id: 3, role: 'user', content: '需要', songs: [] },
+  { id: 4, role: 'assistant', content: '晚上好啊，小满。广州这会儿云层薄薄的，风也松了下来，是那种下班后想给自己留一段空白的天气。\n\n今天先不用急着说话，让音乐来搭把手。', songs: [] },
+ ] } }));
+ await page.goto('/'); await page.getByRole('button', { name: '和音乐搭子聊天' }).click();
+ await expect(page.locator('.chat-title')).toHaveText('我在，慢慢说。');
+ await page.locator('.chat-messages').evaluate(el => { el.scrollTop = 0; });
+ await page.screenshot({ animations: 'disabled', path: 'docs/preview-chat.png' });
+ for (const width of [320, 390, 430, 768]) {
+  await page.setViewportSize({ width, height: 844 });
+  expect(await page.locator('.chat-sheet').evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+  expect(await page.getByRole('textbox', { name: '对搭子说点什么' }).evaluate(el => el.getBoundingClientRect().bottom <= innerHeight)).toBe(true);
+ }
 });
 
 test('真实音频播放后计入数据库，暂停不继续累计', async ({ page, request }) => {

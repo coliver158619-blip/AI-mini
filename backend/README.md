@@ -51,21 +51,31 @@ python -m backend.app
 | `GET /api/bootstrap` | 用户、歌曲、主动问候、最新天气 |
 | `GET /api/location/search?q=广州` | 公共城市搜索，返回可选地点及坐标 |
 | `POST /api/weather` | `{latitude,longitude,city?}` 获取坐标天气，未命名城市时反向解析 |
-| `POST /api/chat` | `{message,scene?}` 场景及天气推荐，写入聊天历史 |
+| `POST /api/chat` | `{message,scene?,conversationId?}` 场景及天气推荐，写入选定会话 |
+| `GET /api/conversations` | 会话列表和当前选中会话 |
+| `POST /api/conversations` | 开启新对话，原聊天保留 |
+| `POST /api/conversations/<id>/select` | 选择历史对话，返回该会话消息 |
 | `POST /api/recommendations` | `{scene?,message?}` 模型结合心情、已选城市坐标及天气生成歌曲卡片，不写聊天历史 |
 | `GET /api/recommendations?scene=放松` | 恢复该心情最近一次已保存的推荐及生成时天气 |
 | `GET /api/recommendations/hourly` | 首页最近单曲、下次推荐时间和生成状态 |
 | `POST /api/recommendations/hourly` | 到期才向模型请求一首歌，未到期返回已存状态 |
-| `GET /api/messages` | 最近 80 条聊天消息 |
+| `GET /api/messages` | 当前选中会话的消息，可传 `conversationId` 查询指定会话 |
 | `POST /api/play` | `{songId,seconds,sessionId?,eventId?}` 保存真实播放增量 |
 | `GET /api/diary` | 每日日记，日期倒序 |
-| `PUT /api/diary/YYYY-MM-DD` | `{note}` 保存不超过 4000 字的随手记 |
+| `PUT /api/diary/YYYY-MM-DD` | `{note}` 保存当天不超过 300 字的随手记草稿 |
+| `POST /api/diary/YYYY-MM-DD/inputs` | `{note?,songId?,location?,attachments?,voiceTranscript?}` 保存当天素材并调用模型生成；失败仍返回 `entry` 并保留素材和原文 |
+| `POST /api/diary/YYYY-MM-DD/attachments` | multipart `file` + `kind=photo/camera/voice`，照片上限 8 MB、音频 16 MB；每篇最多引用 6 份素材 |
+| `GET /api/diary/attachments/<id>` | 读取 SQLite 持久保存的照片或语音 |
 | `GET /api/reports?period=week&offset=0` | 周/月/年聚合；`offset=-1` 为上期 |
 | `POST /api/favorites` | `{songId,favorite?}` 收藏或取消；不传布尔值则切换 |
 | `POST /api/profile` | `{name}` 改名，1—16 字 |
 | `POST /api/feed` | 每日一次增加 40 能量 |
 
 所有日期按 UTC+8 归档。周周期为周一至周日，月和年为自然周期。听歌指数为「活跃天数 / 周期已过天数」；月趋势含最近 6 月，年趋势含最近 5 年。没有记录的周期返回零与空列表，不补写虚拟数据。
+
+日记后台在北京时间 22:00 自动运行，每天一次，检测到已有模型日记时不覆盖。当天主动提交的素材可提前生成，往日内容不可重写；打开日记、刷新和新增播放不会重写已保存日记。电脑与后端需在 22:00 运行，错过后不补写往日。测试模式不启动定时线程；设置 `DIARY_SCHEDULER=false` 可禁用。
+
+`inputs.location` 为 `{text,latitude?,longitude?}`；`attachments` 为 `[{id,caption?}]`；`voiceTranscript` 为不超过 2000 字的用户确认文字。现有模型为文字接口，照片和音频本体保存在数据库，写作依据用户提供的照片说明及语音文字，不声称识别了媒体内容。日记返回 `canEdit`、`isLocked`、`inputs` 及 `story.source`（`input` / `scheduled` / 旧内容 `legacy`）。
 
 ## 验证
 

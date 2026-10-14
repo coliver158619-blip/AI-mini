@@ -235,7 +235,7 @@ export default function App() {
      <button className="bubble-chat" onClick={() => setDrawer('chat')} aria-label="和音乐搭子聊天"><span className="bubble-caption"><span className="online-dot"/>你的音乐搭子 <Sparkles size={12}/></span><span className="bubble-copy">{bubble}</span></button>
      {hourlySong && <div className="hourly-song" aria-label="搭子每小时推荐" aria-live="polite"><button className="hourly-song-main" onClick={() => play(hourlySong)} aria-label={`播放${hourlySong.title}`}><Disc3 size={24}/><span><strong>{hourlySong.title}</strong><small>{hourlySong.artist}</small></span>{playing && current?.id === hourlySong.id ? <Pause size={15}/> : <Play size={15}/>}</button><button className="hourly-song-heart" onClick={() => void favorite(hourlySong)} aria-label={`${favorites.includes(hourlySong.id) ? '取消收藏' : '收藏'}${hourlySong.title}`}><Heart size={17} fill={favorites.includes(hourlySong.id) ? 'currentColor' : 'none'}/></button></div>}
     </div>
-    <button key={wiggle} className={`companion ${wiggle ? 'wiggle' : ''}`} onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><img src="/assets/companion.png" alt="穿黄色西装的音乐搭子和小狗" draggable={false}/></button>
+    <button key={wiggle} className={`companion ${wiggle ? 'wiggle' : ''}`} onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><img src="/assets/companion.webp" alt="穿黄色西装的音乐搭子和小狗" draggable={false}/></button>
     <div className="companion-caption"><button onClick={() => setDrawer('settings')}>{data.profile.name}<Pencil size={12}/></button><span>已经陪你走过 <b>{data.profile.days}</b> 天 <Heart size={11}/></span></div>
     </div>
    </section>

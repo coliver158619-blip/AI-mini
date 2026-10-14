@@ -25,7 +25,40 @@ python -m backend.app
 
 手机同局域网预览：默认监听 `0.0.0.0:5000`，启动命令会显示当前局域网地址。同一 Wi-Fi 下用手机浏览器打开，电脑需保持服务运行。若 Windows 防火墙拦截，请在管理员 PowerShell 中运行 `./enable-lan-firewall.ps1`，仅放行本机 Python 的 TCP 5000 与本地子网。浏览器定位需要 HTTPS 或 localhost，在普通局域网 HTTP 中可手动搜索城市。设置 `HOST=127.0.0.1` 可恢复仅本机访问。
 
+## 手机公网访问（本电脑 + Tailscale Funnel）
+
+已复用 Musicdemo 的原公网链接：https://desktop-rjgij1s.tailc7b3e2.ts.net/ 。现在该地址打开本项目，手机不用安装 Tailscale，浏览器首次打开会要求账号和密码。
+
+- 账号：`mini`。访问密码保存在本机 `backend/data/public-access.json` 的 `password` 字段；该文件限制当前 Windows 用户和 SYSTEM 读取，不进入 Git。请勿公开分享该文件。
+- 首页、接口、上传文件和静态资源统一经过密码验证。所有获准访问者仍共用原型的聊天、日记与收藏数据。
+- 本电脑必须保持开机、联网、不休眠，且 Tailscale 已连接。电脑重启后需重新运行下面命令；没有配置开机自启动。
+
+在项目目录运行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start-public.ps1
+# 前端没有修改时，跳过构建，启动更快：
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start-public.ps1 -SkipBuild
+```
+
+
+脚本构建前端，使用 Waitress 在 `127.0.0.1:5000` 启动 Flask，以 Caddy 在 `127.0.0.1:8088` 验证访问密码，再把 Tailscale Funnel 的 HTTPS 443 入口指向该代理。服务在后台运行，关闭启动终端不会关闭服务。重复执行复用已有服务和密码；修改后端代码后需先停止对应后端进程再启动。数据库继续使用 `backend/data/companion.sqlite3`，不会重置数据。Caddy 从本机 Musicdemo 复制至 `.runtime/caddy.exe`，不修改 Musicdemo 文件。
+
+后端日志位于 `backend/data/public-backend.stderr.log`，代理日志位于 `backend/data/public-proxy.stderr.log`。HTTPS 可支持手机定位、拍照与录音，但仍需浏览器授权和真机验证。
+
+切换前的 Tailscale 配置已保存在 `backend/data/tailscale-before-ai-mini.json`。要恢复旧项目，先启动原 Musicdemo 的后端和 8080 代理，再运行：
+
+```powershell
+tailscale funnel --bg --https=443 --yes http://127.0.0.1:8080
+```
+
+临时关闭公网入口：`tailscale funnel --https=443 off`。参考：[Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel)、[Caddy 密码验证](https://caddyserver.com/docs/caddyfile/directives/basic_auth)、[Flask / Waitress](https://flask.palletsprojects.com/en/stable/deploying/waitress/)。
+
 ## 响应式与客户端容器
+
+公网加载优化：首页两张图片改用 WebP，合计从 3,512,894 字节降为 319,990 字节，保留原 PNG 素材。Caddy 为 JS/CSS 启用 gzip/zstd，静态资源使用仅浏览器可缓存的 `private, max-age=86400`；首页和 API 继续不缓存，所有路径仍需登录。更改同名图片后需要改资源 URL 或等待缓存到期。
+
+页面数据 GET 在网络中断、15 秒超时或 502/503/504 时最多重试一次；401 直接提示重新登录，聊天和保存等 POST 不自动重发。`tests/network.spec.ts` 覆盖断网恢复、写入不重发和认证失效。Funnel 公网手机链路与本机访问路径不同，本机测速不能代表手机实测速率。
 
 页面共用 `src/responsive.css` 的 H5 容器与安全区规则。默认在宽屏居中预览、最大宽度 480px，手机按可用宽度排版；更多玩法卡片铺满内容区，字体与图标保持当前尺寸。首页随视口高度撑满，小人和头顶气泡采用纵向自适应布局，能量条下方的“热门活动”跳转到运营活动分组。
 

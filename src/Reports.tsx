@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowUpRight, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, Disc3, Heart, Info, Music2, Play, RefreshCw, Share2, Sparkles, Star, X } from 'lucide-react';
 import type { Song } from './types';
 import './reports.css';
+import { api } from './api';
 
 type Period = 'week' | 'month' | 'year';
 type RankedSong = Song & { plays: number; minutes: number };
@@ -105,11 +106,7 @@ export default function Reports({ onBack, onPlay }: { onBack: () => void; onPlay
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true); setError(''); setReport(null); setSelectedDay(null); setShowLetter(false);
-    fetch(`/api/reports?period=${period}&offset=${offset}`, { signal: controller.signal })
-      .then(async response => {
-        if (!response.ok) throw new Error('音乐报告暂时没有送达');
-        return response.json() as Promise<Report>;
-      })
+    api<Report>(`/api/reports?period=${period}&offset=${offset}`, { signal: controller.signal })
       .then(data => { setReport(data); setLoading(false); })
       .catch(err => { if (err.name !== 'AbortError') { setError('音乐报告暂时没有送达，请检查网络后重试。'); setLoading(false); } });
     return () => controller.abort();
@@ -202,7 +199,7 @@ export default function Reports({ onBack, onPlay }: { onBack: () => void; onPlay
     {!loading && report && <div className="report-content" id="report-panel" role="tabpanel" aria-labelledby={`report-tab-${period}`} key={`${period}-${offset}`}>
       <div className="report-intro">
         <div><span className="report-eyebrow">MY MUSIC, MY MOMENTS</span><h2>{period === 'week' ? <>这一周，<br/>音乐一直在身边。</> : period === 'month' ? <>把平凡的日子，<br/>听成喜欢的样子。</> : <>每一次心动，<br/>都被音乐记得。</>}</h2></div>
-        <span className="report-intro-art" aria-hidden="true"><img src="/assets/report-note.png" alt="" draggable={false}/></span>
+        <span className="report-intro-art" aria-hidden="true"><img src="/assets/report-note.webp" alt="" draggable={false}/></span>
       </div>
       {report.summary.playCount === 0 ? <div className="report-state report-empty"><Music2 size={38}/><h2>这一页，等待你的第一首歌</h2><p>这段时间还没有听歌记录。去更多玩法挑一首喜欢的歌，让音乐留下足迹。</p><button className="report-primary" onClick={onBack}>去听一首歌<ArrowUpRight size={16}/></button></div> : <>
         {period === 'week' && <article className="report-card report-overview">

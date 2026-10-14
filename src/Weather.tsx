@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSun, Droplets, LoaderCircle, LocateFixed, MapPin, RefreshCw, Search, Snowflake, Sun, Thermometer } from 'lucide-react';
 import WeatherScene, { getCityScene } from './WeatherScene';
 import './weather.css';
+import { api } from './api';
 
 export type WeatherData = {
   city: string;
@@ -45,12 +46,7 @@ export function WeatherIcon({ code, size = 22 }: { code: number; size?: number }
 }
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, options);
-  let data;
-  try { data = await response.json(); }
-  catch { throw new Error('暂时连接不上天气服务，请稍后重试。'); }
-  if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : data.error?.message || '暂时连接不上天气服务，请稍后重试。');
-  return data as T;
+  return api<T>(url, options);
 }
 
 function finite(value: number | undefined): value is number { return typeof value === 'number' && Number.isFinite(value); }

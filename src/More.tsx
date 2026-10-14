@@ -20,7 +20,7 @@ const artwork = {
 function MoreArt({ kind, className = '' }: { kind: keyof typeof artwork; className?: string }) {
   const [x, y, width, height] = artwork[kind]
   return <span className={`more-art ${className}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true">
-    <img src="/assets/more-reference.png" alt="" draggable={false} style={{
+    <img src="/assets/more-reference.webp" alt="" draggable={false} style={{
       width: `${877 / width * 100}%`,
       left: `${-x / width * 100}%`,
       top: `${-y / height * 100}%`,

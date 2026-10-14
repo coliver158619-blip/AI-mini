@@ -1,0 +1,64 @@
+requirements.txt
+  s_0e1b72cfc48ec0::t_b1772f8c373b08 2
+.gitignore
+  s_0e1b72cfc48ec0::t_b1772f8c373b08 13
+README.md
+  s_0e1b72cfc48ec0::t_98e37797148a99 30-33
+  s_0e1b72cfc48ec0::t_55f97a11e5d79f 28-29
+  s_11d104d6f8bf6c::t_a81bcb5734544b 34-56,59-62
+Caddyfile
+  s_0e1b72cfc48ec0::t_795b3d813318b8 9
+  s_0e1b72cfc48ec0::t_b1772f8c373b08 1,4-5,19
+  s_0e1b72cfc48ec0::t_3a8b43cf98837b 2-3,7-8,10,16-18
+  s_0e1b72cfc48ec0::t_5bbee661db3c3d 11-15
+  s_0e1b72cfc48ec0::t_601bb575bbe15e 6
+start-public.ps1
+  s_0e1b72cfc48ec0::t_fc7e1fbda49586 1-112
+src/api.ts
+  s_0e1b72cfc48ec0::t_5bbee661db3c3d 13-19,21-32,34-49
+  s_0e1b72cfc48ec0::t_efc7cd430f4b34 33
+src/Weather.tsx
+  s_0e1b72cfc48ec0::t_5bbee661db3c3d 5,49
+src/styles.css
+  s_0e1b72cfc48ec0::t_712c5094750ffc 2
+  s_0e1b72cfc48ec0::t_e808c8b5fc9f96 13
+tests/network.spec.ts
+  s_0e1b72cfc48ec0::t_38b31fd2949ca8 1-35
+src/Diary.tsx
+  s_0e1b72cfc48ec0::t_e26480a3db6374 6,57,61,77,85
+src/More.tsx
+  s_0e1b72cfc48ec0::t_394a5108832ce9 23
+src/Reports.tsx
+  s_0e1b72cfc48ec0::t_333cf8974feb6a 5,109,202
+src/App.tsx
+  s_0e1b72cfc48ec0::t_73abc605215ed9 238
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "3eab20e3454e75f2b572e9f75b118eea2a2eff34",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_0e1b72cfc48ec0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c940-ac0c-70f2-a11f-4050aa73f9da",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_11d104d6f8bf6c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c6ce-8ae5-71d2-b337-6b9371c0caf3",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

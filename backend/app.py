@@ -23,6 +23,10 @@ from .audio import generate_preview
 from .chat_text import clean_assistant_text
 from .diary_story import context_for_day, generate_story, story_state
 from .network import lan_access
+from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID
+from .appearance import appearance_state
+from .personalities import GROUPS, PERSONALITIES, PERSONALITIES_BY_ID, personality_for_id
+from .personality_site import PersonalitySiteSync
 from .kugou import KugouClient, RemoteError
 from .weather import get_weather, search_locations
 
@@ -126,6 +130,18 @@ def init_db(app):
             db.execute("ALTER TABLE messages ADD COLUMN conversation_id TEXT REFERENCES conversations(id)")
         db.execute("CREATE INDEX IF NOT EXISTS messages_conversation ON messages(conversation_id, id)")
         db.execute("INSERT OR IGNORE INTO hourly_recommendation(id) VALUES (1)")
+        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('outfit_id', ?)", (DEFAULT_OUTFIT_ID,))
+        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('personality_site_revision', '0')")
+        saved_outfit = db.execute("SELECT value FROM app_meta WHERE key='outfit_id'").fetchone()[0]
+        # Split legacy MBTI wardrobe selection once, retaining the displayed character.
+        legacy_personality = personality_for_id(saved_outfit)["id"]
+        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('personality_id', ?)", (legacy_personality,))
+        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('appearance_mode', ?)", ('outfit' if saved_outfit in OUTFITS_BY_ID and saved_outfit != DEFAULT_OUTFIT_ID else 'personality',))
+        for character in CHARACTERS:
+            id_ = saved_outfit if saved_outfit in OUTFITS_BY_ID and OUTFITS_BY_ID[saved_outfit]['characterId'] == character['id'] else character['defaultOutfitId']
+            db.execute("INSERT OR IGNORE INTO app_meta VALUES (?, ?)", ('outfit_' + character['id'], id_))
+        if saved_outfit not in OUTFITS_BY_ID:
+            db.execute("UPDATE app_meta SET value=? WHERE key='outfit_id'", (DEFAULT_OUTFIT_ID,))
         for id_, title, color, tags, seed in CATALOG:
             db.execute("INSERT OR IGNORE INTO songs VALUES (?, ?, ?, ?, ?, ?)", (id_, title, "陪伴音乐室", color, json.dumps(tags, ensure_ascii=False), seed))
         db.execute("INSERT OR IGNORE INTO app_meta VALUES ('chat_session_id', ?)", (str(uuid.uuid4()),))
@@ -209,7 +225,8 @@ def get_profile():
     while current.isoformat() in dates:
         streak += 1
         current -= timedelta(days=1)
-    return {"name": row["name"], "days": max(1, (today - date.fromisoformat(row["joined_date"])).days + 1), "energy": row["energy"], "energyMax": 1600, "streak": streak, "fedToday": bool(db.execute("SELECT 1 FROM feed_events WHERE date = ?", (today.isoformat(),)).fetchone())}
+    appearance, _ = appearance_state(db)
+    return {"name": row["name"], "days": max(1, (today - date.fromisoformat(row["joined_date"])).days + 1), "energy": row["energy"], "energyMax": 1600, "streak": streak, "fedToday": bool(db.execute("SELECT 1 FROM feed_events WHERE date = ?", (today.isoformat(),)).fetchone()), **appearance}
 
 
 def infer_mood(text):
@@ -558,10 +575,14 @@ def create_app(test_config=None):
     app.config.update(DATABASE=os.getenv("APP_DATABASE_PATH", str(ROOT / "backend" / "data" / "companion.sqlite3")), SEED_DEMO=os.getenv("SEED_DEMO", "true").lower() in ("true", "1", "yes"), MAX_CONTENT_LENGTH=32 * 1024)
     if test_config:
         app.config.update(test_config)
+    app.config.setdefault('PERSONALITY_SITE_URL', os.getenv('PERSONALITY_SITE_URL', ''))
+    app.config.setdefault('PERSONALITY_SITE_SYNC_TOKEN', os.getenv('PERSONALITY_SITE_SYNC_TOKEN', ''))
     app.json.ensure_ascii = False
     init_db(app)
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
+    site_sync = PersonalitySiteSync(app)
+    app.extensions['personality_site_sync'] = site_sync
 
     @app.teardown_appcontext
     def close_db(error=None):
@@ -829,6 +850,57 @@ def create_app(test_config=None):
                 db.execute("DELETE FROM favorites WHERE song_id = ?", (id_,))
         return jsonify(songId=id_, favorite=desired)
 
+    @app.get("/api/outfits")
+    def outfits():
+        return jsonify(characters=CHARACTERS, outfits=OUTFITS, profile=get_profile())
+
+    @app.get("/api/personalities")
+    def personalities():
+        return jsonify(personalities=PERSONALITIES, groups=GROUPS, profile=get_profile())
+
+    @app.get("/api/personality/image")
+    def personality_image():
+        supplied = [key for key in ('personalityId', 'outfitId') if key in request.args]
+        if len(supplied) > 1:
+            raise ValueError("请只提供一种形象编号")
+        if supplied:
+            key = supplied[0]
+            if len(request.args.getlist(key)) != 1:
+                raise ValueError("请只提供一个形象编号")
+            id_ = valid_text(request.args[key], "形象编号", 40)
+            catalog = PERSONALITIES_BY_ID if key == 'personalityId' else OUTFITS_BY_ID
+            if id_ not in catalog:
+                raise ValueError("这个形象不存在，请重新选择")
+            image = catalog[id_]
+        else:
+            image = get_profile()["appearance"]
+        return jsonify(imageName=image["imageName"])
+
+    @app.post("/api/personality")
+    def change_personality():
+        id_ = valid_text(json_body().get("personalityId"), "人格编号", 4)
+        if id_ not in PERSONALITIES_BY_ID:
+            raise ValueError("这个音乐人格不存在，请重新选择")
+        with get_db() as db:
+            db.execute("UPDATE app_meta SET value=? WHERE key='personality_id'", (id_,))
+            db.execute("UPDATE app_meta SET value='personality' WHERE key='appearance_mode'")
+            db.execute("UPDATE app_meta SET value=CAST(value AS INTEGER)+1 WHERE key='personality_site_revision'")
+        site_sync.wake()
+        return jsonify(profile=get_profile())
+
+    @app.post("/api/outfit")
+    def change_outfit():
+        id_ = valid_text(json_body().get("outfitId"), "装扮编号", 40)
+        if id_ not in OUTFITS_BY_ID:
+            raise ValueError("这套装扮不存在，请重新选择")
+        with get_db() as db:
+            db.execute("UPDATE app_meta SET value=? WHERE key='outfit_id'", (id_,))
+            db.execute("UPDATE app_meta SET value='outfit' WHERE key='appearance_mode'")
+            db.execute("UPDATE app_meta SET value=? WHERE key=?", (id_, 'outfit_' + OUTFITS_BY_ID[id_]['characterId']))
+            db.execute("UPDATE app_meta SET value=CAST(value AS INTEGER)+1 WHERE key='personality_site_revision'")
+        site_sync.wake()
+        return jsonify(profile=get_profile())
+
     @app.post("/api/profile")
     def profile():
         name = valid_text(json_body().get("name"), "名字", 16)
@@ -843,7 +915,7 @@ def create_app(test_config=None):
             fed = cursor.rowcount > 0
             if fed:
                 db.execute("UPDATE profile SET energy = min(1600, energy + 40) WHERE id = 1")
-        return jsonify(profile=get_profile(), message="吃饱啦！今天的陪伴能量 +40，谢谢你记得我。" if fed else "今天已经吃饱啦，再陪我听一首歌吧。")
+        return jsonify(profile=get_profile(), message="收到点心啦！今天的陪伴能量 +40，谢谢你记得我。" if fed else "今天已经收到点心啦，再陪我听一首歌吧。")
 
     @app.get("/api/location/search")
     def locations():
@@ -885,6 +957,19 @@ def create_app(test_config=None):
     def unknown_api(path):
         return jsonify(error="接口不存在"), 404
 
+    @app.get("/assets/characters/<path:image_name>")
+    def character_asset(image_name):
+        if image_name not in {item["imageName"] for item in OUTFITS}:
+            return jsonify(error="装扮图片不存在"), 404
+        return send_from_directory(ROOT / "public" / "assets" / "characters", image_name, conditional=True, max_age=3600)
+
+    @app.get("/assets/personalities/<path:image_name>")
+    def personality_asset(image_name):
+        if image_name not in {item["imageName"] for item in PERSONALITIES}:
+            return jsonify(error="人格图片不存在"), 404
+        return send_from_directory(ROOT / "public" / "assets" / "personalities", image_name,
+                                   conditional=True, max_age=3600)
+
     @app.get("/", defaults={"path": ""})
     @app.get("/<path:path>")
     def frontend(path):
@@ -897,6 +982,7 @@ def create_app(test_config=None):
 
     if not app.testing:
         start_diary_clock(app)
+        site_sync.start()
     return app
 
 

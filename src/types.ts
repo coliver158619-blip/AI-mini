@@ -1,5 +1,10 @@
 export type Song = { id: string; title: string; artist: string; color: string; tags: string[]; audioUrl?: string; audioLabel?: string; favorite?: boolean };
-export type Profile = { name: string; days: number; energy: number; energyMax: number; streak: number };
+export type Character = { id: string; name: string; defaultOutfitId: string; imageUrl: string };
+export type Outfit = { characterId: string; imageName: string; id: string; name: string; description: string; tag: string; color: string; thumbnailUrl: string; imageUrl: string };
+export type Personality = { id: string; name: string; description: string; groupId: string; groupName: string; color: string; accent: string; traits: string[]; musicStyles: string[]; companionship: string; imageName: string; imageUrl: string };
+export type PersonalityImage = Pick<Personality, 'imageName'>;
+export type PersonalityGroup = { id: string; name: string; color: string; accent: string };
+export type Profile = { name: string; days: number; energy: number; energyMax: number; streak: number; appearanceMode: 'personality' | 'outfit'; appearance: { id: string; name: string; imageName: string; imageUrl: string }; characterOutfitIds: Record<string, string>; outfitId: string; outfit: Outfit; personalityId: string; personality: Personality };
 export type Message = { id?: number | string; role: 'user' | 'assistant'; content: string; songs?: Song[]; createdAt?: string; source?: string };
 export type Integration = { provider: string; configured: boolean; state: 'ready' | 'connected' | 'error' | 'disabled'; detail: string; configSource?: string; sessionPersistent?: boolean };
 export type Bootstrap = { profile: Profile; songs: Song[]; greeting: string; mode: string; isDemo?: boolean; integration?: Integration };

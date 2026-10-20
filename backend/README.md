@@ -9,6 +9,10 @@ python -m backend.app
 
 本地服务默认为 `http://127.0.0.1:5000`。开发时前端 Vite 将 `/api` 代理到本服务；运行 `npm run build` 后 Flask 同时提供 `dist/` 内的 H5 文件。`HOST`、`PORT` 可通过环境变量覆盖。局域网手机访问可设置 `HOST=0.0.0.0`，浏览器定位通常需要 HTTPS；无法定位时可手动搜索城市。
 
+macOS 内网预览现由用户会话的 launchd 服务 `local.ai-mini.lan` 独立运行，退出终端不影响服务，异常退出后会重启。定义和日志在已忽略的 `backend/data/` 下。可用 `launchctl print gui/$(id -u)/local.ai-mini.lan` 查看状态，`launchctl kickstart -k gui/$(id -u)/local.ai-mini.lan` 重启。该配置加载于当前登录会话，重新登录后可执行 `launchctl bootstrap gui/$(id -u) "$PWD/backend/data/local.ai-mini.lan.plist"` 恢复。
+
+`backend.run_lan` 读取本机 `backend/data/lan-service.json` 中的 Sites 同步运行参数；文件权限必须为 `0600`，不进入 Git、前端构建或日志。普通启动方式仍可使用环境变量配置。
+
 ## 数据与示例
 
 默认数据库为 `backend/data/companion.sqlite3`，可通过 `APP_DATABASE_PATH` 指向其他绝对路径。SQLite 保存用户昵称、陪伴能量、每日喂食、聊天记录、歌曲收藏、每段真实听歌时长、日记手写内容、城市与天气快照；页面刷新和服务重启不会丢失。
@@ -63,7 +67,16 @@ python -m backend.app
 | `GET /api/reports?period=week&offset=0` | 周/月/年聚合；`offset=-1` 为上期 |
 | `POST /api/favorites` | `{songId,favorite?}` 收藏或取消；不传布尔值则切换 |
 | `POST /api/profile` | `{name}` 改名，1—16 字 |
+| `GET /api/outfits` | 两个人物 `characters`、14 套装扮 `outfits` 和当前 `profile` |
+| `POST /api/outfit` | `{outfitId}` 确认人物装扮（如 `lyn22` / `zsh08`），保留音乐人格，返回更新后的 `profile` |
+| `GET /api/personalities` | 16 型音乐人格、四类分组和当前 `profile` |
+| `GET /api/personality/image` | 只返回当前首页形象的 `{imageName}`；支持 `?personalityId=ENFP` 或 `?outfitId=zsh01` 查询 |
+| `POST /api/personality` | `{personalityId}` 选择音乐人格并用于首页，保留衣橱装扮 |
 | `POST /api/feed` | 每日一次增加 40 能量 |
+
+客户端文件名查询示例见 [客户端人格图片接口](../docs/personality-client.md)。此接口不返回图片地址或 PNG 内容；命令号推送需按客户端现有桥接协议另行对接。
+
+配置 `PERSONALITY_SITE_URL` 和服务端环境变量 `PERSONALITY_SITE_SYNC_TOKEN` 可启用 Sites 公网当前人格同步：本地确认保存后异步同步，失败每 15 秒重试，SQLite 保存递增版本，重启后补传。未配置时保持原有本地行为。密钥只在后端使用，客户端调用公网 GET 接口不需要密钥。
 
 所有日期按 UTC+8 归档。周周期为周一至周日，月和年为自然周期。听歌指数为「活跃天数 / 周期已过天数」；月趋势含最近 6 月，年趋势含最近 5 年。没有记录的周期返回零与空列表，不补写虚拟数据。
 

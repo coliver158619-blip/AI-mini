@@ -474,7 +474,9 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 
   await checkPage('.weather-details');
   const weatherBounds = await page.locator('.weather-details').boundingBox();
   expect(weatherBounds!.width).toBeCloseTo(homeBounds!.width, 1);
-  expect(weatherBounds!.height).toBeCloseTo(homeBounds!.height, 1);
+  // A short landscape viewport can scroll the weather content vertically.
+  if (viewport.height <= 500) expect(weatherBounds!.height).toBeGreaterThanOrEqual(homeBounds!.height);
+  else expect(weatherBounds!.height).toBeCloseTo(homeBounds!.height, 1);
   await expect(page.locator('.home-page')).toHaveAttribute('inert', '');
   expect(await page.locator('.weather-details').evaluate(el => {
    const frame = el.getBoundingClientRect();

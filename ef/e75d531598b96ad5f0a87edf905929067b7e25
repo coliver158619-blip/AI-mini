@@ -1,0 +1,132 @@
+backend/README.md
+  s_0e1b72cfc48ec0::t_bd842b525787d2 12-15
+  s_44fa422e891a30::t_4ef35b818be752 50-51,78-82,85-88
+src/App.tsx
+  h_8ff5910b74b80c 8-10
+src/More.tsx
+  s_0e1b72cfc48ec0::t_712c5094750ffc 3,5-6
+  s_44fa422e891a30::t_bc0435487691fe 39,43,49,53-54,63-65,71,77-78,84-85
+.gitignore
+  s_44fa422e891a30::t_9c3b1d435a36e2 15-19
+README.md
+  s_11d104d6f8bf6c::t_38e06fa8eb5d42 63,67,69,74-75,78,80,109,111
+backend/app.py
+  s_44fa422e891a30::t_6bb7f0afe66d5f 28-31,100,137-148,213-214,382,420-432,558-559,567-568,614-617,737,846-896,911,953-965,977-978
+backend/appearance.py
+  s_44fa422e891a30::t_27d18583c036b5 1-17
+backend/conversations.py
+  s_44fa422e891a30::t_5cfeb8a6c526b4 47
+backend/outfits.py
+  s_44fa422e891a30::t_c1b7ff846ca2e0 1-136
+backend/personalities.py
+  s_44fa422e891a30::t_36b036874f5882 1-40
+backend/personality_site.py
+  s_44fa422e891a30::t_cb337f210bc8d5 1-59
+backend/run_lan.py
+  s_44fa422e891a30::t_c100af2bd839c6 1-27
+backend/test_app.py
+  s_44fa422e891a30::t_b166061421c926 107
+backend/test_conversations.py
+  s_44fa422e891a30::t_31ee0a352261a2 1-92,99
+backend/test_data_chain.py
+  s_44fa422e891a30::t_93cce793d2ed02 74
+backend/test_diary_story.py
+  s_44fa422e891a30::t_a54ff53606e887 49-63
+backend/test_outfits.py
+  s_44fa422e891a30::t_918c80ce07666d 1-102
+backend/test_personalities.py
+  s_44fa422e891a30::t_afc56ae1575178 1-138
+backend/test_personality_site.py
+  s_44fa422e891a30::t_4893bee607c2da 1-70
+backend/test_recommendations.py
+  s_44fa422e891a30::t_7e76e0592e1db6 91-101
+docs/acceptance.md
+  s_44fa422e891a30::t_3cb33b7825e7da 12-13,19-26,28
+docs/assets.md
+  s_44fa422e891a30::t_dc7aaa625c6bb6 3-34
+docs/integration-check.md
+  s_44fa422e891a30::t_3d23bb62fff941 3-9
+docs/personality-client.md
+  s_44fa422e891a30::t_8c3cb4789c9541 1-64
+docs/wardrobe.md
+  s_44fa422e891a30::t_2592786e3f7152 1-35
+index.html
+  s_44fa422e891a30::t_28a0d0f03bec97 2
+playwright.fullscreen.config.ts
+  s_44fa422e891a30::t_d829d4493dd2f1 1-4
+playwright.personality.config.ts
+  s_44fa422e891a30::t_9ec217f14acbdc 1-4
+playwright.wardrobe.config.ts
+  s_44fa422e891a30::t_8262558656c24f 1-19
+src/ChatHistory.tsx
+  s_44fa422e891a30::t_1f9ec4fd8f2596 1-54
+src/Personality.tsx
+  s_44fa422e891a30::t_a39def74efada4 1-97
+src/Recommendations.tsx
+  s_44fa422e891a30::t_3f84d89dc43c8b 13-14,22-23,25,27-29,33-54,57-58,61,63-68,71-72,75-76,79,81-85
+src/StreakShare.tsx
+  s_44fa422e891a30::t_c78fefaaf5785c 1-24
+src/Wardrobe.tsx
+  s_44fa422e891a30::t_6d77296cef62ce 1-106
+src/chat-history.css
+  s_44fa422e891a30::t_1a2f5c3b76684d 1-23
+src/personality.css
+  s_44fa422e891a30::t_849c0a8a48e3a5 1-54
+src/responsive.css
+  s_44fa422e891a30::t_304cf77ea35f17 2,13-14,16,20,24-31,34-51,55,72-107,109-118,121-127,151,156,159-171,181-183
+src/streak-share.css
+  s_44fa422e891a30::t_747742456dc59d 1-15
+src/types.ts
+  s_44fa422e891a30::t_3a3eb7a99f7a17 2-7
+src/usePullToDismiss.ts
+  s_44fa422e891a30::t_7cb0c5ce0e474e 1-65
+src/wardrobe.css
+  s_44fa422e891a30::t_d0fbfa238cbf37 1-59
+tests/app.spec.ts
+  s_44fa422e891a30::t_ebc89f436688de 311,447,454,463,524
+tests/fullscreen.spec.ts
+  s_44fa422e891a30::t_08311f9108feb6 1-195
+tests/mobile-interactions.spec.ts
+  s_44fa422e891a30::t_8e89cea399a47c 1-186
+tests/personality.spec.ts
+  s_44fa422e891a30::t_c4d5c4233f63af 1-133
+tests/wardrobe.spec.ts
+  s_44fa422e891a30::t_b0e7ac5ad70177 1-101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "efe75d531598b96ad5f0a87edf905929067b7e25",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_0e1b72cfc48ec0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c940-ac0c-70f2-a11f-4050aa73f9da",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_11d104d6f8bf6c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a0c6ce-8ae5-71d2-b337-6b9371c0caf3",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_44fa422e891a30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15c64-c4af-7263-95c6-220797e3b8db",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

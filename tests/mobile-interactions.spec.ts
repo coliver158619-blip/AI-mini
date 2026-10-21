@@ -64,7 +64,7 @@ test('火花面板随下拉移动，松手关闭，短拉和横向划动不会�
  await page.goto('/');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
  const sheet = page.locator('.bottom-sheet');
- const header = page.locator('.sheet-heading h2');
+ const header = page.locator('.sheet-heading h2, .chat-title');
  const original = await sheet.boundingBox();
  const heading = await header.boundingBox();
  await swipe(page, { x: heading!.x + heading!.width / 2, y: heading!.y + 10 }, { x: 0, y: 34 });
@@ -118,7 +118,7 @@ test('聊天标题可下拉关闭，短拉回弹、横滑不关闭，草稿与�
  const input = page.getByRole('textbox', { name: '对搭子说点什么' });
  await input.fill('下次接着聊的草稿');
  const original = await sheet.boundingBox();
- const header = await page.locator('.sheet-heading h2').boundingBox();
+ const header = await page.locator('.sheet-heading h2, .chat-title').boundingBox();
  const start = { x: header!.x + 20, y: header!.y + 10 };
  await swipe(page, start, { x: 0, y: 34 });
  await expect.poll(async () => Math.abs((await sheet.boundingBox())!.y - original!.y) < 2).toBe(true);
@@ -164,7 +164,7 @@ test('键盘可视区域下聊天仍能下拉关闭，输入和历史列表操�
  await page.getByRole('button', { name: '选择历史对话' }).click();
  const history = page.getByRole('region', { name: '历史对话', exact: true });
  await expect(history).toBeVisible();
- const historyHeader = await history.locator('header strong').boundingBox();
+ const historyHeader = await history.locator('header h3').boundingBox();
  await swipe(page, { x: historyHeader!.x + 10, y: historyHeader!.y + 8 }, { x: 0, y: 160 });
  await expect(page.locator('.chat-sheet')).toBeVisible();
  await page.getByRole('button', { name: '关闭历史对话' }).click();
@@ -180,7 +180,7 @@ test('键盘可视区域下聊天仍能下拉关闭，输入和历史列表操�
  await swipe(page, { x: field!.x + 30, y: field!.y + 10 }, { x: 0, y: 120 });
  await expect(page.locator('.chat-sheet')).toBeVisible();
  await expect(input).toHaveValue('键盘下的草稿');
- const header = await page.locator('.sheet-heading h2').boundingBox();
+ const header = await page.locator('.sheet-heading h2, .chat-title').boundingBox();
  await swipe(page, { x: header!.x + 20, y: header!.y + 10 }, { x: 0, y: 140 });
  await expect(page.locator('.chat-sheet')).toHaveCount(0);
 });

@@ -21,7 +21,9 @@ from werkzeug.exceptions import HTTPException
 
 from .audio import generate_preview
 from .chat_text import clean_assistant_text
+from .conversations import init_conversations, register_conversations, selected_id
 from .diary_story import context_for_day, generate_story, story_state
+from .diary_inputs import read_inputs, save_inputs, save_attachment
 from .network import lan_access
 from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID
 from .appearance import appearance_state
@@ -91,15 +93,18 @@ def init_db(app):
                 song_id TEXT PRIMARY KEY REFERENCES songs(id), created_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS diary_notes (date TEXT PRIMARY KEY, note TEXT NOT NULL);
-            CREATE TABLE IF NOT EXISTS conversations (
-                id TEXT PRIMARY KEY, title TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
-            );
             CREATE TABLE IF NOT EXISTS diary_stories (
                 date TEXT PRIMARY KEY, text TEXT NOT NULL DEFAULT '', context_hash TEXT,
                 updated_at TEXT, attempt_id TEXT, pending_until TEXT
             );
-            CREATE TABLE IF NOT EXISTS diary_editions (
-                date TEXT PRIMARY KEY, entry TEXT NOT NULL, attempted_at TEXT
+            CREATE TABLE IF NOT EXISTS diary_editions (date TEXT PRIMARY KEY, entry TEXT NOT NULL, attempted_at TEXT);
+            CREATE TABLE IF NOT EXISTS diary_inputs (
+                date TEXT PRIMARY KEY, data TEXT NOT NULL, updated_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS diary_attachments (
+                id TEXT PRIMARY KEY, date TEXT NOT NULL, kind TEXT NOT NULL,
+                mime_type TEXT NOT NULL, name TEXT NOT NULL, content BLOB NOT NULL,
+                size INTEGER NOT NULL, created_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS feed_events (date TEXT PRIMARY KEY, created_at TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS weather_snapshots (
@@ -126,9 +131,8 @@ def init_db(app):
             db.execute("ALTER TABLE plays ADD COLUMN session_id TEXT")
         if "origin" not in {column[1] for column in db.execute("PRAGMA table_info(recommendation_requests)")}:
             db.execute("ALTER TABLE recommendation_requests ADD COLUMN origin TEXT NOT NULL DEFAULT 'manual'")
-        if "conversation_id" not in {column[1] for column in db.execute("PRAGMA table_info(messages)")}:
-            db.execute("ALTER TABLE messages ADD COLUMN conversation_id TEXT REFERENCES conversations(id)")
-        db.execute("CREATE INDEX IF NOT EXISTS messages_conversation ON messages(conversation_id, id)")
+        if "source" not in {column[1] for column in db.execute("PRAGMA table_info(diary_stories)")}:
+            db.execute("ALTER TABLE diary_stories ADD COLUMN source TEXT NOT NULL DEFAULT 'legacy'")
         db.execute("INSERT OR IGNORE INTO hourly_recommendation(id) VALUES (1)")
         db.execute("INSERT OR IGNORE INTO app_meta VALUES ('outfit_id', ?)", (DEFAULT_OUTFIT_ID,))
         db.execute("INSERT OR IGNORE INTO app_meta VALUES ('personality_site_revision', '0')")
@@ -145,12 +149,6 @@ def init_db(app):
         for id_, title, color, tags, seed in CATALOG:
             db.execute("INSERT OR IGNORE INTO songs VALUES (?, ?, ?, ?, ?, ?)", (id_, title, "陪伴音乐室", color, json.dumps(tags, ensure_ascii=False), seed))
         db.execute("INSERT OR IGNORE INTO app_meta VALUES ('chat_session_id', ?)", (str(uuid.uuid4()),))
-        legacy = db.execute("SELECT value FROM app_meta WHERE key='chat_session_id'").fetchone()[0]
-        db.execute("INSERT OR IGNORE INTO app_meta VALUES ('legacy_chat_session_id', ?)", (legacy,))
-        legacy = db.execute("SELECT value FROM app_meta WHERE key='legacy_chat_session_id'").fetchone()[0]
-        first, last = db.execute("SELECT MIN(created_at), MAX(created_at) FROM messages").fetchone()
-        db.execute("INSERT OR IGNORE INTO conversations VALUES (?, ?, ?, ?)", (legacy, "历史对话" if first else "新对话", first or now().isoformat(), last or now().isoformat()))
-        db.execute("UPDATE messages SET conversation_id=? WHERE conversation_id IS NULL", (legacy,))
         if db.execute("SELECT 1 FROM app_meta WHERE key = 'initialized'").fetchone():
             return
         today = now().date()
@@ -177,19 +175,6 @@ def song_dict(row):
     if row["audio_seed"] is not None:
         result.update(audioUrl=f"/api/audio/{row['id']}.wav", audioLabel="原创演示音乐", duration=32)
     return result
-
-
-def conversation_id(value=None):
-    id_ = value if value is not None else get_db().execute("SELECT value FROM app_meta WHERE key='chat_session_id'").fetchone()[0]
-    if not isinstance(id_, str) or not get_db().execute("SELECT 1 FROM conversations WHERE id=?", (id_,)).fetchone():
-        raise ValueError("这段对话不存在，请重新选择历史对话")
-    return id_
-
-
-def conversation_messages(id_):
-    rows = get_db().execute("""SELECT * FROM messages WHERE COALESCE(conversation_id,
-        (SELECT value FROM app_meta WHERE key='legacy_chat_session_id'))=? ORDER BY id""", (id_,)).fetchall()
-    return [{"id": row["id"], "role": row["role"], "content": clean_assistant_text(row["content"]) if row["role"] == "assistant" else row["content"], "songs": json.loads(row["songs"]), "createdAt": row["created_at"], "source": row["source"]} for row in rows]
 
 
 def all_songs():
@@ -427,67 +412,62 @@ def live_diary_entry(day):
             body += "把阳光和旋律一起，收进今天这一页。"
     upstream = current_app.extensions["kugou"]
     context = context_for_day(get_db(), day, get_profile()["name"])
-    story = story_state(get_db(), context, upstream.enabled and not upstream.local_mode)
-    return {"date": day.isoformat(), "title": title, "body": story["text"] or body, "story": story, "mood": mood, "minutes": length, "songCount": len(counts), "topSong": top, "note": note[0] if note else "", "isDemo": any(r["is_demo"] for r in rows), "weather": weather}
+    story = story_state(get_db(), context, upstream.enabled and not upstream.local_mode, now().date())
+    return {"date": day.isoformat(), "title": title, "body": story["text"] or body, "story": story, "mood": mood, "minutes": length, "songCount": len(counts), "topSong": top, "note": note[0] if note else "", "isDemo": any(r["is_demo"] for r in rows), "weather": weather,
+            "inputs": read_inputs(get_db(), day.isoformat()), "canEdit": day == now().date(), "isLocked": day < now().date()}
 
 
 def diary_entry(day):
-    db = get_db()
-    row = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day.isoformat(),)).fetchone()
-    if not row:
-        entry = live_diary_entry(day)
-        entry['story'].update(canGenerate=False, stale=False)
-        with db:
-            db.execute("INSERT OR IGNORE INTO diary_editions(date,entry) VALUES (?,?)", (day.isoformat(), json.dumps(entry, ensure_ascii=False)))
-        row = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day.isoformat(),)).fetchone()
-    entry = json.loads(row['entry'])
-    entry['locked'] = day < now().date()
-    # Today's handwritten note remains editable without rewriting the published memory.
-    if not entry['locked']:
-        note = db.execute("SELECT note FROM diary_notes WHERE date=?", (day.isoformat(),)).fetchone()
-        entry['note'] = note[0] if note else ''
+    entry = live_diary_entry(day)
+    row = get_db().execute("SELECT entry FROM diary_editions WHERE date=?", (day.isoformat(),)).fetchone()
+    if row and day < now().date():
+        archived = json.loads(row["entry"])
+        for key in ("title", "body", "mood", "minutes", "songCount", "topSong", "note", "isDemo", "weather"):
+            if key in archived:
+                entry[key] = archived[key]
+        entry["story"] = {**archived.get("story", entry["story"]), "canGenerate": False, "stale": False}
+    entry["locked"] = day < now().date()
     return entry
 
 
-def publish_daily_diary():
-    at = now()
-    if at.hour != 22 or at.minute != 0:
+def run_scheduled_diary(at=None):
+    """One claim at Beijing 22:00; never replace an existing handwritten/model edition."""
+    at = (at or now()).astimezone(LOCAL_ZONE)
+    if (at.hour, at.minute) != (22, 0):
         return False
-    day = at.date()
-    previous = diary_entry(day)
-    db = get_db()
-    # Durable claim also prevents duplicate model calls after a restart or across workers.
+    upstream = current_app.extensions["kugou"]
+    if not upstream.enabled or upstream.local_mode:
+        return False
+    day, db = at.date(), get_db()
     with db:
-        claimed = db.execute("UPDATE diary_editions SET attempted_at=? WHERE date=? AND attempted_at IS NULL", (at.isoformat(), day.isoformat())).rowcount
+        claimed = db.execute("INSERT OR IGNORE INTO app_meta(key,value) VALUES (?,?)", ("diary_schedule:" + day.isoformat(), at.isoformat())).rowcount
     if not claimed:
         return False
-    upstream = current_app.extensions['kugou']
-    context = context_for_day(db, day, get_profile()['name'])
+    context = context_for_day(db, day, get_profile()["name"])
     try:
-        state = story_state(db, context, upstream.enabled and not upstream.local_mode)
-        if state['canGenerate']:
-            generate_story(db, upstream, context, at)
-        entry = live_diary_entry(day)
-        entry['story'].update(canGenerate=False, stale=False)
-    except (RemoteError, OSError, ValueError, TypeError, KeyError, AttributeError):
-        current_app.logger.warning('Daily diary generation failed; keeping the saved edition.')
-        entry = previous
-    # Keep the handwritten note at publication time for the immutable historical edition.
-    with db:
-        db.execute("UPDATE diary_editions SET entry=? WHERE date=?", (json.dumps(entry, ensure_ascii=False), day.isoformat()))
-    return True
+        return generate_story(db, upstream, context, at, source="scheduled", clock=now)
+    except (RemoteError, OSError, ValueError, TypeError, KeyError, AttributeError) as cause:
+        upstream.fail(cause if isinstance(cause, RemoteError) else RemoteError("chat", "response"))
+        current_app.logger.warning("Scheduled diary could not be generated for %s; saved inputs retained", day)
+        return False
 
 
-def start_diary_clock(app):
-    def run():
-        while True:
+def start_diary_scheduler(app):
+    if app.testing or os.getenv("DIARY_SCHEDULER", "true").lower() in ("0", "false"):
+        return
+    stopped = threading.Event()
+    app.extensions["diary_scheduler_stop"] = stopped
+
+    def worker():
+        while not stopped.is_set():
             try:
                 with app.app_context():
-                    publish_daily_diary()
-            except Exception:
-                app.logger.exception('Daily diary scheduler failed')
-            threading.Event().wait(20)
-    threading.Thread(target=run, name='daily-diary', daemon=True).start()
+                    run_scheduled_diary()
+            except Exception as error:
+                app.logger.warning("Diary scheduler failed: %s", type(error).__name__)
+            stopped.wait(15)
+
+    threading.Thread(target=worker, name="diary-beijing-2200", daemon=True).start()
 
 
 def report_data(period, offset):
@@ -579,6 +559,9 @@ def create_app(test_config=None):
     app.config.setdefault('PERSONALITY_SITE_SYNC_TOKEN', os.getenv('PERSONALITY_SITE_SYNC_TOKEN', ''))
     app.json.ensure_ascii = False
     init_db(app)
+    with app.app_context():
+        init_conversations(get_db(), now().isoformat())
+    register_conversations(app, get_db, now)
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
     site_sync = PersonalitySiteSync(app)
@@ -624,36 +607,6 @@ def create_app(test_config=None):
     @app.get("/api/network")
     def network_access():
         return jsonify(lan_access())
-
-    @app.get("/api/messages")
-    def messages():
-        id_ = conversation_id(request.args.get("conversationId"))
-        return jsonify(conversationId=id_, messages=conversation_messages(id_))
-
-    @app.get("/api/conversations")
-    def conversations():
-        rows = get_db().execute("""SELECT c.*, (SELECT COUNT(*) FROM messages m WHERE m.conversation_id=c.id) message_count,
-            (SELECT content FROM messages m WHERE m.conversation_id=c.id ORDER BY m.id DESC LIMIT 1) preview
-            FROM conversations c ORDER BY c.updated_at DESC, c.id""").fetchall()
-        return jsonify(activeConversationId=conversation_id(), conversations=[{
-            "id": row["id"], "title": row["title"], "createdAt": row["created_at"], "updatedAt": row["updated_at"],
-            "messageCount": row["message_count"], "preview": clean_assistant_text(row["preview"] or "还没有消息，聊聊今天吧")[:80]
-        } for row in rows])
-
-    @app.post("/api/conversations")
-    def new_conversation():
-        id_, at = str(uuid.uuid4()), now().isoformat()
-        with get_db() as db:
-            db.execute("INSERT INTO conversations VALUES (?, '新对话', ?, ?)", (id_, at, at))
-            db.execute("UPDATE app_meta SET value=? WHERE key='chat_session_id'", (id_,))
-        return jsonify(conversationId=id_, messages=[]), 201
-
-    @app.post("/api/conversations/<id_>/select")
-    def select_conversation(id_):
-        id_ = conversation_id(id_)
-        with get_db() as db:
-            db.execute("UPDATE app_meta SET value=? WHERE key='chat_session_id'", (id_,))
-        return jsonify(conversationId=id_, messages=conversation_messages(id_))
 
     @app.get("/api/recommendations")
     def saved_recommendations():
@@ -716,7 +669,7 @@ def create_app(test_config=None):
     @app.post("/api/chat")
     def chat():
         body = json_body()
-        session_id = conversation_id(body.get("conversationId"))
+        session_id = selected_id(get_db(), body.get("conversationId"))
         message = valid_text(body.get("message"), "消息", 1000)
         scene = valid_text(body.get("scene", ""), "场景", 40, True)
         result = recommend(message, scene) if upstream.local_mode else {"mood": infer_mood(scene or message)}
@@ -744,13 +697,11 @@ def create_app(test_config=None):
                 return jsonify(error=error.public_message, source="kugou-error", integration=upstream.integration()), 503
         at = now().isoformat()
         with get_db() as db:
-            first_message = not db.execute("SELECT 1 FROM messages WHERE conversation_id=?", (session_id,)).fetchone()
             db.execute("INSERT INTO messages(role, content, created_at, source, conversation_id) VALUES ('user', ?, ?, ?, ?)", (message, at, result["source"], session_id))
             cursor = db.execute("INSERT INTO messages(role, content, songs, created_at, source, conversation_id) VALUES ('assistant', ?, ?, ?, ?, ?)", (result["reply"], json.dumps(result["songs"], ensure_ascii=False), at, result["source"], session_id))
-            db.execute("UPDATE conversations SET updated_at=?, title=CASE WHEN ? THEN ? ELSE title END WHERE id=?", (at, first_message, message[:24], session_id))
-            result["conversationId"] = session_id
             result["messageId"] = cursor.lastrowid
-        return jsonify({**result, "integration": upstream.integration()})
+            db.execute("UPDATE conversations SET title=CASE WHEN title IN ('新对话', '历史对话') THEN ? ELSE title END, updated_at=? WHERE id=?", (message[:24], at, session_id))
+        return jsonify({**result, "conversationId": session_id, "integration": upstream.integration()})
 
     @app.post("/api/play")
     def play():
@@ -783,41 +734,83 @@ def create_app(test_config=None):
 
     @app.get("/api/diary")
     def diary():
-        dates = {row[0] for row in get_db().execute("SELECT DISTINCT substr(listened_at, 1, 10) FROM plays UNION SELECT date FROM diary_notes UNION SELECT date FROM weather_snapshots UNION SELECT substr(created_at, 1, 10) FROM messages UNION SELECT substr(created_at, 1, 10) FROM recommendation_requests UNION SELECT date FROM diary_stories UNION SELECT date FROM diary_editions")}
+        dates = {row[0] for row in get_db().execute("SELECT DISTINCT substr(listened_at, 1, 10) FROM plays UNION SELECT date FROM diary_notes UNION SELECT date FROM weather_snapshots UNION SELECT substr(created_at, 1, 10) FROM messages UNION SELECT substr(created_at, 1, 10) FROM recommendation_requests UNION SELECT date FROM diary_stories UNION SELECT date FROM diary_inputs UNION SELECT date FROM diary_editions")}
         dates.add(now().date().isoformat())
         entries = [diary_entry(date.fromisoformat(day)) for day in sorted(dates, reverse=True)]
         return jsonify(entries=entries, total=len(entries))
 
-    @app.post("/api/diary/<day>/story")
-    def write_diary_story(day):
+    def parse_diary_day(day):
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
             raise ValueError("日期格式应为 YYYY-MM-DD")
         parsed = date.fromisoformat(day)
         if parsed > now().date() or parsed.year < 2000:
             raise ValueError("日记日期需为 2000 年以后且不能晚于今天")
-        # Kept for older frontends: only the server's 22:00 job may rewrite a diary.
+        return parsed
+
+    def generate_input_diary(parsed):
+        if not upstream.enabled or upstream.local_mode:
+            return jsonify(entry=diary_entry(parsed), error="素材已保存，模型暂未连接，请连接模型后重试。"), 503
+        context = context_for_day(get_db(), parsed, get_profile()["name"])
+        try:
+            if not generate_story(get_db(), upstream, context, now(), source="input", clock=now):
+                return jsonify(entry=diary_entry(parsed), error="这一天的回忆正在整理或日期已结束，请稍后查看。"), 409
+        except (RemoteError, OSError, ValueError, TypeError, KeyError, AttributeError) as cause:
+            error = cause if isinstance(cause, RemoteError) else RemoteError("chat", "response")
+            upstream.fail(error)
+            return jsonify(entry=diary_entry(parsed), error="专属回忆暂未写好，素材和原有记录已保留。" + error.public_message), 503
         return jsonify(entry=diary_entry(parsed))
+
+    @app.post("/api/diary/<day>/story")
+    def write_diary_story(day):
+        parsed = parse_diary_day(day)
+        if parsed != now().date():
+            return jsonify(entry=diary_entry(parsed), error="往日的日记已封存，不能重新生成。"), 409
+        entry = diary_entry(parsed)
+        if entry["story"]["text"]:
+            return jsonify(entry=entry)
+        # Opening a page never creates a story. This endpoint only retries saved user inputs.
+        inputs = read_inputs(get_db(), day)
+        if not any(inputs.get(field) for field in ("note", "songId", "location", "attachments", "voiceTranscript")):
+            return jsonify(entry=diary_entry(parsed))
+        return generate_input_diary(parsed)
+
+    @app.post("/api/diary/<day>/inputs")
+    def write_diary_inputs(day):
+        parsed = parse_diary_day(day)
+        if parsed != now().date():
+            return jsonify(error="往日的日记已封存，只能记录今天。"), 409
+        save_inputs(get_db(), day, json_body(), now())
+        return generate_input_diary(parsed)
+
+    @app.post("/api/diary/<day>/attachments")
+    def upload_diary_attachment(day):
+        parsed = parse_diary_day(day)
+        if parsed != now().date():
+            return jsonify(error="往日的日记已封存，只能记录今天。"), 409
+        request.max_content_length = 17 * 1024 * 1024
+        attachment = save_attachment(get_db(), day, request.files.get("file"), request.form.get("kind"), now())
+        return jsonify(attachment=attachment), 201
+
+    @app.get("/api/diary/attachments/<identifier>")
+    def diary_attachment(identifier):
+        row = get_db().execute("SELECT content,mime_type FROM diary_attachments WHERE id=?", (identifier,)).fetchone()
+        if not row:
+            return jsonify(error="素材不存在"), 404
+        return send_file(BytesIO(row["content"]), mimetype=row["mime_type"], conditional=True)
 
     @app.put("/api/diary/<day>")
     def save_diary(day):
-        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
-            raise ValueError("日期格式应为 YYYY-MM-DD")
-        try:
-            parsed = date.fromisoformat(day)
-        except ValueError:
-            raise ValueError("日记日期无效") from None
-        if parsed > now().date() or parsed.year < 2000:
-            raise ValueError("日记日期需为 2000 年以后且不能晚于今天")
-        if parsed < now().date():
-            return jsonify(error="往日日记已定稿，不能再修改。"), 409
-        note = valid_text(json_body().get("note"), "日记", 4000, True)
+        parsed = parse_diary_day(day)
+        if parsed != now().date():
+            return jsonify(error="往日的日记已封存，只能记录今天。"), 409
+        note = valid_text(json_body().get("note"), "日记", 300, True)
         with get_db() as db:
             db.execute("INSERT INTO diary_notes VALUES (?, ?) ON CONFLICT(date) DO UPDATE SET note=excluded.note", (day, note))
-            saved = db.execute("SELECT entry FROM diary_editions WHERE date=?", (day,)).fetchone()
+            saved = db.execute("SELECT data FROM diary_inputs WHERE date=?", (day,)).fetchone()
             if saved:
-                edition = json.loads(saved['entry'])
-                edition['note'] = note
-                db.execute("UPDATE diary_editions SET entry=? WHERE date=?", (json.dumps(edition, ensure_ascii=False), day))
+                inputs = json.loads(saved[0])
+                inputs["note"] = note
+                db.execute("UPDATE diary_inputs SET data=?,updated_at=? WHERE date=?", (json.dumps(inputs, ensure_ascii=False), now().isoformat(), day))
         return jsonify(entry=diary_entry(parsed))
 
     @app.get("/api/reports")
@@ -980,8 +973,8 @@ def create_app(test_config=None):
             return send_from_directory(dist, "index.html")
         return jsonify(message="后端已启动；开发预览请启动 npm run dev，或先运行 npm run build。"), 200
 
+    start_diary_scheduler(app)
     if not app.testing:
-        start_diary_clock(app)
         site_sync.start()
     return app
 

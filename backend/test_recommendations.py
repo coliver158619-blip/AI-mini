@@ -88,6 +88,17 @@ class RecommendationsTest(unittest.TestCase):
         self.assertIn('"weather": null', post.call_args.args[2]["query"])
         self.assertNotIn("这是不需要显示", response.get_data(as_text=True))
 
+    def test_latest_mood_and_personal_results_are_separate_and_survive_failure(self):
+        with patch.object(self.upstream, "post", return_value=CARDS):
+            self.client.post('/api/recommendations', json={'scene': '放松一下'})
+            mood = self.client.post('/api/recommendations', json={'scene': '有点难过'}).json
+            personal = self.client.post('/api/recommendations', json={}).json
+        with patch.object(self.upstream, 'chat', side_effect=RemoteError('chat', 'network')):
+            self.assertEqual(self.client.post('/api/recommendations', json={}).status_code, 503)
+        restarted = create_app(self.config).test_client()
+        self.assertEqual(restarted.get('/api/recommendations?mode=mood').json['context'], mood['context'])
+        self.assertEqual(restarted.get('/api/recommendations?mode=personal').json['createdAt'], personal['createdAt'])
+
     def test_expired_weather_refreshes_same_saved_coordinates(self):
         original = self.record_weather(now() - timedelta(hours=2))
         with patch("backend.weather.fetch_json", return_value={"current": {"weather_code": 0, "temperature_2m": 27}}) as fetch, patch.object(self.upstream, "post", return_value=CARDS) as post:

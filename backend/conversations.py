@@ -44,7 +44,7 @@ def register_conversations(app, get_db, now):
     def list_conversations():
         db = get_db()
         rows = db.execute('SELECT c.*, (SELECT count(*) FROM messages WHERE conversation_id=c.id) messageCount FROM conversations c ORDER BY updated_at DESC, rowid DESC').fetchall()
-        return jsonify(activeConversationId=selected_id(db), conversations=[dict(row) for row in rows])
+        return jsonify(activeConversationId=selected_id(db), conversations=[{**dict(row), 'createdAt': row['created_at'], 'updatedAt': row['updated_at']} for row in rows])
 
     @app.post('/api/conversations')
     def new_conversation():

@@ -1,0 +1,23 @@
+.chat-context { position: relative; flex-shrink: 0; }
+.chat-weather-context { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-context .chat-provider { margin-left: 0; flex-shrink: 0; }
+.chat-session-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+.chat-session-actions > button { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #e8decb; border-radius: 10px; color: #9e8050; background: #fcf7ec; }
+.chat-session-actions button:disabled { opacity: .45; cursor: default; }
+.chat-session-actions > button:hover:not(:disabled) { background: #f3e8cf; }
+.chat-history-panel { position: absolute; top: calc(100% - 6px); left: 18px; right: 18px; z-index: 5; display: flex; flex-direction: column; max-height: min(420px, calc(var(--visible-height, 100dvh) * .52)); padding: 10px; color: #79674c; background: #fffcf6; border: 1px solid #e8ddc8; border-radius: 17px; box-shadow: 0 12px 35px #58472330; }
+.chat-history-panel header { display: flex; align-items: center; justify-content: space-between; padding-left: 7px; flex-shrink: 0; }
+.chat-history-panel header strong { font-size: 13px; }
+.chat-history-panel header button { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; }
+.chat-history-panel > p { display: flex; align-items: center; gap: 7px; padding: 15px 7px; font-size: 12px; }
+.chat-history-panel > p button { text-decoration: underline; flex-shrink: 0; }
+.chat-history-list { overflow-y: auto; min-height: 0; overscroll-behavior: contain; }
+.chat-history-list > button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px 9px; border-radius: 10px; text-align: left; }
+.chat-history-list > button:hover, .chat-history-list > button[aria-current] { background: #f4ecdc; }
+.chat-history-list > button > span:first-child { flex: 1; min-width: 0; }
+.chat-history-list strong, .chat-history-list small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-history-list strong { font-size: 12px; margin-bottom: 5px; }
+.chat-history-list small { font-size: 11px; color: #a18e73; }
+.chat-history-list time { display: block; margin-top: 6px; font-size: 10px; color: #a18e73; }
+.chat-history-list .sr-only { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; }
+@media (max-width: 359px) { .chat-context .chat-provider { font-size: 8px; padding-inline: 4px; } .chat-session-actions > button { width: 30px; } }

@@ -1,5 +1,12 @@
 # 接口联调记录 · 2026-09-23
 
+## 2026-10-20 本机重新接入
+
+- 使用本次用户提供的 `test.py`，只读取配置常量，采用线上 `assistant-v2` 协议。
+- 为使独立后台进程可读取配置，将文本调用必需字段保存在 Git 忽略的 `backend/data/chat-config.json`，权限 `0600`；配置引用同样只保存在本机。
+- 实际调用项目 `/api/chat` 返回 200、`source=kugou` 和真实回复；`/api/recommendations` 返回 200、`source=kugou` 和 12 首歌曲。验证使用临时数据库，未向用户聊天记录写入测试消息。
+- 内网 `http://10.230.52.36:5000/api/health` 确认 `configured=true`、`configSource=local-file`。服务启动后显示待连接，当前进程首次成功对话后显示已连接。
+
 使用用户提供的 `test.py` 线上配置验证 `/v2/assistant/stream`。本机引用文件为 `backend/data/chat-config-path.txt`，仅记录原脚本路径；原脚本的签名密钥与网关地址不复制进仓库。
 
 ## 实际外部服务验证

@@ -1,0 +1,54 @@
+.personality-page { --selection-gutter: 20px; padding: 24px var(--selection-gutter) 0; min-height: var(--page-height, 100dvh); color: #584b3c; background: radial-gradient(ellipse at 100% 2%, #ece6f4, transparent 45%), #faf7f0; }
+.personality-header { display: flex; align-items: center; gap: 11px; margin-bottom: 22px; min-height: 44px; }
+.personality-header > button { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #fff; border-radius: 50%; background: #fffcf9bd; flex-shrink: 0; }
+.personality-header h1 { font-size: 22px; font-weight: 650; outline: none; }
+.personality-header > span { margin-left: auto; color: #a59682; font-size: 10px; }
+.personality-hero { padding: 16px 16px 22px; border: 1px solid #fff; border-radius: 26px; background: radial-gradient(ellipse at 50% 45%, #fffdf8, var(--personality-color) 150%); box-shadow: 0 8px 25px #9283660a; }
+.personality-hero-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--personality-accent); }
+.personality-hero-top > span { display: flex; gap: 4px; align-items: center; padding: 5px 8px; border-radius: 20px; background: #ffffff80; }
+.personality-stage { height: clamp(210px, 65cqw, 280px); position: relative; display: grid; place-items: center; margin-top: 8px; }
+.personality-stage > span { position: absolute; width: 75%; aspect-ratio: 1; border-radius: 50%; border: 1px solid #fff9; background: radial-gradient(circle, #fff9, #fff0 70%); }
+.personality-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 6px #5f674c18); }
+.personality-intro { text-align: center; margin-top: 14px; }
+.personality-intro > strong { display: block; font-size: 29px; font-weight: 650; color: var(--personality-accent); letter-spacing: 5px; }
+.personality-intro h2 { margin-top: 4px; font-size: 19px; font-weight: 650; letter-spacing: 1px; }
+.personality-intro > p { margin: 10px auto 0; font-size: 11px; line-height: 1.8; color: #958873; max-width: 290px; }
+.personality-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.personality-tags > span { padding: 4px 10px; border-radius: 15px; background: #fff9; font-size: 10px; color: var(--personality-accent); }
+.personality-details { border-radius: 20px; border: 1px solid #eee7da; background: #fffdf8; padding: 18px; margin-top: 16px; }
+.personality-details h3 { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; }
+.personality-details h3 svg { color: var(--personality-accent); }
+.personality-details p { color: #9c8c75; font-size: 11px; line-height: 1.8; margin: 8px 0 16px; }
+.personality-dimensions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; border-top: 1px solid #eee7da; padding-top: 15px; }
+.personality-dimensions > span { text-align: center; font-size: 9px; color: #9d907f; }
+.personality-dimensions b { display: block; color: var(--personality-accent); font-size: 17px; font-weight: 600; margin-bottom: 5px; }
+.personality-catalog { margin-top: 27px; }
+.personality-catalog-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.personality-catalog-heading h2 { font-size: 16px; font-weight: 650; }
+.personality-catalog-heading > span { font-size: 10px; color: #a3937d; }
+.personality-filters { display: flex; gap: 6px; margin: 16px 0; }
+.personality-filters button { flex: 1; min-width: 0; padding: 10px 2px; border: 1px solid #e8e0d2; border-radius: 18px; color: #9c8d76; background: #fffcf7; font-size: 10px; white-space: nowrap; }
+.personality-filters button[aria-pressed=true] { background: var(--personality-color); color: var(--personality-accent); border-color: var(--personality-accent); }
+.personality-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 8px; }
+.personality-grid > button { min-width: 0; text-align: center; border-radius: 14px; }
+.personality-tile-art { display: block; position: relative; aspect-ratio: .8; background: linear-gradient(145deg, #fffdf9, var(--tile-color)); border: 2px solid #fff; border-radius: 15px; }
+.personality-tile-art img { width: 100%; height: 100%; object-fit: contain; padding: 4px 0; }
+.personality-grid .is-selected .personality-tile-art { border-color: var(--personality-accent); box-shadow: 0 0 0 3px #a8957420; }
+.personality-tile-art > svg { position: absolute; bottom: 4px; right: 4px; color: #fff; background: var(--personality-accent); border-radius: 50%; padding: 2px; width: 17px; height: 17px; }
+.personality-tile-art > i { position: absolute; top: 3px; left: 3px; border-radius: 5px; background: #fff9; padding: 2px 4px; font-style: normal; font-size: 8px; color: #8b7e69; }
+.personality-grid > button > strong { display: block; font-size: 12px; letter-spacing: 1px; margin-top: 8px; }
+.personality-grid small { display: block; font-size: 8px; color: #a3927a; margin-top: 4px; overflow-wrap: anywhere; }
+.personality-note { margin-top: 22px; color: #b0a28c; text-align: center; font-size: 10px; }
+.personality-footer { --selection-footer-background: #faf7f0; position: sticky; z-index: 3; bottom: calc(var(--safe-bottom, 0px) + var(--player-space, 0px)); margin-top: 14px; padding: 18px 0 14px; background: var(--selection-footer-background); }
+.personality-footer > button { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; min-height: 48px; padding: 12px; border-radius: 17px; background: var(--personality-accent); color: #fffdf9; font-size: 14px; font-weight: 600; }
+.personality-footer > button:disabled { background: #eae5d9; color: #a29783; opacity: 1; }
+.personality-footer > p { text-align: center; color: #a79880; font-size: 10px; line-height: 1.6; margin-top: 9px; }
+.personality-error, .personality-footer > .personality-error { color: #ad6656; font-size: 12px; text-align: center; line-height: 1.7; margin: 8px 0; }
+.personality-state { min-height: 60dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: #a48c68; text-align: center; font-size: 14px; line-height: 1.8; }
+.personality-state button { display: flex; align-items: center; gap: 7px; border-radius: 20px; border: 1px solid #decba9; padding: 10px 20px; }
+.streak-avatar-character { background-size: 48px auto; background-position: center 0; }
+.streak-avatar-music { display: grid; place-items: center; background-image: none; margin-left: -5px; background-color: #e9dfc9; color: #ad9569; }
+.more-card .more-character-art { width: 30%; height: 90%; top: 5%; right: 7%; mask-image: none; }
+.more-card-personality .more-character-art { width: 42%; right: 2%; top: 12%; height: 85%; }
+.more-card .more-character-art img { width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 359px) { .personality-page { --selection-gutter: 15px; } .personality-header { gap: 8px; } .personality-header h1 { font-size: 20px; } .personality-header > span { font-size: 9px; } .personality-catalog-heading > span { font-size: 9px; } }

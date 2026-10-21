@@ -12,3 +12,8 @@ playwright-report/
 .npm-cache/
 .runtime/
 *.tsbuildinfo
+.DS_Store
+# Local image exports and duplicate delivery archives; app assets live in public/.
+/output/
+# The Sites deployment has its own managed source repository.
+/sites/

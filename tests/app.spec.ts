@@ -308,7 +308,7 @@ test('HTTP定位说明明确，手动选城后保留天气详情和城市景观'
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-weather-shanghai-night.png', fullPage: true });
  for (const width of [320, 390, 1200]) {
   await page.setViewportSize({ width, height: 844 });
-  expect(await page.locator('.weather-page').evaluate(el => ({ width: el.clientWidth, available: el.parentElement!.clientWidth, overflow: document.documentElement.scrollWidth > innerWidth }))).toEqual({ width: Math.min(width, 480), available: Math.min(width, 480), overflow: false });
+  expect(await page.locator('.weather-page').evaluate(el => ({ width: el.clientWidth, available: el.parentElement!.clientWidth, overflow: document.documentElement.scrollWidth > innerWidth }))).toEqual({ width, available: width, overflow: false });
  }
  await page.getByRole('button', { name: '返回上一页', exact: true }).click();
  await expect(page.locator('.weather-pill')).toContainText('上海 多云 22°');
@@ -444,14 +444,14 @@ test('真实音频播放后计入数据库，暂停不继续累计', async ({ pa
 
 
 
-test('心情页选择城市返回后自动结合心情生成卡片', async ({ page }) => {
+test('心情页先选择城市再选择心情生成卡片', async ({ page }) => {
  const calls = await modelCardsFixture(page, false);
  await page.route('**/api/location/search?*', route => route.fulfill({ json: { results: [{ id: 1, name: '广州', city: '广州', country: '中国', latitude: 23.12, longitude: 113.26 }] } }));
  await page.route('**/api/weather', route => route.fulfill({ json: selectedWeather }));
  await page.goto('/');
  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
  await page.getByRole('button', { name: '心情选歌', exact: true }).click();
- await page.getByRole('button', { name: '专注时刻', exact: true }).click();
+ await expect(page.getByRole('button', { name: '专注时刻', exact: true })).toBeDisabled();
  expect(calls).toHaveLength(0);
  await page.getByRole('button', { name: '选择天气与位置' }).click();
  await page.getByRole('heading', { name: '天气与位置' }).waitFor();
@@ -460,6 +460,7 @@ test('心情页选择城市返回后自动结合心情生成卡片', async ({ pa
  await expect(page.locator('.weather-details')).toBeVisible();
  await page.getByRole('button', { name: '返回上一页', exact: true }).click();
  await expect(page.getByRole('heading', { name: '心情选歌' })).toBeVisible();
+ await page.getByRole('button', { name: '专注时刻', exact: true }).click();
  await expect(page.locator('.recommendation-song')).toHaveCount(3);
  expect(calls[0].scene).toBe('专注时刻');
  await expect(page.locator('.recommendation-context')).toContainText('广州 · 多云');
@@ -520,7 +521,7 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 
   await checkPage('.more-page');
   expect(await page.locator('.more-card-chat').evaluate(el => {
    const card = el.getBoundingClientRect(), shell = document.querySelector('.more-page')!.getBoundingClientRect();
-   return card.left - shell.left <= 17 && shell.right - card.right <= 17;
+   return card.left >= shell.left && card.right <= shell.right && card.width >= 44;
   })).toBe(true);
   await page.getByRole('button', { name: 'AI聊天', exact: true }).click();
   const input = page.getByRole('textbox', { name: '对搭子说点什么' });

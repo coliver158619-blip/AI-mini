@@ -46,6 +46,21 @@ class DiaryStoryTest(unittest.TestCase):
     def entry(self):
         return next(e for e in self.client.get('/api/diary').json['entries'] if e['date'] == self.day)
 
+    def test_existing_ike_historical_edition_survives_upgrade(self):
+        yesterday = (now() - timedelta(days=1)).date().isoformat()
+        archived = {"title": "原来的日记", "body": "已经保存的历史回忆", "minutes": 7, "note": "原来的手写内容", "story": {"text": "已经保存的历史回忆"}}
+        with sqlite3.connect(self.path) as db:
+            db.execute("INSERT INTO diary_editions(date,entry) VALUES (?,?)", (yesterday, json.dumps(archived)))
+        restarted = create_app(self.config).test_client()
+        entry = next(item for item in restarted.get('/api/diary').json['entries'] if item['date'] == yesterday)
+        self.assertEqual(entry['body'], archived['body'])
+        self.assertEqual(entry['note'], archived['note'])
+        self.assertEqual(entry['minutes'], 7)
+        self.assertTrue(entry['isLocked'])
+        self.assertFalse(entry['story']['canGenerate'])
+        self.assertEqual(restarted.post(f'/api/diary/{yesterday}/inputs', json={"note": "改写"}).status_code, 409)
+        self.model.assert_not_called()
+
     def test_context_generation_and_persistence_without_extra_calls(self):
         self.seed_day()
         self.assertFalse(self.entry()['story']['stale'])
@@ -138,5 +153,3 @@ class DiaryStoryTest(unittest.TestCase):
             self.assertEqual(self.entry()['story']['text'], '')
         self.model.side_effect = [{'reply': '```code```'}, {'reply': MEMORY}]
         self.assertEqual(self.client.post(self.url).json['entry']['body'], MEMORY)
-
-

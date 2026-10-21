@@ -71,6 +71,7 @@ class DataChainTest(unittest.TestCase):
                 restarted = request("/api/reports?period=month")
                 self.assertEqual(restarted["trend"], month["trend"])
                 self.assertEqual(restarted["summary"], month["summary"])
+                # Daily listening totals and reports include both persisted chunks.
                 self.assertEqual(request("/api/diary")["entries"][0]["minutes"], 3)
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowUpRight, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, Clock3, Disc3, Heart, Info, Music2, Play, RefreshCw, Share2, Sparkles, Star, X } from 'lucide-react';
-import type { Song } from './types';
+import type { Profile, Song } from './types';
 import './reports.css';
 
 type Period = 'week' | 'month' | 'year';
@@ -47,7 +47,7 @@ function Trend({ values, kind }: { values: NonNullable<Report['trend']>; kind: P
   return <div className="report-trend">
     <div className="report-chart-heading"><span>{kind === 'year' ? '近 5 年的音乐足迹' : '近 6 个月的陪伴'}</span><small>听歌时长 / 分钟</small></div>
     <svg viewBox="0 0 320 140" role="group" aria-label="听歌时长趋势，点击表情查看数值">
-      <defs><linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffb65f" stopOpacity=".25"/><stop offset="100%" stopColor="#ffb65f" stopOpacity="0"/></linearGradient></defs>
+      <defs><linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffd16c" stopOpacity=".42"/><stop offset="100%" stopColor="#ffb65f" stopOpacity="0"/></linearGradient><radialGradient id={`${gradientId}-shine`} cx="30%" cy="20%" r="80%"><stop stopColor="#fff" stopOpacity=".85"/><stop offset=".4" stopColor="#fff" stopOpacity="0"/><stop offset="1" stopColor="#a36d21" stopOpacity=".18"/></radialGradient></defs>
       {[28, 48, 68, 100].map(y => <line key={y} x1="16" y1={y} x2="304" y2={y} stroke="#e8e5eb" strokeDasharray="3 4"/>)}
       <polygon points={`${coords[0].x},108 ${points} ${coords[coords.length - 1].x},108`} fill={`url(#${gradientId})`}/>
       <polyline points={points} stroke="#ffb44f" fill="none" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round"/>
@@ -65,6 +65,7 @@ function Trend({ values, kind }: { values: NonNullable<Report['trend']>; kind: P
             <circle className="report-face-ring" r="16" fill="none" stroke={outlineColor} strokeWidth="1.4"/>
             <g className="report-face-art" aria-hidden="true">
               <circle className="report-face" r="12.5" fill={faceColor} stroke={outlineColor} strokeWidth="1.15"/>
+              <circle r="12.5" fill={`url(#${gradientId}-shine)`}/>
               <path d="M -8 -5 Q -6 -10 0 -10" fill="none" stroke="#fff" strokeOpacity=".6" strokeWidth="1.4" strokeLinecap="round"/>
               {mood >= 3 ? <path d="M -7 -2 Q -4.5 -5.5 -2 -2 M 2 -2 Q 4.5 -5.5 7 -2" fill="none" stroke="#664222" strokeWidth="1.6" strokeLinecap="round"/>
                 : <><circle cx="-4.3" cy="-2.5" r="1.2" fill="#6a5640"/><circle cx="4.3" cy="-2.5" r="1.2" fill="#6a5640"/></>}
@@ -85,7 +86,7 @@ function SongCover({ song, large = false }: { song: Song; large?: boolean }) {
   return <span className={`report-cover ${large ? 'report-cover-large' : ''}`} style={{ backgroundColor: song.color || '#b8c4a9' }} aria-hidden="true"><span className="report-cover-sun"/><Music2 size={large ? 29 : 19}/></span>;
 }
 
-export default function Reports({ onBack, onPlay }: { onBack: () => void; onPlay: (song: Song) => void }) {
+export default function Reports({ onBack, onPlay, appearance }: { onBack: () => void; onPlay: (song: Song) => void; appearance: Profile['appearance'] }) {
   const [period, setPeriod] = useState<Period>('week');
   const [offset, setOffset] = useState(0);
   const [report, setReport] = useState<Report | null>(null);
@@ -202,12 +203,12 @@ export default function Reports({ onBack, onPlay }: { onBack: () => void; onPlay
     {!loading && report && <div className="report-content" id="report-panel" role="tabpanel" aria-labelledby={`report-tab-${period}`} key={`${period}-${offset}`}>
       <div className="report-intro">
         <div><span className="report-eyebrow">MY MUSIC, MY MOMENTS</span><h2>{period === 'week' ? <>这一周，<br/>音乐一直在身边。</> : period === 'month' ? <>把平凡的日子，<br/>听成喜欢的样子。</> : <>每一次心动，<br/>都被音乐记得。</>}</h2></div>
-        <span className="report-intro-art" aria-hidden="true"><img src="/assets/report-note.png" alt="" draggable={false}/></span>
+        <img className="report-companion" key={appearance.id} src={`/assets/report-companions/${encodeURIComponent(appearance.id)}.webp`} alt={`${appearance.name}趴在报告卡片上陪你看音乐足迹`} draggable={false}/>
       </div>
       {report.summary.playCount === 0 ? <div className="report-state report-empty"><Music2 size={38}/><h2>这一页，等待你的第一首歌</h2><p>这段时间还没有听歌记录。去更多玩法挑一首喜欢的歌，让音乐留下足迹。</p><button className="report-primary" onClick={onBack}>去听一首歌<ArrowUpRight size={16}/></button></div> : <>
         {period === 'week' && <article className="report-card report-overview">
           <div className="report-card-top"><h3><span className="report-small-icon"><Clock3 size={14}/></span>音乐陪伴了你</h3><span className="report-tiny-label">WEEKLY</span></div>
-          <div className="report-main-number">{format(report.summary.minutes)}<span>分钟</span></div>
+          <div className="report-main-number"><strong>{format(report.summary.minutes)}</strong><span>分钟</span></div>
           <div className="report-stat-line"><span>听过 <b>{report.summary.songCount}</b> 首歌</span><i/>{report.comparison.minutesPercent !== null ? <span>比上周 {report.comparison.minutesPercent >= 0 ? '多' : '少'} <b>{Math.abs(report.comparison.minutesPercent).toFixed(0)}%</b></span> : <span>每一次聆听都值得记录</span>}</div>
           <div className="report-chart-heading"><span>一周的音乐温度</span><small>{selectedDay === null ? '点击查看每日时长' : `${report.daily[selectedDay].date.slice(5).replace('-', '.')} · ${format(report.daily[selectedDay].minutes)} 分钟`}</small></div>
           <div className="report-heat-grid">{report.daily.map((day, i) => <button key={day.date} className={`report-heat-day ${day.minutes === maxDay ? 'report-heat-peak' : ''} ${selectedDay === i ? 'report-heat-selected' : ''}`} onClick={() => setSelectedDay(i)} aria-label={`${day.date}，听歌${format(day.minutes)}分钟`} aria-pressed={selectedDay === i}><span className="report-heat-fill" style={{ height: `${day.minutes ? Math.max(12, day.minutes / maxDay * 100) : 0}%` }}/><span className="report-heat-count">{day.minutes ? format(day.minutes) : '—'}</span><span className="report-heat-label">{day.label}</span></button>)}</div>
@@ -228,6 +229,7 @@ export default function Reports({ onBack, onPlay }: { onBack: () => void; onPlay
         </article>}
 
         <article className="report-insight">
+          <span className="report-vinyl" aria-hidden="true"><i/><Music2/></span>
           <div className="report-insight-icon"><Sparkles size={20}/></div>
           <div><div className="report-insight-heading"><span>音乐搭子想对你说</span><span className="report-ai-label">音乐小皓</span></div><h3>{report.insight.title}</h3><p>{report.insight.body}</p>{report.tags.length > 0 && <div className="report-tags">{report.tags.slice(0, 3).map(tag => <span key={tag}>#{tag}</span>)}</div>}</div>
         </article>

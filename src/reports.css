@@ -22,38 +22,44 @@
 .report-page .report-date-nav { padding-top: 5px; min-height: 36px; color: #565967; font-size: 13px; gap: 8px; }
 .report-page .report-date-nav > span { min-width: 122px; }
 .report-page .report-content { padding: 0 18px; }
-.report-page .report-intro { padding: 18px 7px 25px; min-height: 136px; gap: 0; overflow: visible; }
-.report-page .report-eyebrow { font-size: 7px; letter-spacing: 2px; color: #a0a4b0; font-weight: 500; white-space: nowrap; }
-.report-page .report-intro h2 { font-size: clamp(23px, 6.6cqw, 32px); line-height: 1.5; letter-spacing: 0; font-weight: 600; margin-top: 10px; color: #071336; }
-.report-page .report-intro-art { width: 122px; height: 114px; align-self: flex-end; background: none; transform: none; margin-left: -11px; }
-.report-intro-art > img { display: block; width: 122%; max-width: none; height: 122%; object-fit: contain; filter: drop-shadow(0 9px 12px #ff829b19); }
-.report-page .report-card { background: #ffffffb8; border: 1px solid #ffffffcc; border-radius: 20px; padding: 17px 17px 15px; margin-bottom: 12px; box-shadow: 0 4px 26px #f1b0cc09; }
+.report-page .report-intro { position: relative; padding: 22px 9px 35px; min-height: 144px; gap: 0; overflow: visible; align-items: flex-start; }
+.report-page .report-intro > div { width: 63%; position: relative; z-index: 1; }
+.report-page .report-eyebrow { font-size: 8px; letter-spacing: 1px; color: #89888d; font-weight: 500; white-space: nowrap; }
+.report-page .report-intro h2 { font-size: clamp(21px, 6cqw, 29px); line-height: 1.42; letter-spacing: 0; font-weight: 700; margin-top: 9px; color: #071336; }
+/* The exported hands share a bottom baseline, independent of character hair or headwear. */
+.report-page .report-companion { position: absolute; right: 17px; bottom: -1px; z-index: 2; width: 34%; max-width: 146px; height: auto; aspect-ratio: 1; object-fit: contain; object-position: bottom; pointer-events: none; }
+.report-page .report-card { background: #fffdfdc9; border: 1px solid #ffffffcc; border-radius: 25px; padding: 19px 18px 17px; margin-bottom: 16px; box-shadow: 0 7px 17px #e9aac314; }
 .report-page .report-card-top { margin-bottom: 12px; gap: 6px; }
 .report-page .report-card h3, .report-page .report-section-heading h3 { color: #101b3d; font-size: 14px; font-weight: 700; letter-spacing: 0; }
 .report-page .report-card-top h3 { gap: 7px; }
-.report-page .report-small-icon { color: #ffae00; }
+.report-page .report-small-icon { color: #f5799d; }
 .report-page .report-small-icon svg { width: 19px; height: 19px; stroke-width: 2.3; }
-.report-page .report-tiny-label { font-size: 8px; letter-spacing: .2px; color: #8c99af; }
+.report-page .report-tiny-label { font-size: 9px; letter-spacing: .2px; color: #99949b; }
 .report-page .report-main-number { font-family: inherit; font-weight: 750; font-size: 44px; color: #ff777e; letter-spacing: -1px; }
-.report-page .report-main-number > span { font-family: inherit; font-size: 12px; font-weight: 500; color: #76829f; letter-spacing: 0; margin-left: 7px; }
+.report-page .report-main-number > span { font-family: inherit; font-size: 12px; font-weight: 500; color: #68636c; letter-spacing: 0; margin-left: 7px; }
 .report-page .report-year-card .report-main-number { font-size: clamp(37px, 11.5cqw, 53px); line-height: 1.1; }
-.report-page .report-year-card .report-main-number > strong { font-weight: 750; background: linear-gradient(150deg, #ffb395, #ff656d 55%, #ff888e); color: transparent; background-clip: text; filter: drop-shadow(0 2px 1px #ffb8b329); }
+.report-page .report-main-number > strong { font-weight: 750; background: linear-gradient(150deg, #ffae7e, #f96e87 55%, #ff9e82); color: transparent; -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 2px 1px #ffb8b329); }
 .report-page .report-year-card .report-main-number > b { font-size: inherit; font-weight: 700; margin-left: 10px; background: linear-gradient(145deg, #dbb5ff, #ac54ff 55%, #c28cff); background-clip: text; color: transparent; }
-.report-page .report-soft-text, .report-page .report-stat-line { font-size: 10px; color: #7884a6; line-height: 1.5; margin-top: 8px; }
+.report-page .report-soft-text, .report-page .report-stat-line { font-size: 11px; color: #69646e; line-height: 1.5; margin-top: 9px; }
 .report-page .report-stat-line b { color: #fe9568; }
-.report-page .report-chart-heading { font-size: 12px; color: #182444; margin-top: 18px; margin-bottom: 9px; }
+.report-page .report-chart-heading { font-size: 12px; font-weight: 600; color: #182444; margin-top: 21px; margin-bottom: 9px; }
 .report-page .report-chart-heading small { font-size: 9px; color: #8692a9; }
-.report-page .report-trend-caption { color: #7d8cab; font-size: 8px; margin-top: 6px; gap: 4px; }
+.report-page .report-trend-caption { color: #77717a; font-size: 9px; margin-top: 9px; gap: 4px; }
 .report-page .report-trend-caption i { background: linear-gradient(90deg, #ffe2a4, #ffa932); height: 6px; width: 24px; }
-.report-page .report-trend-caption > [role='status'] { color: #a86a20; }
-.report-page .report-face-art { filter: drop-shadow(0 1px 1px #71645422); }
-.report-page .report-insight { position: relative; background: linear-gradient(130deg, #ffffffd6, #fffdfca8 65%, #f5e9ff85); border: 1px solid #ffffffbd; border-radius: 19px; padding: 17px 17px 15px; margin: 12px 0 0; display: block; }
+.report-page .report-trend-caption > [role='status'] { color: #141d37; }
+.report-page .report-face-art { filter: drop-shadow(0 2px 2px #7164542e); }
+.report-page .report-insight { position: relative; background: linear-gradient(130deg, #ffffffd6, #fffdfcbf 65%, #f9eeffc9); border: 1px solid #ffffffbd; border-radius: 25px; padding: 19px 18px 18px; margin: 16px 0 0; display: block; box-shadow: 0 7px 17px #e9aac314; }
 .report-page .report-insight-icon { position: absolute; top: 17px; left: 17px; color: #ffad00; padding: 0; }
 .report-page .report-insight-icon svg { width: 20px; height: 20px; }
-.report-page .report-insight-heading { padding-left: 28px; font-size: 10px; color: #bc9165; min-height: 20px; gap: 8px; }
-.report-page .report-ai-label { border: 1px solid #ffdfbe; border-radius: 8px; padding: 4px 8px; background: #fff3e799; color: #a9773d; font-size: 9px; white-space: nowrap; }
-.report-page .report-insight h3 { font-size: 14px; line-height: 1.5; color: #0f183b; margin: 11px 0 8px; font-weight: 700; }
-.report-page .report-insight p { font-size: 11px; line-height: 1.8; color: #7884a4; }
+.report-page .report-insight-heading { position: relative; z-index: 1; padding-left: 25px; font-size: 11px; min-height: 20px; gap: 6px; flex-wrap: wrap; padding-right: 44px; }
+.report-page .report-insight-heading > span:first-child { background: linear-gradient(100deg, #f4a850, #f17e7e 55%, #e96ca7); color: transparent; -webkit-background-clip: text; background-clip: text; font-weight: 700; }
+.report-page .report-ai-label { border: 0; border-radius: 9px; padding: 4px 6px; background: #ffe6ed99; color: #33303e; font-size: 8px; white-space: nowrap; }
+.report-page .report-insight h3 { position: relative; z-index: 1; padding-right: 35px; font-size: 15px; line-height: 1.55; color: #0f183b; margin: 10px 0 9px; font-weight: 700; }
+.report-page .report-insight p { position: relative; z-index: 1; font-size: 11px; line-height: 1.9; color: #36323d; }
+.report-vinyl { position: absolute; right: 0; top: 21px; width: 64px; height: 58px; pointer-events: none; }
+.report-vinyl i { position: absolute; width: 59px; height: 39px; left: 0; bottom: 4px; border-radius: 50%; transform: rotate(-12deg); background: repeating-radial-gradient(ellipse at center, transparent 0 5px, #fff2 6px 7px), conic-gradient(from 40deg, #d7a8ff, #a76ce9, #e4c5ff, #9560dd, #d7a8ff); border: 1px solid #e3caff; box-shadow: 0 4px 0 #b87cf36b, 0 9px 10px #bb86eb38, inset 0 2px 4px #fff8; }
+.report-vinyl i::after { content: ''; position: absolute; width: 18px; height: 11px; left: 20px; top: 13px; border-radius: 50%; background: radial-gradient(ellipse, #9e5bce 0 10%, #ffb9df 18%); }
+.report-vinyl svg { position: absolute; right: 0; top: 0; width: 25px; height: 25px; stroke: #f391b8; stroke-width: 3; filter: drop-shadow(0 2px 1px #e6a2d34d); transform: rotate(15deg); }
 .report-page .report-tags { gap: 6px; margin-top: 10px; font-size: 10px; }
 .report-page .report-tags span { border: 1px solid #ffe2c6; border-radius: 18px; padding: 5px 12px; color: #a76a20; background: #fff0dc99; }
 .report-page .report-tags span:nth-child(2) { background: #eadfff99; border-color: #dcd0ff; color: #7950e8; }

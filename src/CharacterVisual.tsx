@@ -4,7 +4,7 @@ import {actionDuration,characterAtlas,createCharacterFrames,type CharacterAction
 import './character-visual.css';
 type Bounds={height:number;top:number;center:number};
 const actions:CharacterAction[]=['wave','blink','wink'];
-export default function CharacterVisual({id,src,alt,imageClass='',animated=false,reaction=0}:{id:string;src:string;alt:string;imageClass?:string;animated?:boolean;reaction?:number}){
+export default function CharacterVisual({id,src,alt,imageClass='',animated=false,reaction=0,onLoad,onError}:{id:string;src:string;alt:string;imageClass?:string;animated?:boolean;reaction?:number;onLoad?:()=>void;onError?:()=>void}){
  const canvas=useRef<HTMLCanvasElement>(null),renderer=useRef<ReturnType<typeof createCharacterFrames>>(null),animation=useRef(0),running=useRef(false),lastReaction=useRef(reaction);
  const [ready,setReady]=useState(false),[action,setAction]=useState<CharacterAction|'idle'>('idle');
  const atlas=animated?characterAtlas(id):undefined;
@@ -35,7 +35,7 @@ export default function CharacterVisual({id,src,alt,imageClass='',animated=false
  const bounds=(measurements as Record<string,Bounds>)[id];
  const style:CSSProperties|undefined=bounds?{height:`${bounds.height*100}%`,top:`${bounds.top}%`,transform:`translateX(-${bounds.center}%)`}:undefined;
  return <span className={`character-visual${bounds?' is-normalized':''}`} data-character={id} data-action={action} data-motion-ready={ready} data-wave-ready={ready} data-renderer="frames">
-  <img className={imageClass} src={src} alt={alt} draggable={false} decoding="async" style={style}/>
-  {atlas&&<canvas ref={canvas} className="character-frames" aria-hidden="true" style={style}/>}
+  <img className={imageClass} src={src} alt={alt} draggable={false} decoding="async" style={style} onLoad={onLoad} onError={onError}/>
+  {atlas&&<canvas ref={canvas} className="character-frames" aria-hidden="true" style={atlas.layout?{left:0,top:0,width:'100%',height:'100%',objectFit:'contain'}:style}/>}
  </span>;
 }

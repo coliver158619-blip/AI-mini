@@ -85,7 +85,7 @@ test('人格与衣橱的底部遮挡覆盖安全区和播放器预留区，列�
   for (const player of [false, true]) {
    for (const menu of [
     { name: '音乐形象', footer: '.personality-footer', grid: '.personality-grid', color: [250, 247, 240] },
-    { name: '形象', footer: '.wardrobe-footer', grid: '.wardrobe-grid', color: [250, 245, 238] },
+    { name: '形象', footer: '.wardrobe-footer', grid: '.wardrobe-grid', color: [250, 241, 252] },
    ]) {
     await page.goto('/');
     await page.evaluate(({ top, bottom, left, right }) => {

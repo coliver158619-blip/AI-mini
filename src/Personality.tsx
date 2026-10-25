@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowLeft, Check, Heart, Headphones, LoaderCircle, RefreshCw, Sparkles } from 'lucide-react';
 import { api, post } from './api';
 import type { Personality as Character, PersonalityGroup, Profile } from './types';
+import CharacterVisual from './CharacterVisual';
 import './personality.css';
 
 type Props = { onBack: () => void; onProfile: (profile: Profile) => void; onSaved: () => void };
@@ -20,6 +21,7 @@ export default function Personality({ onBack, onProfile, onSaved }: Props) {
  const [attempt, setAttempt] = useState(0);
  const [loadedImage, setLoadedImage] = useState('');
  const [imageError, setImageError] = useState('');
+ const [reaction, setReaction] = useState(0);
  const busy = useRef(false);
  const callbacks = useRef({ onProfile, onSaved }); callbacks.current = { onProfile, onSaved };
  const heading = useRef<HTMLHeadingElement>(null);
@@ -60,7 +62,7 @@ export default function Personality({ onBack, onProfile, onSaved }: Props) {
    : selected && <>
     <section className="personality-hero" aria-label="音乐形象预览">
      <div className="personality-hero-top"><span><Sparkles size={13}/>{selected.groupName}</span><span aria-live="polite">{isCurrent ? <><Check size={12}/>当前音乐形象</> : '正在浏览'}</span></div>
-     <div className="personality-stage"><span aria-hidden="true"/><img key={selected.imageUrl} src={selected.imageUrl} alt={selected.name} draggable={false} onLoad={() => { setLoadedImage(selected.imageUrl); setImageError(''); }} onError={() => setImageError(selected.imageUrl)}/></div>
+     <div className="personality-stage"><span aria-hidden="true"/><button className="personality-greet" aria-label={`和${selected.name}打招呼`} onClick={() => setReaction(value => value + 1)}><CharacterVisual key={selected.id} id={selected.id} src={selected.imageUrl} alt={selected.name} animated reaction={reaction} onLoad={() => { setLoadedImage(selected.imageUrl); setImageError(''); }} onError={() => setImageError(selected.imageUrl)}/></button></div>
      {imageError === selected.imageUrl && <p role="alert" className="personality-error">图片加载失败，请重新打开页面。</p>}
      <div className="personality-intro" aria-live="polite"><strong>{selected.musicStyles[1]}</strong><h2>{selected.name}</h2><p>{selected.description}</p><div className="personality-tags">{selected.traits.map(trait => <span key={trait}>{trait}</span>)}</div></div>
     </section>

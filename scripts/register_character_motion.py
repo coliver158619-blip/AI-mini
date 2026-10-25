@@ -22,7 +22,7 @@ POSE_MAPS = {
 }
 
 
-def measure(path):
+def measure(path, adaptive_columns=False):
     image = Image.open(path).convert('RGBA')
     alpha = image.getchannel('A').point(lambda a: 255 if a > 128 else 0)
     w, h = image.size
@@ -31,9 +31,13 @@ def measure(path):
     cuts = [0] + [min(range(round(h * (i / 4 - .07)), round(h * (i / 4 + .07))), key=lambda y: rows[y]) for i in range(1, 4)] + [h]
     frames = []
     for row in range(4):
+        y0, y1 = cuts[row], cuts[row + 1]
+        columns = [round(w * col / 4) for col in range(5)]
+        if adaptive_columns:
+            ink = [sum(alpha.crop((x, y0, x + 1, y1)).getdata()) for x in range(w)]
+            columns = [0] + [min(range(round(w * (i / 4 - .07)), round(w * (i / 4 + .07))), key=lambda x: (ink[x], abs(x-w*i/4))) for i in range(1, 4)] + [w]
         for col in range(4):
-            x0, x1 = round(w * col / 4), round(w * (col + 1) / 4)
-            y0, y1 = cuts[row], cuts[row + 1]
+            x0, x1 = columns[col], columns[col + 1]
             bbox = alpha.crop((x0, y0, x1, y1)).getbbox()
             assert bbox, f'{path.stem}: empty frame {len(frames)}'
             left, top, right, bottom = bbox

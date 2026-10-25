@@ -1,0 +1,2002 @@
+{
+  "ENFJ": {
+    "src": "/assets/music-image-motion/ENFJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 105,
+        "y": 18,
+        "width": 144,
+        "height": 291,
+        "anchor": 49.3056
+      },
+      {
+        "x": 401,
+        "y": 18,
+        "width": 146,
+        "height": 291,
+        "anchor": 48.6301
+      },
+      {
+        "x": 710,
+        "y": 17,
+        "width": 145,
+        "height": 292,
+        "anchor": 48.9655
+      },
+      {
+        "x": 1006,
+        "y": 18,
+        "width": 146,
+        "height": 291,
+        "anchor": 48.6301
+      },
+      {
+        "x": 104,
+        "y": 326,
+        "width": 147,
+        "height": 293,
+        "anchor": 48.9796
+      },
+      {
+        "x": 402,
+        "y": 327,
+        "width": 148,
+        "height": 293,
+        "anchor": 48.9865
+      },
+      {
+        "x": 708,
+        "y": 327,
+        "width": 150,
+        "height": 292,
+        "anchor": 48.3333
+      },
+      {
+        "x": 105,
+        "y": 18,
+        "width": 144,
+        "height": 291,
+        "anchor": 49.3056
+      },
+      {
+        "x": 103,
+        "y": 637,
+        "width": 148,
+        "height": 292,
+        "anchor": 49.6622
+      },
+      {
+        "x": 403,
+        "y": 637,
+        "width": 148,
+        "height": 292,
+        "anchor": 48.6486
+      },
+      {
+        "x": 699,
+        "y": 636,
+        "width": 157,
+        "height": 293,
+        "anchor": 51.9108
+      },
+      {
+        "x": 1007,
+        "y": 636,
+        "width": 146,
+        "height": 293,
+        "anchor": 49.3151
+      },
+      {
+        "x": 104,
+        "y": 947,
+        "width": 146,
+        "height": 292,
+        "anchor": 48.9726
+      },
+      {
+        "x": 391,
+        "y": 946,
+        "width": 161,
+        "height": 293,
+        "anchor": 52.795
+      },
+      {
+        "x": 709,
+        "y": 947,
+        "width": 148,
+        "height": 292,
+        "anchor": 49.3243
+      },
+      {
+        "x": 105,
+        "y": 18,
+        "width": 144,
+        "height": 291,
+        "anchor": 49.3056
+      }
+    ],
+    "layout": {
+      "height": 862.0,
+      "top": 48.0,
+      "center": 383.0,
+      "widthScale": 0.9142981438515081
+    }
+  },
+  "ENFP": {
+    "src": "/assets/music-image-motion/ENFP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 107,
+        "y": 10,
+        "width": 213,
+        "height": 312,
+        "anchor": 50.0
+      },
+      {
+        "x": 389,
+        "y": 10,
+        "width": 212,
+        "height": 312,
+        "anchor": 50.0
+      },
+      {
+        "x": 665,
+        "y": 11,
+        "width": 211,
+        "height": 311,
+        "anchor": 50.0
+      },
+      {
+        "x": 948,
+        "y": 11,
+        "width": 212,
+        "height": 311,
+        "anchor": 50.0
+      },
+      {
+        "x": 106,
+        "y": 327,
+        "width": 214,
+        "height": 311,
+        "anchor": 50.0
+      },
+      {
+        "x": 390,
+        "y": 326,
+        "width": 214,
+        "height": 312,
+        "anchor": 50.0
+      },
+      {
+        "x": 665,
+        "y": 327,
+        "width": 212,
+        "height": 311,
+        "anchor": 50.0
+      },
+      {
+        "x": 107,
+        "y": 10,
+        "width": 213,
+        "height": 312,
+        "anchor": 50.0
+      },
+      {
+        "x": 110,
+        "y": 642,
+        "width": 213,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 391,
+        "y": 642,
+        "width": 213,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 665,
+        "y": 643,
+        "width": 213,
+        "height": 298,
+        "anchor": 50.0
+      },
+      {
+        "x": 950,
+        "y": 640,
+        "width": 217,
+        "height": 301,
+        "anchor": 49.5392
+      },
+      {
+        "x": 109,
+        "y": 945,
+        "width": 213,
+        "height": 302,
+        "anchor": 50.0
+      },
+      {
+        "x": 389,
+        "y": 947,
+        "width": 214,
+        "height": 300,
+        "anchor": 50.0
+      },
+      {
+        "x": 664,
+        "y": 946,
+        "width": 213,
+        "height": 301,
+        "anchor": 50.0
+      },
+      {
+        "x": 107,
+        "y": 10,
+        "width": 213,
+        "height": 312,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 383.0,
+      "widthScale": 0.905320813771518
+    }
+  },
+  "ENTJ": {
+    "src": "/assets/music-image-motion/ENTJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 84,
+        "y": 21,
+        "width": 221,
+        "height": 294,
+        "anchor": 39.819
+      },
+      {
+        "x": 385,
+        "y": 20,
+        "width": 224,
+        "height": 295,
+        "anchor": 39.5089
+      },
+      {
+        "x": 686,
+        "y": 19,
+        "width": 225,
+        "height": 296,
+        "anchor": 39.5556
+      },
+      {
+        "x": 996,
+        "y": 19,
+        "width": 222,
+        "height": 296,
+        "anchor": 40.0901
+      },
+      {
+        "x": 81,
+        "y": 329,
+        "width": 224,
+        "height": 296,
+        "anchor": 40.4018
+      },
+      {
+        "x": 385,
+        "y": 328,
+        "width": 224,
+        "height": 297,
+        "anchor": 39.9554
+      },
+      {
+        "x": 686,
+        "y": 330,
+        "width": 226,
+        "height": 295,
+        "anchor": 39.823
+      },
+      {
+        "x": 84,
+        "y": 21,
+        "width": 221,
+        "height": 294,
+        "anchor": 39.819
+      },
+      {
+        "x": 77,
+        "y": 638,
+        "width": 228,
+        "height": 297,
+        "anchor": 41.2281
+      },
+      {
+        "x": 389,
+        "y": 639,
+        "width": 223,
+        "height": 296,
+        "anchor": 40.583
+      },
+      {
+        "x": 686,
+        "y": 638,
+        "width": 226,
+        "height": 297,
+        "anchor": 40.4867
+      },
+      {
+        "x": 997,
+        "y": 638,
+        "width": 222,
+        "height": 297,
+        "anchor": 41.2162
+      },
+      {
+        "x": 81,
+        "y": 948,
+        "width": 225,
+        "height": 294,
+        "anchor": 40.4444
+      },
+      {
+        "x": 387,
+        "y": 949,
+        "width": 221,
+        "height": 293,
+        "anchor": 41.629
+      },
+      {
+        "x": 687,
+        "y": 948,
+        "width": 226,
+        "height": 294,
+        "anchor": 40.708
+      },
+      {
+        "x": 84,
+        "y": 21,
+        "width": 221,
+        "height": 294,
+        "anchor": 39.819
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 320.0,
+      "widthScale": 0.9484665661136249
+    }
+  },
+  "ENTP": {
+    "src": "/assets/music-image-motion/ENTP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 82,
+        "y": 21,
+        "width": 184,
+        "height": 292,
+        "anchor": 42.663
+      },
+      {
+        "x": 394,
+        "y": 21,
+        "width": 186,
+        "height": 292,
+        "anchor": 42.4731
+      },
+      {
+        "x": 706,
+        "y": 21,
+        "width": 186,
+        "height": 292,
+        "anchor": 42.2043
+      },
+      {
+        "x": 1019,
+        "y": 21,
+        "width": 186,
+        "height": 292,
+        "anchor": 42.4731
+      },
+      {
+        "x": 81,
+        "y": 330,
+        "width": 186,
+        "height": 296,
+        "anchor": 42.7419
+      },
+      {
+        "x": 393,
+        "y": 330,
+        "width": 186,
+        "height": 296,
+        "anchor": 42.7419
+      },
+      {
+        "x": 706,
+        "y": 330,
+        "width": 186,
+        "height": 296,
+        "anchor": 42.7419
+      },
+      {
+        "x": 82,
+        "y": 21,
+        "width": 184,
+        "height": 292,
+        "anchor": 42.663
+      },
+      {
+        "x": 81,
+        "y": 643,
+        "width": 186,
+        "height": 292,
+        "anchor": 42.4731
+      },
+      {
+        "x": 397,
+        "y": 641,
+        "width": 164,
+        "height": 294,
+        "anchor": 48.1707
+      },
+      {
+        "x": 708,
+        "y": 643,
+        "width": 174,
+        "height": 292,
+        "anchor": 45.1149
+      },
+      {
+        "x": 1023,
+        "y": 641,
+        "width": 158,
+        "height": 294,
+        "anchor": 50.0
+      },
+      {
+        "x": 83,
+        "y": 953,
+        "width": 171,
+        "height": 292,
+        "anchor": 45.9064
+      },
+      {
+        "x": 397,
+        "y": 953,
+        "width": 179,
+        "height": 292,
+        "anchor": 43.8547
+      },
+      {
+        "x": 709,
+        "y": 953,
+        "width": 183,
+        "height": 292,
+        "anchor": 42.8962
+      },
+      {
+        "x": 82,
+        "y": 21,
+        "width": 184,
+        "height": 292,
+        "anchor": 42.663
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 345.0,
+      "widthScale": 0.9147041062801932
+    }
+  },
+  "ESFJ": {
+    "src": "/assets/music-image-motion/ESFJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 64,
+        "y": 18,
+        "width": 246,
+        "height": 301,
+        "anchor": 50.0
+      },
+      {
+        "x": 355,
+        "y": 19,
+        "width": 244,
+        "height": 300,
+        "anchor": 50.0
+      },
+      {
+        "x": 663,
+        "y": 19,
+        "width": 247,
+        "height": 300,
+        "anchor": 50.0
+      },
+      {
+        "x": 963,
+        "y": 19,
+        "width": 245,
+        "height": 300,
+        "anchor": 49.5918
+      },
+      {
+        "x": 64,
+        "y": 328,
+        "width": 246,
+        "height": 300,
+        "anchor": 50.0
+      },
+      {
+        "x": 357,
+        "y": 329,
+        "width": 247,
+        "height": 299,
+        "anchor": 49.7976
+      },
+      {
+        "x": 665,
+        "y": 329,
+        "width": 246,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 64,
+        "y": 18,
+        "width": 246,
+        "height": 301,
+        "anchor": 50.0
+      },
+      {
+        "x": 62,
+        "y": 636,
+        "width": 247,
+        "height": 295,
+        "anchor": 48.3806
+      },
+      {
+        "x": 356,
+        "y": 636,
+        "width": 248,
+        "height": 294,
+        "anchor": 49.5968
+      },
+      {
+        "x": 662,
+        "y": 635,
+        "width": 249,
+        "height": 296,
+        "anchor": 50.4016
+      },
+      {
+        "x": 962,
+        "y": 635,
+        "width": 247,
+        "height": 296,
+        "anchor": 48.1781
+      },
+      {
+        "x": 62,
+        "y": 939,
+        "width": 248,
+        "height": 297,
+        "anchor": 47.7823
+      },
+      {
+        "x": 359,
+        "y": 940,
+        "width": 248,
+        "height": 296,
+        "anchor": 50.6048
+      },
+      {
+        "x": 665,
+        "y": 940,
+        "width": 246,
+        "height": 297,
+        "anchor": 50.4065
+      },
+      {
+        "x": 64,
+        "y": 18,
+        "width": 246,
+        "height": 301,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 385.0,
+      "widthScale": 0.9233476362541403
+    }
+  },
+  "ESFP": {
+    "src": "/assets/music-image-motion/ESFP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 88,
+        "y": 22,
+        "width": 254,
+        "height": 291,
+        "anchor": 50.7874
+      },
+      {
+        "x": 367,
+        "y": 21,
+        "width": 254,
+        "height": 292,
+        "anchor": 50.3937
+      },
+      {
+        "x": 644,
+        "y": 21,
+        "width": 252,
+        "height": 292,
+        "anchor": 50.1984
+      },
+      {
+        "x": 919,
+        "y": 21,
+        "width": 255,
+        "height": 292,
+        "anchor": 50.1961
+      },
+      {
+        "x": 88,
+        "y": 324,
+        "width": 254,
+        "height": 292,
+        "anchor": 50.7874
+      },
+      {
+        "x": 366,
+        "y": 324,
+        "width": 255,
+        "height": 292,
+        "anchor": 50.3922
+      },
+      {
+        "x": 642,
+        "y": 323,
+        "width": 256,
+        "height": 293,
+        "anchor": 50.7812
+      },
+      {
+        "x": 88,
+        "y": 22,
+        "width": 254,
+        "height": 291,
+        "anchor": 50.7874
+      },
+      {
+        "x": 88,
+        "y": 625,
+        "width": 254,
+        "height": 290,
+        "anchor": 50.7874
+      },
+      {
+        "x": 366,
+        "y": 625,
+        "width": 254,
+        "height": 291,
+        "anchor": 50.3937
+      },
+      {
+        "x": 642,
+        "y": 625,
+        "width": 252,
+        "height": 291,
+        "anchor": 50.7937
+      },
+      {
+        "x": 920,
+        "y": 625,
+        "width": 253,
+        "height": 290,
+        "anchor": 50.7905
+      },
+      {
+        "x": 86,
+        "y": 925,
+        "width": 261,
+        "height": 293,
+        "anchor": 50.5747
+      },
+      {
+        "x": 368,
+        "y": 925,
+        "width": 257,
+        "height": 293,
+        "anchor": 50.0
+      },
+      {
+        "x": 643,
+        "y": 925,
+        "width": 253,
+        "height": 293,
+        "anchor": 50.5929
+      },
+      {
+        "x": 88,
+        "y": 22,
+        "width": 254,
+        "height": 291,
+        "anchor": 50.7874
+      }
+    ],
+    "layout": {
+      "height": 842.0,
+      "top": 50.0,
+      "center": 380.0,
+      "widthScale": 0.9361288271270128
+    }
+  },
+  "ESTJ": {
+    "src": "/assets/music-image-motion/ESTJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 79,
+        "y": 19,
+        "width": 197,
+        "height": 313,
+        "anchor": 49.4924
+      },
+      {
+        "x": 393,
+        "y": 19,
+        "width": 197,
+        "height": 312,
+        "anchor": 49.7462
+      },
+      {
+        "x": 707,
+        "y": 19,
+        "width": 197,
+        "height": 312,
+        "anchor": 49.4924
+      },
+      {
+        "x": 1012,
+        "y": 19,
+        "width": 195,
+        "height": 312,
+        "anchor": 50.0
+      },
+      {
+        "x": 80,
+        "y": 339,
+        "width": 197,
+        "height": 308,
+        "anchor": 49.4924
+      },
+      {
+        "x": 393,
+        "y": 339,
+        "width": 197,
+        "height": 308,
+        "anchor": 49.7462
+      },
+      {
+        "x": 706,
+        "y": 339,
+        "width": 198,
+        "height": 308,
+        "anchor": 49.7475
+      },
+      {
+        "x": 79,
+        "y": 19,
+        "width": 197,
+        "height": 313,
+        "anchor": 49.4924
+      },
+      {
+        "x": 74,
+        "y": 657,
+        "width": 208,
+        "height": 291,
+        "anchor": 50.9615
+      },
+      {
+        "x": 396,
+        "y": 652,
+        "width": 195,
+        "height": 296,
+        "anchor": 50.2564
+      },
+      {
+        "x": 713,
+        "y": 653,
+        "width": 195,
+        "height": 295,
+        "anchor": 50.0
+      },
+      {
+        "x": 1017,
+        "y": 651,
+        "width": 191,
+        "height": 297,
+        "anchor": 51.3089
+      },
+      {
+        "x": 78,
+        "y": 952,
+        "width": 197,
+        "height": 295,
+        "anchor": 51.269
+      },
+      {
+        "x": 392,
+        "y": 952,
+        "width": 197,
+        "height": 294,
+        "anchor": 50.7614
+      },
+      {
+        "x": 706,
+        "y": 952,
+        "width": 196,
+        "height": 294,
+        "anchor": 50.5102
+      },
+      {
+        "x": 79,
+        "y": 19,
+        "width": 197,
+        "height": 313,
+        "anchor": 49.4924
+      }
+    ],
+    "layout": {
+      "height": 862.0,
+      "top": 50.0,
+      "center": 380.0,
+      "widthScale": 0.9363421154910667
+    }
+  },
+  "ESTP": {
+    "src": "/assets/music-image-motion/ESTP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 106,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 402,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.4419
+      },
+      {
+        "x": 702,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 999,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.4419
+      },
+      {
+        "x": 106,
+        "y": 322,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 402,
+        "y": 322,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 702,
+        "y": 322,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 106,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      },
+      {
+        "x": 106,
+        "y": 635,
+        "width": 172,
+        "height": 297,
+        "anchor": 42.7326
+      },
+      {
+        "x": 402,
+        "y": 633,
+        "width": 174,
+        "height": 299,
+        "anchor": 42.2414
+      },
+      {
+        "x": 682,
+        "y": 634,
+        "width": 194,
+        "height": 298,
+        "anchor": 50.7732
+      },
+      {
+        "x": 998,
+        "y": 633,
+        "width": 178,
+        "height": 299,
+        "anchor": 44.382
+      },
+      {
+        "x": 85,
+        "y": 948,
+        "width": 196,
+        "height": 295,
+        "anchor": 47.7041
+      },
+      {
+        "x": 998,
+        "y": 633,
+        "width": 178,
+        "height": 299,
+        "anchor": 44.382
+      },
+      {
+        "x": 689,
+        "y": 947,
+        "width": 187,
+        "height": 296,
+        "anchor": 48.6631
+      },
+      {
+        "x": 106,
+        "y": 9,
+        "width": 172,
+        "height": 296,
+        "anchor": 42.7326
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 348.0,
+      "widthScale": 0.9560723514211887
+    }
+  },
+  "INFJ": {
+    "src": "/assets/music-image-motion/INFJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 125,
+        "y": 29,
+        "width": 144,
+        "height": 282,
+        "anchor": 50.0
+      },
+      {
+        "x": 399,
+        "y": 29,
+        "width": 146,
+        "height": 282,
+        "anchor": 50.0
+      },
+      {
+        "x": 703,
+        "y": 29,
+        "width": 148,
+        "height": 282,
+        "anchor": 50.0
+      },
+      {
+        "x": 981,
+        "y": 29,
+        "width": 148,
+        "height": 282,
+        "anchor": 50.0
+      },
+      {
+        "x": 124,
+        "y": 329,
+        "width": 146,
+        "height": 285,
+        "anchor": 50.0
+      },
+      {
+        "x": 400,
+        "y": 330,
+        "width": 147,
+        "height": 285,
+        "anchor": 50.0
+      },
+      {
+        "x": 702,
+        "y": 330,
+        "width": 150,
+        "height": 284,
+        "anchor": 50.0
+      },
+      {
+        "x": 125,
+        "y": 29,
+        "width": 144,
+        "height": 282,
+        "anchor": 50.0
+      },
+      {
+        "x": 125,
+        "y": 632,
+        "width": 171,
+        "height": 286,
+        "anchor": 43.5673
+      },
+      {
+        "x": 397,
+        "y": 632,
+        "width": 153,
+        "height": 286,
+        "anchor": 49.0196
+      },
+      {
+        "x": 702,
+        "y": 631,
+        "width": 168,
+        "height": 287,
+        "anchor": 44.6429
+      },
+      {
+        "x": 984,
+        "y": 631,
+        "width": 162,
+        "height": 287,
+        "anchor": 47.2222
+      },
+      {
+        "x": 127,
+        "y": 934,
+        "width": 157,
+        "height": 285,
+        "anchor": 48.7261
+      },
+      {
+        "x": 400,
+        "y": 933,
+        "width": 183,
+        "height": 286,
+        "anchor": 40.7104
+      },
+      {
+        "x": 700,
+        "y": 934,
+        "width": 169,
+        "height": 285,
+        "anchor": 44.0828
+      },
+      {
+        "x": 125,
+        "y": 29,
+        "width": 144,
+        "height": 282,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 384.0,
+      "widthScale": 0.961033950617284
+    }
+  },
+  "INFP": {
+    "src": "/assets/music-image-motion/INFP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 100,
+        "y": 10,
+        "width": 198,
+        "height": 297,
+        "anchor": 44.697
+      },
+      {
+        "x": 396,
+        "y": 10,
+        "width": 194,
+        "height": 297,
+        "anchor": 44.8454
+      },
+      {
+        "x": 686,
+        "y": 10,
+        "width": 198,
+        "height": 297,
+        "anchor": 44.4444
+      },
+      {
+        "x": 980,
+        "y": 10,
+        "width": 196,
+        "height": 297,
+        "anchor": 45.1531
+      },
+      {
+        "x": 100,
+        "y": 323,
+        "width": 197,
+        "height": 298,
+        "anchor": 44.9239
+      },
+      {
+        "x": 396,
+        "y": 323,
+        "width": 194,
+        "height": 298,
+        "anchor": 44.8454
+      },
+      {
+        "x": 396,
+        "y": 323,
+        "width": 194,
+        "height": 298,
+        "anchor": 44.8454
+      },
+      {
+        "x": 100,
+        "y": 10,
+        "width": 198,
+        "height": 297,
+        "anchor": 44.697
+      },
+      {
+        "x": 100,
+        "y": 636,
+        "width": 198,
+        "height": 298,
+        "anchor": 44.697
+      },
+      {
+        "x": 396,
+        "y": 636,
+        "width": 194,
+        "height": 298,
+        "anchor": 45.1031
+      },
+      {
+        "x": 686,
+        "y": 636,
+        "width": 198,
+        "height": 298,
+        "anchor": 44.697
+      },
+      {
+        "x": 979,
+        "y": 636,
+        "width": 197,
+        "height": 298,
+        "anchor": 44.6701
+      },
+      {
+        "x": 101,
+        "y": 950,
+        "width": 197,
+        "height": 298,
+        "anchor": 44.6701
+      },
+      {
+        "x": 396,
+        "y": 950,
+        "width": 194,
+        "height": 298,
+        "anchor": 45.1031
+      },
+      {
+        "x": 688,
+        "y": 950,
+        "width": 196,
+        "height": 298,
+        "anchor": 44.898
+      },
+      {
+        "x": 100,
+        "y": 10,
+        "width": 198,
+        "height": 297,
+        "anchor": 44.697
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 347.0,
+      "widthScale": 0.9583333333333333
+    }
+  },
+  "INTJ": {
+    "src": "/assets/music-image-motion/INTJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 110,
+        "y": 31,
+        "width": 156,
+        "height": 285,
+        "anchor": 50.0
+      },
+      {
+        "x": 396,
+        "y": 27,
+        "width": 157,
+        "height": 289,
+        "anchor": 50.0
+      },
+      {
+        "x": 700,
+        "y": 28,
+        "width": 157,
+        "height": 288,
+        "anchor": 50.0
+      },
+      {
+        "x": 997,
+        "y": 30,
+        "width": 156,
+        "height": 286,
+        "anchor": 50.0
+      },
+      {
+        "x": 110,
+        "y": 337,
+        "width": 154,
+        "height": 285,
+        "anchor": 50.0
+      },
+      {
+        "x": 397,
+        "y": 336,
+        "width": 157,
+        "height": 286,
+        "anchor": 50.0
+      },
+      {
+        "x": 703,
+        "y": 336,
+        "width": 157,
+        "height": 286,
+        "anchor": 50.0
+      },
+      {
+        "x": 110,
+        "y": 31,
+        "width": 156,
+        "height": 285,
+        "anchor": 50.0
+      },
+      {
+        "x": 105,
+        "y": 642,
+        "width": 167,
+        "height": 290,
+        "anchor": 47.3054
+      },
+      {
+        "x": 397,
+        "y": 642,
+        "width": 168,
+        "height": 290,
+        "anchor": 47.0238
+      },
+      {
+        "x": 698,
+        "y": 641,
+        "width": 183,
+        "height": 291,
+        "anchor": 45.3552
+      },
+      {
+        "x": 998,
+        "y": 642,
+        "width": 173,
+        "height": 290,
+        "anchor": 45.9538
+      },
+      {
+        "x": 105,
+        "y": 949,
+        "width": 180,
+        "height": 282,
+        "anchor": 44.4444
+      },
+      {
+        "x": 396,
+        "y": 947,
+        "width": 190,
+        "height": 284,
+        "anchor": 41.8421
+      },
+      {
+        "x": 702,
+        "y": 947,
+        "width": 180,
+        "height": 284,
+        "anchor": 44.4444
+      },
+      {
+        "x": 110,
+        "y": 31,
+        "width": 156,
+        "height": 285,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 862.0,
+      "top": 50.0,
+      "center": 390.0,
+      "widthScale": 0.8986257362127431
+    }
+  },
+  "INTP": {
+    "src": "/assets/music-image-motion/INTP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 114,
+        "y": 12,
+        "width": 162,
+        "height": 297,
+        "anchor": 44.7531
+      },
+      {
+        "x": 414,
+        "y": 12,
+        "width": 162,
+        "height": 297,
+        "anchor": 44.7531
+      },
+      {
+        "x": 703,
+        "y": 12,
+        "width": 163,
+        "height": 297,
+        "anchor": 44.7853
+      },
+      {
+        "x": 1000,
+        "y": 12,
+        "width": 162,
+        "height": 297,
+        "anchor": 44.7531
+      },
+      {
+        "x": 112,
+        "y": 320,
+        "width": 167,
+        "height": 308,
+        "anchor": 44.6108
+      },
+      {
+        "x": 411,
+        "y": 320,
+        "width": 169,
+        "height": 308,
+        "anchor": 44.6746
+      },
+      {
+        "x": 701,
+        "y": 320,
+        "width": 168,
+        "height": 308,
+        "anchor": 44.6429
+      },
+      {
+        "x": 114,
+        "y": 12,
+        "width": 162,
+        "height": 297,
+        "anchor": 44.7531
+      },
+      {
+        "x": 111,
+        "y": 637,
+        "width": 171,
+        "height": 302,
+        "anchor": 43.8596
+      },
+      {
+        "x": 410,
+        "y": 638,
+        "width": 172,
+        "height": 301,
+        "anchor": 43.6047
+      },
+      {
+        "x": 694,
+        "y": 637,
+        "width": 175,
+        "height": 302,
+        "anchor": 46.5714
+      },
+      {
+        "x": 997,
+        "y": 637,
+        "width": 168,
+        "height": 303,
+        "anchor": 44.6429
+      },
+      {
+        "x": 106,
+        "y": 951,
+        "width": 174,
+        "height": 296,
+        "anchor": 47.1264
+      },
+      {
+        "x": 401,
+        "y": 952,
+        "width": 184,
+        "height": 295,
+        "anchor": 47.2826
+      },
+      {
+        "x": 700,
+        "y": 951,
+        "width": 169,
+        "height": 296,
+        "anchor": 44.6746
+      },
+      {
+        "x": 114,
+        "y": 12,
+        "width": 162,
+        "height": 297,
+        "anchor": 44.7531
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 357.0,
+      "widthScale": 0.9760802469135804
+    }
+  },
+  "ISFJ": {
+    "src": "/assets/music-image-motion/ISFJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 132,
+        "y": 14,
+        "width": 145,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 423,
+        "y": 14,
+        "width": 145,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 702,
+        "y": 14,
+        "width": 147,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 987,
+        "y": 14,
+        "width": 145,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 132,
+        "y": 320,
+        "width": 147,
+        "height": 303,
+        "anchor": 50.0
+      },
+      {
+        "x": 423,
+        "y": 322,
+        "width": 146,
+        "height": 301,
+        "anchor": 50.0
+      },
+      {
+        "x": 705,
+        "y": 322,
+        "width": 147,
+        "height": 301,
+        "anchor": 50.0
+      },
+      {
+        "x": 132,
+        "y": 14,
+        "width": 145,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 133,
+        "y": 634,
+        "width": 146,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 423,
+        "y": 634,
+        "width": 146,
+        "height": 299,
+        "anchor": 50.0
+      },
+      {
+        "x": 696,
+        "y": 634,
+        "width": 157,
+        "height": 299,
+        "anchor": 53.5032
+      },
+      {
+        "x": 985,
+        "y": 634,
+        "width": 148,
+        "height": 299,
+        "anchor": 51.0135
+      },
+      {
+        "x": 133,
+        "y": 944,
+        "width": 145,
+        "height": 298,
+        "anchor": 50.0
+      },
+      {
+        "x": 403,
+        "y": 943,
+        "width": 164,
+        "height": 299,
+        "anchor": 55.4878
+      },
+      {
+        "x": 694,
+        "y": 944,
+        "width": 156,
+        "height": 298,
+        "anchor": 52.8846
+      },
+      {
+        "x": 132,
+        "y": 14,
+        "width": 145,
+        "height": 299,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 384.0,
+      "widthScale": 0.8973818646232439
+    }
+  },
+  "ISFP": {
+    "src": "/assets/music-image-motion/ISFP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 103,
+        "y": 20,
+        "width": 201,
+        "height": 309,
+        "anchor": 50.0
+      },
+      {
+        "x": 391,
+        "y": 22,
+        "width": 203,
+        "height": 307,
+        "anchor": 51.7241
+      },
+      {
+        "x": 684,
+        "y": 21,
+        "width": 203,
+        "height": 308,
+        "anchor": 51.9704
+      },
+      {
+        "x": 973,
+        "y": 21,
+        "width": 202,
+        "height": 308,
+        "anchor": 51.4851
+      },
+      {
+        "x": 103,
+        "y": 342,
+        "width": 202,
+        "height": 309,
+        "anchor": 50.495
+      },
+      {
+        "x": 400,
+        "y": 346,
+        "width": 204,
+        "height": 305,
+        "anchor": 49.5098
+      },
+      {
+        "x": 683,
+        "y": 344,
+        "width": 205,
+        "height": 307,
+        "anchor": 50.7317
+      },
+      {
+        "x": 103,
+        "y": 20,
+        "width": 201,
+        "height": 309,
+        "anchor": 50.0
+      },
+      {
+        "x": 98,
+        "y": 663,
+        "width": 207,
+        "height": 293,
+        "anchor": 52.657
+      },
+      {
+        "x": 397,
+        "y": 663,
+        "width": 204,
+        "height": 293,
+        "anchor": 51.9608
+      },
+      {
+        "x": 674,
+        "y": 663,
+        "width": 212,
+        "height": 293,
+        "anchor": 49.0566
+      },
+      {
+        "x": 978,
+        "y": 665,
+        "width": 203,
+        "height": 291,
+        "anchor": 50.2463
+      },
+      {
+        "x": 91,
+        "y": 966,
+        "width": 218,
+        "height": 282,
+        "anchor": 51.3761
+      },
+      {
+        "x": 384,
+        "y": 967,
+        "width": 221,
+        "height": 281,
+        "anchor": 50.4525
+      },
+      {
+        "x": 686,
+        "y": 967,
+        "width": 202,
+        "height": 281,
+        "anchor": 52.4752
+      },
+      {
+        "x": 103,
+        "y": 20,
+        "width": 201,
+        "height": 309,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 384.0,
+      "widthScale": 0.9537037037037036
+    }
+  },
+  "ISTJ": {
+    "src": "/assets/music-image-motion/ISTJ-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 153,
+        "y": 10,
+        "width": 154,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 410,
+        "y": 10,
+        "width": 154,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 677,
+        "y": 10,
+        "width": 155,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 941,
+        "y": 10,
+        "width": 155,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 153,
+        "y": 320,
+        "width": 153,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 410,
+        "y": 320,
+        "width": 154,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 677,
+        "y": 320,
+        "width": 156,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 153,
+        "y": 10,
+        "width": 154,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 153,
+        "y": 634,
+        "width": 164,
+        "height": 296,
+        "anchor": 47.2561
+      },
+      {
+        "x": 411,
+        "y": 634,
+        "width": 164,
+        "height": 297,
+        "anchor": 47.2561
+      },
+      {
+        "x": 676,
+        "y": 634,
+        "width": 170,
+        "height": 297,
+        "anchor": 47.3529
+      },
+      {
+        "x": 944,
+        "y": 634,
+        "width": 159,
+        "height": 296,
+        "anchor": 49.3711
+      },
+      {
+        "x": 153,
+        "y": 944,
+        "width": 164,
+        "height": 298,
+        "anchor": 47.2561
+      },
+      {
+        "x": 410,
+        "y": 945,
+        "width": 169,
+        "height": 297,
+        "anchor": 45.858
+      },
+      {
+        "x": 679,
+        "y": 946,
+        "width": 156,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 153,
+        "y": 10,
+        "width": 154,
+        "height": 296,
+        "anchor": 50.0
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 384.0,
+      "widthScale": 0.9254449254449254
+    }
+  },
+  "ISTP": {
+    "src": "/assets/music-image-motion/ISTP-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 93,
+        "y": 11,
+        "width": 219,
+        "height": 308,
+        "anchor": 39.4977
+      },
+      {
+        "x": 378,
+        "y": 11,
+        "width": 218,
+        "height": 308,
+        "anchor": 39.6789
+      },
+      {
+        "x": 681,
+        "y": 11,
+        "width": 221,
+        "height": 308,
+        "anchor": 39.3665
+      },
+      {
+        "x": 992,
+        "y": 12,
+        "width": 218,
+        "height": 307,
+        "anchor": 39.6789
+      },
+      {
+        "x": 91,
+        "y": 320,
+        "width": 221,
+        "height": 310,
+        "anchor": 39.819
+      },
+      {
+        "x": 379,
+        "y": 321,
+        "width": 217,
+        "height": 309,
+        "anchor": 40.0922
+      },
+      {
+        "x": 680,
+        "y": 321,
+        "width": 223,
+        "height": 309,
+        "anchor": 39.6861
+      },
+      {
+        "x": 93,
+        "y": 11,
+        "width": 219,
+        "height": 308,
+        "anchor": 39.4977
+      },
+      {
+        "x": 90,
+        "y": 631,
+        "width": 222,
+        "height": 309,
+        "anchor": 38.0631
+      },
+      {
+        "x": 377,
+        "y": 633,
+        "width": 228,
+        "height": 306,
+        "anchor": 37.5
+      },
+      {
+        "x": 681,
+        "y": 632,
+        "width": 225,
+        "height": 308,
+        "anchor": 38.2222
+      },
+      {
+        "x": 995,
+        "y": 632,
+        "width": 214,
+        "height": 308,
+        "anchor": 40.1869
+      },
+      {
+        "x": 91,
+        "y": 942,
+        "width": 217,
+        "height": 305,
+        "anchor": 39.8618
+      },
+      {
+        "x": 378,
+        "y": 941,
+        "width": 218,
+        "height": 306,
+        "anchor": 39.9083
+      },
+      {
+        "x": 685,
+        "y": 943,
+        "width": 226,
+        "height": 304,
+        "anchor": 38.2743
+      },
+      {
+        "x": 93,
+        "y": 11,
+        "width": 219,
+        "height": 308,
+        "anchor": 39.4977
+      }
+    ],
+    "layout": {
+      "height": 864.0,
+      "top": 48.0,
+      "center": 315.0,
+      "widthScale": 0.9245729748012854
+    }
+  }
+}

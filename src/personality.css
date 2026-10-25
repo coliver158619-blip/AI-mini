@@ -56,3 +56,14 @@
 .personality-intro > strong { font-size:22px; letter-spacing:1px; }
 .personality-grid > button > strong { letter-spacing:0; }
 .personality-tile-art > i { z-index:1; }
+
+.personality-page button,
+.personality-page .personality-filters button[aria-pressed],
+.personality-page .personality-footer > button:disabled,
+.personality-page .personality-grid small,
+.personality-page .personality-details :is(h3, p),
+.personality-page .personality-intro > strong,
+.personality-page .personality-tags > span { color: #303039; }
+.personality-greet { position:absolute; inset:0; width:100%; height:100%; padding:0; border:0; background:none; cursor:pointer; }
+.personality-greet:focus-visible { outline:2px solid var(--personality-accent); outline-offset:3px; border-radius:20px; }
+.personality-greet .character-frames { filter:drop-shadow(0 8px 6px #5f674c18); }

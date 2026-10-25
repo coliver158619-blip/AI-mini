@@ -1,0 +1,262 @@
+src/wardrobe.css
+  s_bc3e1980fa79c9::t_f7664846e2d358 31-32
+  s_44fa422e891a30::t_4265a41e876dd8 61-98
+src/companion-space.css
+  s_bc3e1980fa79c9::t_bcda93ead1c533 12
+  s_bc3e1980fa79c9::t_1a006ede439da2 1-11,13-49
+docs/widget-api.md
+  s_bc3e1980fa79c9::t_91566e591dcf4f 1-76
+tests/character-motion.spec.ts
+  s_bc3e1980fa79c9::t_6b0e374dffe608 36,66
+  s_bc3e1980fa79c9::t_479eb00ffa42fb 12
+  s_bc3e1980fa79c9::t_715ae56b6a03d9 3,25,27-30,32-33,39,43,46,56
+  s_bc3e1980fa79c9::t_57652b9e9cbdff 1-2,4-11,13-22,24,26,31,34-35,37-38,40-42,44-45,47-55,57-62,64-65,67-84
+  s_bc3e1980fa79c9::t_46785ff30d848d 85
+  s_bc3e1980fa79c9::t_004b690b87a73d 23,63
+playwright.pink.config.ts
+  s_bc3e1980fa79c9::t_8e8a44d5479d21 1-3
+src/couple-characters.css
+  s_bc3e1980fa79c9::t_069dbfed804540 1-4
+  s_bc3e1980fa79c9::t_851422f015f712 5-11
+src/CompanionSpace.tsx
+  s_bc3e1980fa79c9::t_069dbfed804540 48-50,52
+  s_bc3e1980fa79c9::t_172609dc3555fd 2,38,41-44
+  s_bc3e1980fa79c9::t_363644a30b9ba8 1,3-7,9-10,12-37,39-40,45-47,51,53-65
+  s_bc3e1980fa79c9::t_11106f90b7ad8f 8,11
+src/CharacterVisual.tsx
+  s_bc3e1980fa79c9::t_d19a18d022d351 1,3,5-24,34,37-39
+  s_bc3e1980fa79c9::t_cdccdf09760c76 25-32
+  s_bc3e1980fa79c9::t_069dbfed804540 41
+  s_bc3e1980fa79c9::t_83605978fbe61b 2,4,33,35-36,40
+docs/motion-v2-assets.md
+  s_bc3e1980fa79c9::t_2e8b821ba307e9 1
+  s_bc3e1980fa79c9::t_787d31283f19d3 2,4-18
+  s_bc3e1980fa79c9::t_0e5f84c75cd915 3
+  s_bc3e1980fa79c9::t_090ca40dfca8bb 19-20
+playwright.bubble.config.ts
+  s_bc3e1980fa79c9::t_c3409e4993d016 1-3
+backend/test_listen_together.py
+  s_bc3e1980fa79c9::t_f1b5a26b7c13d3 1-32
+tests/home-repair.spec.ts
+  s_bc3e1980fa79c9::t_0ff06c47ac5b1e 1-25,28-31,37-46,52
+  s_bc3e1980fa79c9::t_02ede32f60fae9 27,36
+  s_bc3e1980fa79c9::t_06bd035661e5ee 32-35
+  s_bc3e1980fa79c9::t_773af5ec6f10d6 26
+  s_bc3e1980fa79c9::t_1c4ccced0be159 47-51
+src/ChatPanel.tsx
+  s_bc3e1980fa79c9::t_1cc29e317129fc 41,43
+  s_bc3e1980fa79c9::t_0bbc83bc89877b 4-5,9
+playwright.shared-space.config.ts
+  s_bc3e1980fa79c9::t_b87f7f8d8f4dd0 1-2
+  s_bc3e1980fa79c9::t_77527c505ce56d 3
+tests/greeting-preview.spec.ts
+  s_bc3e1980fa79c9::t_715ae56b6a03d9 2,6,8
+  s_bc3e1980fa79c9::t_6b0e374dffe608 1,3-5,9-11
+  s_bc3e1980fa79c9::t_ac68282a971e16 7
+tests/shared-space.spec.ts
+  s_bc3e1980fa79c9::t_1a006ede439da2 1-75,77-79,81-84,86-100,102-107
+  s_bc3e1980fa79c9::t_715ae56b6a03d9 80,101
+  s_bc3e1980fa79c9::t_8e8a6e8e5e23f8 76,85
+playwright.home-repair.config.ts
+  s_bc3e1980fa79c9::t_6488632c44f103 3-4
+  s_bc3e1980fa79c9::t_0ff06c47ac5b1e 1-2
+backend/test_outfits.py
+  s_bc3e1980fa79c9::t_b1f50516114118 3
+  s_bc3e1980fa79c9::t_183cd00a635fd8 19-21,26-28,31,35-37,57,93,105
+docs/personality-client.md
+  s_bc3e1980fa79c9::t_161a3fe817cfed 3
+  s_bc3e1980fa79c9::t_9ab3dd8a930a85 4,48
+src/character-motion-v2.json
+  s_bc3e1980fa79c9::t_ce5a579caaee6d 1,6-77,83-84,90-91,97-98,104-105,111-112,118-120,125-196,202-203,209-210,216-217,223-224,230-231,237-1906
+  s_bc3e1980fa79c9::t_75275b28a0d891 2-5,78-82,85-89,92-96,99-103,106-110,113-117,121-124,197-201,204-208,211-215,218-222,225-229,232-236
+tests/wardrobe.spec.ts
+  s_bc3e1980fa79c9::t_1c9540b4451b45 11,15-46
+  s_bc3e1980fa79c9::t_eedf2e422a4937 50-53
+  s_bc3e1980fa79c9::t_b1f50516114118 48-49,54-55,58,60,62
+  s_bc3e1980fa79c9::t_f1b5a26b7c13d3 56-57
+  s_bc3e1980fa79c9::t_161a3fe817cfed 47,59,61
+  s_44fa422e891a30::t_e9a10a73c5d054 70-73,84-85,89-90,92,96,99-100,113,137,141,146
+tests/pink-theme.spec.ts
+  s_bc3e1980fa79c9::t_8e8a44d5479d21 1-7,9-10,12-16,18-29
+  s_bc3e1980fa79c9::t_717c492e00f88f 8,11,17
+backend/weather.py
+  s_bc3e1980fa79c9::t_b62a1fae1985bc 85,87,89,91,93,95-96
+playwright.all-motion.config.ts
+  s_bc3e1980fa79c9::t_e83f634d7c09b2 1-3
+src/AppearanceAvatar.tsx
+  s_bc3e1980fa79c9::t_0bbc83bc89877b 1-8
+src/character-visual.css
+  s_bc3e1980fa79c9::t_d19a18d022d351 4-6
+  s_bc3e1980fa79c9::t_b87f7f8d8f4dd0 8
+  s_bc3e1980fa79c9::t_479eb00ffa42fb 7
+  s_bc3e1980fa79c9::t_069dbfed804540 1-3
+backend/test_shared_space.py
+  s_bc3e1980fa79c9::t_3c6313d3e5d561 1-97
+src/StreakShare.tsx
+  s_bc3e1980fa79c9::t_851422f015f712 1,4,6
+  s_44fa422e891a30::t_f3f37ba1e50918 8,18,22
+backend/test_weather_details.py
+  s_bc3e1980fa79c9::t_0ff06c47ac5b1e 96-97
+src/Wardrobe.tsx
+  s_bc3e1980fa79c9::t_fbbab95c9e8d91 6
+  s_bc3e1980fa79c9::t_70ea912dfbcdcd 25,38-40,54,77,87-88,91,93-95,102,109-111
+src/companion-greeting.ts
+  s_bc3e1980fa79c9::t_8e441a665b02f2 1-6
+src/App.tsx
+  s_bc3e1980fa79c9::t_ef833e25f47736 15
+  s_bc3e1980fa79c9::t_4551fdc2d77dc0 13
+  s_bc3e1980fa79c9::t_8e441a665b02f2 11,14
+  s_bc3e1980fa79c9::t_d19a18d022d351 27
+  s_bc3e1980fa79c9::t_cdccdf09760c76 12,22
+  s_bc3e1980fa79c9::t_3c13fb2320dbf9 45,64,66,74,87-88,97,135,164,168,171,177,192,207-208,212,231,235-236,238,244-245,252,262,264,266
+src/OutfitUnlock.tsx
+  s_bc3e1980fa79c9::t_fbbab95c9e8d91 1-74
+src/SharedDiary.tsx
+  s_bc3e1980fa79c9::t_0726bac47af295 11
+  s_bc3e1980fa79c9::t_11106f90b7ad8f 1-10,12-55
+src/CoupleCharacters.tsx
+  s_bc3e1980fa79c9::t_069dbfed804540 2-3,7-8,12,14
+  s_bc3e1980fa79c9::t_851422f015f712 1,4-6,9-11,13,15-16
+src/theme.css
+  s_bc3e1980fa79c9::t_3515fefc27c71a 1-38
+docs/assets.md
+  s_bc3e1980fa79c9::t_eedf2e422a4937 11-12,15-18
+  s_bc3e1980fa79c9::t_7d5c00294ee01f 19-20,22-31
+src/appearance-avatar.css
+  s_bc3e1980fa79c9::t_0bbc83bc89877b 1-3
+tests/companion-space.spec.ts
+  s_bc3e1980fa79c9::t_f1b5a26b7c13d3 1-16,21-22,24-64,66
+  s_bc3e1980fa79c9::t_b87f7f8d8f4dd0 23
+  s_bc3e1980fa79c9::t_dba006f68ec37a 17-20,65
+tests/bubble-layout.spec.ts
+  s_bc3e1980fa79c9::t_8be26e7a5954ba 2-9,11,13-15
+  s_bc3e1980fa79c9::t_57652b9e9cbdff 1,10
+  s_bc3e1980fa79c9::t_c3409e4993d016 16
+  s_bc3e1980fa79c9::t_741b6c9684083f 12
+backend/outfits.py
+  s_bc3e1980fa79c9::t_e5cfc3222c20da 2-4,182-196,199,205,208,217,226,235,244,253,262,271,280
+  s_bc3e1980fa79c9::t_161a3fe817cfed 1,5-87,91,100,109,118,127,132-181
+  s_bc3e1980fa79c9::t_bf27bcc1be7ef2 197-198,200-204,206-207,209-212,285-290,295-303
+backend/test_wardrobe_unlock.py
+  s_bc3e1980fa79c9::t_1c9540b4451b45 1-104
+src/responsive.css
+  s_bc3e1980fa79c9::t_39b4a6d16baa0d 34
+  s_bc3e1980fa79c9::t_7adf1d4e9bf41e 110,112,114-124,172,216-259
+docs/companion-space.md
+  s_bc3e1980fa79c9::t_072dd79565cc50 10
+  s_bc3e1980fa79c9::t_2e8b821ba307e9 11
+  s_bc3e1980fa79c9::t_9c3e6aa11adb82 14
+  s_bc3e1980fa79c9::t_0e5f84c75cd915 9
+  s_bc3e1980fa79c9::t_090ca40dfca8bb 5,13,15
+  s_bc3e1980fa79c9::t_a184f826095540 7-8,12,17-28,30-40,43,69
+  s_bc3e1980fa79c9::t_525d8bea86f096 1-4,6,41-42,44-68
+  s_bc3e1980fa79c9::t_787d31283f19d3 16,29
+backend/shared_space.py
+  s_bc3e1980fa79c9::t_ec097c3304f223 81-82
+  s_bc3e1980fa79c9::t_4c1aff3b10797d 1-80,84,86-119
+  s_bc3e1980fa79c9::t_a184f826095540 83,85
+src/character-metrics.json
+  s_bc3e1980fa79c9::t_2c29db1ae193c7 1-188
+src/character-wave.ts
+  s_bc3e1980fa79c9::t_83605978fbe61b 115
+  s_bc3e1980fa79c9::t_b2e082b4f31190 86-105
+  s_bc3e1980fa79c9::t_9c3e6aa11adb82 4,13-14,23
+  s_bc3e1980fa79c9::t_3c5d2f766ecbb0 5,15,22
+  s_bc3e1980fa79c9::t_766831f8700bc4 24,29,33
+  s_bc3e1980fa79c9::t_f66395cf109ada 1-3,6-12,16-21,25-28,30-32,34-85,106-114
+playwright.greeting.config.ts
+  s_bc3e1980fa79c9::t_6b0e374dffe608 1
+src/character-frames.ts
+  s_bc3e1980fa79c9::t_d19a18d022d351 1-12,15-20,23-31
+  s_bc3e1980fa79c9::t_02ede32f60fae9 13-14
+  s_bc3e1980fa79c9::t_cdccdf09760c76 21-22
+scripts/optimize_outfits.py
+  s_bc3e1980fa79c9::t_3adaa1b5d6325e 1-31
+docs/wardrobe.md
+  s_bc3e1980fa79c9::t_91566e591dcf4f 6
+  s_bc3e1980fa79c9::t_161a3fe817cfed 8
+  s_44fa422e891a30::t_8000db72b71b82 9,11,20,22-23,39
+src/TogetherPlaylist.tsx
+  s_bc3e1980fa79c9::t_1a006ede439da2 1-17
+tests/all-motion.spec.ts
+  s_bc3e1980fa79c9::t_e83f634d7c09b2 1-35
+src/shared-space.css
+  s_bc3e1980fa79c9::t_11106f90b7ad8f 1-37
+scripts/register_character_motion.py
+  s_bc3e1980fa79c9::t_889651136cab28 1-54
+src/character-rig.ts
+  s_bc3e1980fa79c9::t_fcc3671df5803a 39
+  s_bc3e1980fa79c9::t_e88d64d86c4818 24
+  s_bc3e1980fa79c9::t_f36746ef7ada47 1,5-7,36,92-94
+  s_bc3e1980fa79c9::t_202057b8d20d00 28-33,37-38,40-86
+  s_bc3e1980fa79c9::t_6aec4d4d8768a6 2-4,8-23,25-27,34-35,87-91,95-98
+backend/app.py
+  s_bc3e1980fa79c9::t_4c1aff3b10797d 28,30
+  s_bc3e1980fa79c9::t_cdccdf09760c76 18
+  s_bc3e1980fa79c9::t_363644a30b9ba8 35
+  s_bc3e1980fa79c9::t_e5cfc3222c20da 74-75
+  s_bc3e1980fa79c9::t_069dbfed804540 76,105
+  s_bc3e1980fa79c9::t_f200f519ea2ed9 102-104
+  s_bc3e1980fa79c9::t_a6b98eaadeedeb 101,142-143,284-285,290-291,574,582,619,698-699,727-729,739-741,747-748,751,868-908,949-950,1015-1021,1024-1027,1029-1030
+README.md
+  s_bc3e1980fa79c9::t_f1f6a6d7c4f8bc 41-42,45,53-54,57-58
+backend/README.md
+  s_bc3e1980fa79c9::t_efde1b36b8362b 58-62,83-84,86-87
+backend/test_app.py
+  s_bc3e1980fa79c9::t_9b978639ffb3ed 192-193,195
+backend/test_personalities.py
+  s_bc3e1980fa79c9::t_ec2009b15d359f 17-19,42,72,135
+backend/test_personality_site.py
+  s_bc3e1980fa79c9::t_1b7f2bf01d2487 20-22
+docs/acceptance.md
+  s_bc3e1980fa79c9::t_5af8d1e19f79f5 28
+playwright.personality.config.ts
+  s_44fa422e891a30::t_f4dc83f4a97411 4
+src/Recommendations.tsx
+  s_bc3e1980fa79c9::t_fdcfc2a9d28b8b 11
+src/character-motion.json
+  s_bc3e1980fa79c9::t_275e96301d2920 1-66
+src/streak-share.css
+  s_44fa422e891a30::t_20e74a006f39e7 11-12,16-18
+src/types.ts
+  s_bc3e1980fa79c9::t_3575b673c27597 3
+tests/fullscreen.spec.ts
+  s_bc3e1980fa79c9::t_05ef3fdd8dab03 9,11-12,14,31-32,64,68
+tests/mobile-interactions.spec.ts
+  s_44fa422e891a30::t_c013259e1d2dc2 68,88
+tests/personality.spec.ts
+  s_44fa422e891a30::t_87f850a1d24fd6 29-32,102
+backend/.env.example
+  s_bc3e1980fa79c9::t_007946beae7944 26-27
+src/main.tsx
+  s_bc3e1980fa79c9::t_953d0e1d940dc5 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "c8362de19e9741289c22354213c3ba19b89353a7",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_44fa422e891a30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15c64-c4af-7263-95c6-220797e3b8db",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

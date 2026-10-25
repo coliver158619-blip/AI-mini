@@ -1,0 +1,73 @@
+tests/report-style.spec.ts
+  s_bc3e1980fa79c9::t_db9c281dc9048a 1-28
+scripts/register_music_image_motion.py
+  s_bc3e1980fa79c9::t_759fd88ef18443 12,29-30
+  s_bc3e1980fa79c9::t_407c16913b9137 1-11,13-15,20-28,31-35
+  s_bc3e1980fa79c9::t_0aac2a0eddf867 16-19
+docs/music-image-motion.md
+  s_bc3e1980fa79c9::t_e6b1a678700f9e 1-15
+playwright.report-style.config.ts
+  s_bc3e1980fa79c9::t_db9c281dc9048a 1-4
+src/character-frames.ts
+  s_bc3e1980fa79c9::t_f0d1f5ef870bd0 2,6-7
+  s_bc3e1980fa79c9::t_3a03f42bbb1d70 12-13,16,21
+docs/report-companions.md
+  s_bc3e1980fa79c9::t_fc1bdbd417d17a 1-28
+src/music-image-motion.json
+  s_bc3e1980fa79c9::t_ae2e7920568f64 99,135-1853,1860,1867,1962
+  s_bc3e1980fa79c9::t_fa5a64191ad5cd 1-98,100-134,1854-1859,1861-1866,1868-1961,1963-2002
+playwright.music-interaction.config.ts
+  s_bc3e1980fa79c9::t_0f9a9ccf1c5daa 1-3
+tests/music-interaction.spec.ts
+  s_bc3e1980fa79c9::t_0f9a9ccf1c5daa 1-33
+src/page-route.ts
+  s_bc3e1980fa79c9::t_354dfc830dd3c3 1-25
+src/Reports.tsx
+  s_bc3e1980fa79c9::t_bef144ddc53429 3
+  s_bc3e1980fa79c9::t_1459362c4ffded 50,68,89,206,211,232
+scripts/register_character_motion.py
+  s_bc3e1980fa79c9::t_759fd88ef18443 25,34-38,40
+src/reports.css
+  s_bc3e1980fa79c9::t_d75a14d25d65e9 25-26
+  s_bc3e1980fa79c9::t_97cc763fe84e85 27-29
+  s_bc3e1980fa79c9::t_754ca651a41d98 30-31,35,37,39,41,43,45,47,49-51,54-62
+src/CharacterVisual.tsx
+  s_bc3e1980fa79c9::t_ddb1b75e7bf687 7,38-39
+src/Personality.tsx
+  s_44fa422e891a30::t_b68f1a7488ad4b 5,24,65
+src/personality.css
+  s_44fa422e891a30::t_4af88f75d983f3 59-69
+tests/personality.spec.ts
+  s_44fa422e891a30::t_3248495063bd73 88
+src/App.tsx
+  s_bc3e1980fa79c9::t_6123ca388a8e90 7,37,231
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "e604f676d66f5f7052f3e755863a0273f478e1d6",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_44fa422e891a30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15c64-c4af-7263-95c6-220797e3b8db",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

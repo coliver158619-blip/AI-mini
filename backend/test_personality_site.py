@@ -17,6 +17,9 @@ class PersonalitySiteTest(unittest.TestCase):
                        'PERSONALITY_SITE_URL': 'https://example.test', 'PERSONALITY_SITE_SYNC_TOKEN': 'test-only-token'}
         self.app = create_app(self.config)
         self.client = self.app.test_client()
+        # These tests exercise an already unlocked wardrobe; unlock rules have their own suite.
+        for outfit in self.client.get('/api/outfits').json['outfits']:
+            self.client.post('/api/outfit/unlock', json={'outfitId': outfit['id']})
         self.sync = self.app.extensions['personality_site_sync']
 
     @staticmethod

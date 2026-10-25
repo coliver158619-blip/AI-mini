@@ -1,19 +1,17 @@
 import { useState } from 'react';
 import { ChevronLeft, Disc3, History, MessageSquarePlus, MoreHorizontal, Play, Send, Sun, Tag, X } from 'lucide-react';
 import { api, post } from './api';
-import type { Message, Song } from './types';
+import type { Message, Song, Profile } from './types';
+import AppearanceAvatar from './AppearanceAvatar';
 
 type Selection = { conversationId: string; messages: Message[] };
 type Props = {
+ appearance?: Profile['appearance'];
  messages: Message[]; input: string; sending: boolean; error: string; greeting: string;
  weather: string; provider: string; commands: string[]; conversationId: string;
  onInput: (value: string) => void; onSend: (value: string, scene?: string) => void;
  onClose: () => void; onPlay: (song: Song) => void; onSelect: (value: Selection) => void;
 };
-
-function ChatAvatar() {
- return <span className="message-avatar" aria-hidden="true"><svg viewBox="0 0 48 48"><defs><linearGradient id="headset-blue" x2="1" y2="1"><stop stopColor="#75a9ff"/><stop offset="1" stopColor="#2864ff"/></linearGradient></defs><path d="M10 29v-7a14 14 0 0 1 28 0v8" fill="none" stroke="url(#headset-blue)" strokeWidth="4"/><rect x="7" y="24" width="9" height="15" rx="4.5" fill="url(#headset-blue)"/><rect x="32" y="24" width="9" height="15" rx="4.5" fill="url(#headset-blue)"/><path d="M37 37c0 4-3 5-8 5" stroke="#3471ff" strokeWidth="3" fill="none"/><rect x="25" y="39" width="7" height="5" rx="2.5" fill="#3471ff"/></svg></span>;
-}
 
 export default function ChatPanel(props: Props) {
  const [history, setHistory] = useState<{ id: string; title: string; updated_at: string; messageCount: number }[]>([]);
@@ -40,9 +38,9 @@ export default function ChatPanel(props: Props) {
   <h2 className="chat-title">我在，慢慢说。</h2>
   <div className="chat-context"><span className="chat-presence"><i/>{props.weather}</span><div className="chat-session-actions"><button title="开启新对话" aria-label="开启新对话" onClick={() => void select()} disabled={disabled}><MessageSquarePlus size={21}/></button><button title="选择历史对话" aria-label="选择历史对话" onClick={() => void openHistory()} disabled={disabled}><History size={22}/></button></div><span className="chat-provider">{props.provider}</span></div>
   <div className="chat-messages" aria-live="polite">
-   <div className="chat-message assistant"><ChatAvatar/><div className="message-content"><p>{props.greeting}</p></div></div>
+   <div className="chat-message assistant"><AppearanceAvatar appearance={props.appearance} className="message-avatar"/><div className="message-content"><p>{props.greeting}</p></div></div>
    {props.messages.map((message, index) => <div className={`chat-message ${message.role}`} key={message.id || index}>
-    {message.role === 'assistant' && <ChatAvatar/>}<div className="message-content"><p>{message.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part)}</p>
+    {message.role === 'assistant' && <AppearanceAvatar appearance={props.appearance} className="message-avatar"/>}<div className="message-content"><p>{message.content.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part)}</p>
     {message.songs?.map(song => <button className="chat-song" key={song.id} onClick={() => props.onPlay(song)}><span className="chat-song-cover"><Disc3 size={25}/></span><span><strong>{song.title}</strong><small>{song.artist}</small></span><Play size={16}/></button>)}
     </div>
    </div>)}

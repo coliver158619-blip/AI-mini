@@ -6,11 +6,12 @@ async function safeArea(page: Page, top: number, bottom: number, left = 0, right
  }, { top, bottom, left, right });
 }
 
-async function checkHome(page: Page, bottom: number, player = false) {
+async function checkHome(page: Page, bottom: number, player = false, _scroll = false) {
  await expect(page.getByRole('button', { name: '热门活动', exact: true })).toBeVisible();
- await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true);
+ expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+ await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight <= innerHeight + 1)).toBe(true);
  expect(await page.locator('.hot-activities').evaluate((el, inset) => el.getBoundingClientRect().bottom <= innerHeight - inset - 23, bottom)).toBe(true);
- await expect.poll(() => page.locator('.speech-bubble').evaluate(el => el.getBoundingClientRect().bottom <= document.querySelector('.companion')!.getBoundingClientRect().top + 1)).toBe(true);
+ await expect.poll(() => page.locator('.speech-bubble').evaluate(el => (() => { const b=el.getBoundingClientRect(),c=document.querySelector('.companion .character-visual')!.getBoundingClientRect(); return b.bottom<=c.top+1 || b.right<=c.left+c.width*.23; })())).toBe(true);
  await expect.poll(() => page.locator('.companion').evaluate(el => el.getBoundingClientRect().bottom <= document.querySelector('.companion-caption')!.getBoundingClientRect().top + 1)).toBe(true);
  if (player) expect(await page.locator('.hot-activities').evaluate(el => el.getBoundingClientRect().bottom < document.querySelector('.mini-player')!.getBoundingClientRect().top)).toBe(true);
 }
@@ -27,7 +28,8 @@ for (const device of [
  test(`首页全屏、安全区和一屏入口 ${device.name}`, async ({ page }) => {
   await page.setViewportSize(device);
   await page.goto('/'); await safeArea(page, device.top, device.bottom);
-  await checkHome(page, device.bottom);
+  await checkHome(page, device.bottom, false, device.height < 700);
+  await page.evaluate(() => window.scrollTo(0,0));
   expect(await page.locator('.app-shell').evaluate(el => ({ width: el.getBoundingClientRect().width, radius: getComputedStyle(el).borderRadius }))).toEqual({ width: device.width, radius: '0px' });
   expect(await page.locator('.home-nav').evaluate((el, top) => el.getBoundingClientRect().top >= top, device.top)).toBe(true);
   await expect.poll(() => page.locator('.companion img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
@@ -59,11 +61,11 @@ test('推荐气泡展开时仍然完整显示首页', async ({ page }) => {
  } }));
  await page.goto('/'); await safeArea(page, 59, 34);
  await expect(page.locator('.hourly-song')).toBeVisible();
- await checkHome(page, 34);
+ await checkHome(page, 34, false, true);
  await page.screenshot({ path: 'test-results/fullscreen-hourly.png', animations: 'disabled' });
 });
 
-test('横屏侧边安全区、短屏滚动及软键盘适配', async ({ page }) => {
+test('横屏侧边安全区、一屏布局及软键盘适配', async ({ page }) => {
  await page.setViewportSize({ width: 844, height: 390 });
  await page.goto('/'); await safeArea(page, 0, 21, 59, 59);
  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

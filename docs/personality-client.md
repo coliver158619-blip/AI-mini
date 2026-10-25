@@ -1,5 +1,7 @@
 # 客户端人格文件名接口
 
+当前 H5 使用 Tailscale Funnel 公网服务。iOS 原生挂件优先使用 `https://desktop-rjgij1s.tailc7b3e2.ts.net/api/widget/image`，需要同步版本时使用 `/api/widget/appearance`；见 [iOS Widget API](widget-api.md)。下方独立 Sites 为历史同步方式，不代表已同步最新衣橱目录。
+
 公网接口：`https://ike-personality-image-api.dapperaphid7.chatgpt.site/api/personality/image`。
 
 局域网接口：`http://10.230.52.36:5000/api/personality/image`。
@@ -43,7 +45,7 @@ curl -A 'AI-mini-Personality/1.0' \
 { "imageName": "zsh08.png" }
 ```
 
-装扮编号为 `lyn22` 至 `lyn27`（刘宇宁）及 `zsh01` 至 `zsh08`（张韶涵）。文件在本项目 `public/assets/characters/`，客户端需要自行匹配同名资源。人格仍返回 `ENTJ.png` 等 MBTI 文件名。
+装扮编号为 `lyn22` 至 `lyn35`（KUGUY）及 `zsh01` 至 `zsh17`（KUGIRL）。文件在本项目 `public/assets/characters/`，客户端需要自行匹配同名资源。人格仍返回 `ENTJ.png` 等 MBTI 文件名。
 
 `personalityId` 与 `outfitId` 只能提供其中一种，重复参数、错用编号类别和未知编号返回 400。带参数仅查询目录，不改变选择。
 

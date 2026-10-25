@@ -8,7 +8,7 @@ import './recommendations.css';
 const moods = [
  { name: '放松一下', icon: '☕' }, { name: '开心加倍', icon: '☀' },
  { name: '专注时刻', icon: '✎' }, { name: '陪我入睡', icon: '☾' }, { name: '有点难过', icon: '♡' },
-];
+] as const;
 type Props = {
  mode: 'personal' | 'mood'; weather: WeatherData | null;
  onBack: () => void; onLocation: () => void;

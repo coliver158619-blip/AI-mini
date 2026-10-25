@@ -65,6 +65,7 @@ test('火花面板随下拉移动，松手关闭，短拉和横向划动不会�
  await page.getByRole('button', { name: /听歌续火花/ }).click();
  const sheet = page.locator('.bottom-sheet');
  const header = page.locator('.sheet-heading h2, .chat-title');
+ await sheet.evaluate(el => Promise.all(el.getAnimations().map(animation => animation.finished)));
  const original = await sheet.boundingBox();
  const heading = await header.boundingBox();
  await swipe(page, { x: heading!.x + heading!.width / 2, y: heading!.y + 10 }, { x: 0, y: 34 });
@@ -84,6 +85,7 @@ test('火花面板内容未到顶部时向下滑只滚动内容，到顶部后�
  await page.goto('/');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
  const content = page.locator('.energy-detail');
+ await page.locator('.bottom-sheet').evaluate(el => Promise.all(el.getAnimations().map(animation => animation.finished)));
  await content.evaluate(el => { el.scrollTop = el.scrollHeight; });
  expect(await content.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
  const rect = await content.boundingBox();

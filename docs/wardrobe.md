@@ -3,10 +3,12 @@
 保留两套独立选择，最后确认的类别作为首页当前形象；切换类别不会清空另一套选择。
 
 - 更多玩法 → 音乐人格：16 型面包体人，支持分组、关键词、音乐偏好与陪伴风格。浏览不保存，确认后首页使用该人格。
-- 更多玩法 → 形象：在预览卡下方先选刘宇宁或张韶涵，再试穿对应装扮。刘宇宁 6 套，张韶涵 8 套，张韶涵搭配猫咪。点击“穿上这套”后保存并返回首页。
+- 更多玩法 → 形象：在预览卡下方先选KUGUY或KUGIRL，再试穿对应装扮。KUGUY 14 套，KUGIRL 17 套。每人前三行按参考图顺序排列，其余原有装扮接在后面，重复的“墨金江湖”只展示一次。点击“穿上这套”后保存并返回首页。
 - 衣橱同时记住每个人物上次确认的装扮。人物切换和试穿均不会改变当前首页，必须确认穿戴。
+- 每个人物第一列的三套基础形象默认开放，共六套。其他卡片显示锁，点击后弹出彩色确认框；解锁成功伴随全屏星光、音符和光环，状态写入 SQLite，刷新后保留。原有 14 套按专辑解锁，其余新装扮按能量解锁。
+- 当前按已确认的演示规则直接通过，不扣能量、不查询专辑；页面不显示“演示校验”。接口仍返回 `verificationMode: demo`，真实权益校验待接入。只解锁不会改变首页，必须再次确认穿戴。
 - 再次打开音乐人格，原来的选择仍在；即使编号没有改变，也可确认切回。衣橱同理。
-- 首页小人、顶部头像、火花卡片与文件名接口统一读取当前使用的形象。昵称与人物名称互不覆盖。
+- 首页小人、顶部头像与文件名接口统一读取当前使用的形象。火花卡片和陪伴空间展示男女双人，分别读取各自上次确认的装扮；详见 [陪伴空间](companion-space.md)。昵称与人物名称互不覆盖。
 
 底部确认区的不透明背景覆盖左右边缘、底部安全区和播放器预留区，底层卡片不会透出或被误点，最后一行可滚动到确认区上方。
 
@@ -15,8 +17,10 @@
 ## 接口与持久化
 
 - `GET /api/personalities` 返回 `{personalities, groups, profile}`；`POST /api/personality` 接受 `{personalityId:"ENTJ"}`。
-- `GET /api/outfits` 返回 `{characters, outfits, profile}`，共两个人物和 14 套装扮。
+- `GET /api/outfits` 返回 `{characters, outfits, profile}`，共两个人物和 31 套装扮。
 - `POST /api/outfit` 接受 `{outfitId:"zsh08"}`，返回 `{profile}`。无效编号返回 400，不改变选择。
+- `POST /api/outfit/unlock` 接受 `{outfitId:"zsh08"}`，幂等保存解锁状态；未解锁直接穿戴返回 403。
+- `/api/widget/image` 返回当前 PNG 文件名，`/api/widget/appearance` 同时返回形象类别与保存版本，见 [iOS Widget API](widget-api.md)。
 - `profile.personalityId/personality` 是保存的人格；`profile.outfitId/outfit` 是保存的装扮。
 - `profile.appearanceMode` 为 `personality` 或 `outfit`；`profile.appearance` 提供实际用于首页的 `id/name/imageName/imageUrl`。
 - `profile.characterOutfitIds` 保存两个人物各自最近确认的装扮编号。
@@ -32,4 +36,4 @@ npx playwright test -c playwright.personality.config.ts
 npx playwright test -c playwright.fullscreen.config.ts
 ```
 
-浏览器测试使用独立端口及临时数据库，覆盖 14 套装扮、16 型人格、独立保存与类别切换、每个人物的装扮记忆、预览不保存、确认后首页/头像/火花/接口联动、刷新恢复、失败重试、防重复提交和安全区遮挡。
+浏览器测试使用独立端口及临时数据库，覆盖 31 套装扮、16 型人格、独立保存与类别切换、每个人物的装扮记忆、预览不保存、确认后首页/头像/火花/接口联动、刷新恢复、失败重试、防重复提交和安全区遮挡。

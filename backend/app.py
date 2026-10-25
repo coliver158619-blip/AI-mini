@@ -15,6 +15,7 @@ import re
 import sqlite3
 import threading
 import uuid
+from urllib.parse import urlsplit
 
 from flask import Flask, current_app, g, jsonify, request, send_file, send_from_directory
 from werkzeug.exceptions import HTTPException
@@ -24,13 +25,14 @@ from .chat_text import clean_assistant_text
 from .conversations import init_conversations, register_conversations, selected_id
 from .diary_story import context_for_day, generate_story, story_state
 from .diary_inputs import read_inputs, save_inputs, save_attachment
+from .shared_space import register_shared_space
 from .network import lan_access
-from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID
+from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID, outfit_catalog, unlocked_outfit_ids
 from .appearance import appearance_state
 from .personalities import GROUPS, PERSONALITIES, PERSONALITIES_BY_ID, personality_for_id
 from .personality_site import PersonalitySiteSync
 from .kugou import KugouClient, RemoteError
-from .weather import get_weather, search_locations
+from .weather import get_weather, search_locations, weather_greeting
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -69,6 +71,9 @@ def init_db(app):
         db.execute("PRAGMA journal_mode = WAL")
         db.executescript("""
             CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS outfit_unlocks (
+                outfit_id TEXT PRIMARY KEY, unlocked_at TEXT NOT NULL, method TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS profile (
                 id INTEGER PRIMARY KEY CHECK (id = 1), name TEXT NOT NULL,
                 joined_date TEXT NOT NULL, energy INTEGER NOT NULL DEFAULT 0
@@ -93,6 +98,11 @@ def init_db(app):
                 song_id TEXT PRIMARY KEY REFERENCES songs(id), created_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS diary_notes (date TEXT PRIMARY KEY, note TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS shared_diary (
+                date TEXT PRIMARY KEY, note TEXT NOT NULL DEFAULT '', body TEXT NOT NULL DEFAULT '',
+                source TEXT NOT NULL DEFAULT 'manual', revision INTEGER NOT NULL DEFAULT 0,
+                updated_at TEXT, attempt_id TEXT, pending_until TEXT
+            );
             CREATE TABLE IF NOT EXISTS diary_stories (
                 date TEXT PRIMARY KEY, text TEXT NOT NULL DEFAULT '', context_hash TEXT,
                 updated_at TEXT, attempt_id TEXT, pending_until TEXT
@@ -129,6 +139,8 @@ def init_db(app):
         """)
         if "session_id" not in {column[1] for column in db.execute("PRAGMA table_info(plays)")}:
             db.execute("ALTER TABLE plays ADD COLUMN session_id TEXT")
+        if "context" not in {column[1] for column in db.execute("PRAGMA table_info(plays)")}:
+            db.execute("ALTER TABLE plays ADD COLUMN context TEXT NOT NULL DEFAULT 'solo'")
         if "origin" not in {column[1] for column in db.execute("PRAGMA table_info(recommendation_requests)")}:
             db.execute("ALTER TABLE recommendation_requests ADD COLUMN origin TEXT NOT NULL DEFAULT 'manual'")
         if "source" not in {column[1] for column in db.execute("PRAGMA table_info(diary_stories)")}:
@@ -269,12 +281,14 @@ def latest_weather(day=None):
     weather["cached"] = (now() - datetime.fromisoformat(weather["updatedAt"])).total_seconds() > 3600
     if weather["cached"]:
         mark_cached_weather(weather)
+    else:
+        weather["greeting"] = weather_greeting(weather["city"], weather["condition"], weather["temperature"], weather.get("severe", False))
     return weather
 
 
 def mark_cached_weather(weather):
-    at = datetime.fromisoformat(weather["updatedAt"])
-    weather.update(cached=True, greeting=f"上次记录（{at.month}月{at.day}日 {at:%H:%M}）{weather['city']}是{weather['condition']}。天气可能已经变化，刷新后我再为你挑歌；现在也可以告诉我你的心情。", notice="显示上次获取的天气，可刷新获取最新情况。")
+    # An old observation belongs in weather details, never in a friend's greeting.
+    weather.update(cached=True, greeting="你来啦，今天过得怎么样？陪你听会儿歌，慢慢聊。", notice="显示上次获取的天气，可刷新获取最新情况。")
     return weather
 
 
@@ -557,6 +571,7 @@ def create_app(test_config=None):
         app.config.update(test_config)
     app.config.setdefault('PERSONALITY_SITE_URL', os.getenv('PERSONALITY_SITE_URL', ''))
     app.config.setdefault('PERSONALITY_SITE_SYNC_TOKEN', os.getenv('PERSONALITY_SITE_SYNC_TOKEN', ''))
+    app.config.setdefault('TOGETHER_LISTEN_URL', os.getenv('TOGETHER_LISTEN_URL', '').strip())
     app.json.ensure_ascii = False
     init_db(app)
     with app.app_context():
@@ -564,6 +579,7 @@ def create_app(test_config=None):
     register_conversations(app, get_db, now)
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
+    register_shared_space(app, get_db, now, all_songs, json_body, valid_text, upstream)
     site_sync = PersonalitySiteSync(app)
     app.extensions['personality_site_sync'] = site_sync
 
@@ -600,7 +616,7 @@ def create_app(test_config=None):
 
     @app.get("/api/bootstrap")
     def bootstrap():
-        greeting = "早上好呀，让音乐叫醒今天的好心情。" if now().hour < 11 else "下午好，给自己留一首歌的时间吧。" if now().hour < 18 else "晚上好，今天辛苦啦，让音乐陪你慢下来。"
+        greeting = "早呀，睡得好吗？今天想听什么？" if now().hour < 11 else "下午好，忙得怎么样？来陪你听会儿歌。" if now().hour < 18 else "你来啦，今天辛苦了。想聊聊今天的事吗？"
         weather = latest_weather()
         return jsonify(profile=get_profile(), songs=all_songs(), greeting=weather["greeting"] if weather else greeting, mode=upstream.mode(), integration=upstream.integration(), isDemo=get_db().execute("SELECT value FROM app_meta WHERE key = 'demo_seeded'").fetchone()[0] == "true", weather=weather)
 
@@ -679,7 +695,8 @@ def create_app(test_config=None):
                 weather_context = latest_weather()
                 if weather_context:
                     status = "历史缓存，不代表当前天气" if weather_context.get("cached") else "最近获取的天气"
-                    query += f"（用户已分享的天气背景：{weather_context['city']}，{weather_context['condition']}，{weather_context['temperature']}°C，天气获取于{weather_context['updatedAt']}，{status}。请按需结合天气关怀和推荐音乐。）"
+                    query += f"（用户已分享的天气背景：{weather_context['city']}，{weather_context['condition']}，{weather_context['temperature']}°C，天气获取于{weather_context['updatedAt']}，{status}。天气过期时不主动播报天气，不把历史天气说成当前天气。）"
+                query += "（回复风格：像熟悉的朋友自然聊天，简短、亲切，回应用户当下的话。不要主动提及记录、刷新、缓存、系统检测、数据更新等后台流程，不照搬背景信息；不了解当前情况时自然询问，不编造。）"
                 history = [dict(row) for row in get_db().execute("SELECT role, content FROM (SELECT id, role, content FROM messages WHERE source = 'kugou' AND conversation_id=? ORDER BY id DESC LIMIT 10) ORDER BY id", (session_id,))]
                 for item in history:
                     if item["role"] == "assistant":
@@ -707,6 +724,9 @@ def create_app(test_config=None):
     def play():
         body = json_body()
         id_ = valid_text(body.get("songId"), "歌曲编号", 200)
+        context = body.get('context', 'solo')
+        if context not in ('solo', 'together'):
+            raise ValueError('播放场景应为 solo 或 together')
         seconds = body.get("seconds")
         if isinstance(seconds, bool) or not isinstance(seconds, int) or not 1 <= seconds <= 3600:
             raise ValueError("听歌时长需为 1—3600 秒的整数")
@@ -716,19 +736,19 @@ def create_app(test_config=None):
         session_id = body.get("sessionId")
         if session_id is not None:
             session_id = valid_text(session_id, "播放会话编号", 120)
-            previous = get_db().execute("SELECT song_id FROM plays WHERE session_id = ? LIMIT 1", (session_id,)).fetchone()
-            if previous and previous[0] != id_:
-                return jsonify(error="播放会话已用于其他歌曲"), 409
+            previous = get_db().execute("SELECT song_id, context FROM plays WHERE session_id = ? LIMIT 1", (session_id,)).fetchone()
+            if previous and (previous[0] != id_ or previous['context'] != context):
+                return jsonify(error="播放会话已用于其他歌曲或场景"), 409
         song = get_db().execute("SELECT tags FROM songs WHERE id = ?", (id_,)).fetchone()
         if not song:
             return jsonify(error="歌曲不存在"), 404
         mood = json.loads(song["tags"])[0]
         with get_db() as db:
-            existing = db.execute("SELECT song_id, seconds FROM plays WHERE event_id = ?", (event_id,)).fetchone() if event_id else None
-            if existing and (existing["song_id"] != id_ or existing["seconds"] != seconds):
+            existing = db.execute("SELECT song_id, seconds, context FROM plays WHERE event_id = ?", (event_id,)).fetchone() if event_id else None
+            if existing and (existing["song_id"] != id_ or existing["seconds"] != seconds or existing['context'] != context):
                 return jsonify(error="播放记录编号已用于其他记录"), 409
             if not existing:
-                db.execute("INSERT INTO plays(song_id, seconds, listened_at, mood, event_id, session_id) VALUES (?, ?, ?, ?, ?, ?)", (id_, seconds, now().isoformat(), mood, event_id, session_id))
+                db.execute("INSERT INTO plays(song_id, seconds, listened_at, mood, event_id, session_id, context) VALUES (?, ?, ?, ?, ?, ?, ?)", (id_, seconds, now().isoformat(), mood, event_id, session_id, context))
                 db.execute("UPDATE profile SET energy = min(1600, energy + ?) WHERE id = 1", (max(1, seconds // 30),))
         return jsonify(profile=get_profile(), diary=diary_entry(now().date()), recorded=not bool(existing))
 
@@ -845,7 +865,47 @@ def create_app(test_config=None):
 
     @app.get("/api/outfits")
     def outfits():
-        return jsonify(characters=CHARACTERS, outfits=OUTFITS, profile=get_profile())
+        return jsonify(characters=CHARACTERS, outfits=outfit_catalog(get_db()), profile=get_profile())
+
+    @app.get("/api/listen-together/entry")
+    def listen_together_entry():
+        target = app.config['TOGETHER_LISTEN_URL']
+        if not target:
+            return jsonify(available=False, url=None)
+        parsed = urlsplit(target)
+        relative = target.startswith('/') and not target.startswith('//')
+        secure = parsed.scheme == 'https' and bool(parsed.hostname) and not parsed.username and not parsed.password
+        if '\\' in target or any(ord(char) < 32 for char in target) or not (relative or secure):
+            return jsonify(error='一起听入口配置暂时不可用'), 503
+        return jsonify(available=True, url=target)
+
+    @app.post("/api/outfit/unlock")
+    def unlock_outfit():
+        id_ = valid_text(json_body().get("outfitId"), "装扮编号", 40)
+        if id_ not in OUTFITS_BY_ID:
+            raise ValueError("这套装扮不存在，请重新选择")
+        item = OUTFITS_BY_ID[id_]
+        with get_db() as db:
+            already = id_ in unlocked_outfit_ids(db)
+            # shortcut: approved demo unlock; add real entitlements before paid/energy redemption.
+            if item['unlockMethod'] != 'free':
+                inserted = db.execute('INSERT OR IGNORE INTO outfit_unlocks VALUES (?, ?, ?)',
+                                      (id_, now().isoformat(), item['unlockMethod'])).rowcount
+                already = not bool(inserted)
+        message = '已检测到相关专辑，正在解锁' if item['unlockMethod'] == 'album' else '已检测出陪伴能量充足，正在解锁'
+        return jsonify(outfit=dict(item, unlocked=True), alreadyUnlocked=already,
+                       message=message, verificationMode='demo')
+
+    @app.get("/api/widget/appearance")
+    def widget_appearance():
+        state, revision = appearance_state(get_db())
+        return jsonify(imageName=state['appearance']['imageName'], appearanceId=state['appearance']['id'],
+                       appearanceType=state['appearanceMode'], revision=revision)
+
+    @app.get("/api/widget/image")
+    def widget_image():
+        state, _ = appearance_state(get_db())
+        return jsonify(imageName=state['appearance']['imageName'])
 
     @app.get("/api/personalities")
     def personalities():
@@ -886,6 +946,8 @@ def create_app(test_config=None):
         id_ = valid_text(json_body().get("outfitId"), "装扮编号", 40)
         if id_ not in OUTFITS_BY_ID:
             raise ValueError("这套装扮不存在，请重新选择")
+        if id_ not in unlocked_outfit_ids(get_db()):
+            return jsonify(error="这套装扮尚未解锁，请先解锁", code="OUTFIT_LOCKED"), 403
         with get_db() as db:
             db.execute("UPDATE app_meta SET value=? WHERE key='outfit_id'", (id_,))
             db.execute("UPDATE app_meta SET value='outfit' WHERE key='appearance_mode'")
@@ -950,11 +1012,22 @@ def create_app(test_config=None):
     def unknown_api(path):
         return jsonify(error="接口不存在"), 404
 
+    @app.get('/assets/character-motion/<image_name>')
+    def character_motion_asset(image_name):
+        if image_name not in ('lyn22-v1.webp', 'zsh09-v1.webp', 'lyn22-v2.webp', 'zsh09-v2.webp', 'lyn22-greeting-v1.webp', 'zsh09-greeting-v1.webp'):
+            return jsonify(error='动作素材不存在'), 404
+        return send_from_directory(ROOT / 'public' / 'assets' / 'character-motion', image_name,
+                                   conditional=True, mimetype='image/webp', max_age=86400)
+
     @app.get("/assets/characters/<path:image_name>")
     def character_asset(image_name):
-        if image_name not in {item["imageName"] for item in OUTFITS}:
+        allowed = {item['imageName'] for item in OUTFITS} | {
+            f"{folder}/{item['id']}.webp" for item in OUTFITS for folder in ('thumb-v1', 'web-v1')
+        }
+        if image_name not in allowed:
             return jsonify(error="装扮图片不存在"), 404
-        return send_from_directory(ROOT / "public" / "assets" / "characters", image_name, conditional=True, max_age=3600)
+        return send_from_directory(ROOT / "public" / "assets" / "characters", image_name, conditional=True,
+                                   mimetype='image/webp' if image_name.endswith('.webp') else 'image/png', max_age=86400)
 
     @app.get("/assets/personalities/<path:image_name>")
     def personality_asset(image_name):

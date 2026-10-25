@@ -26,7 +26,10 @@ test('人格分组、预览、保存、刷新以及首页与火花头像联动',
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/personalities/INTJ.png');
  await expect(page.locator('.streak-avatar-character')).toHaveAttribute('style', /INTJ.png/);
  await page.getByRole('button', { name: /听歌续火花/ }).click();
- await expect(page.locator('.streak-share-card img')).toHaveAttribute('src', '/assets/personalities/INTJ.png');
+ await expect(page.locator('.streak-share-card img')).toHaveCount(2);
+ const pair = (await (await request.get('/api/bootstrap')).json()).profile.characterOutfitIds;
+ await expect(page.locator('.streak-share-card .couple-boy')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.lyn}.webp`);
+ await expect(page.locator('.streak-share-card .couple-girl')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.zsh}.webp`);
  await page.getByRole('button', { name: '关闭面板' }).click();
  await page.reload();
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/personalities/INTJ.png');
@@ -96,7 +99,7 @@ test('人格与衣橱的底部遮挡覆盖安全区和播放器预留区，列�
     await page.getByRole('button', { name: '更多玩法', exact: true }).click();
     await page.getByRole('button', { name: menu.name, exact: true }).click();
     const grid = page.locator(menu.grid), footer = page.locator(menu.footer);
-    await expect(grid.locator(':scope > button')).toHaveCount(menu.name === '音乐人格' ? 16 : 6);
+    await expect(grid.locator(':scope > button')).toHaveCount(menu.name === '音乐人格' ? 16 : 14);
     await grid.evaluate(el => scrollTo(0, scrollY + el.getBoundingClientRect().top - innerHeight * .6));
     await expect(footer).toBeVisible();
     const coverage = await footer.evaluate((el, selector) => {

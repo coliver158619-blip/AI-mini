@@ -8,8 +8,11 @@
 .streak-share-count > span { color: #a4855b; font-size: 10px; line-height: 1.7; }
 .streak-share-start { margin: 20px 0; color: #a78047; font-size: 13px; line-height: 1.6; }
 .streak-share-companion { margin-top: 8px; font-size: 10px; color: #a38c6c; overflow-wrap: anywhere; }
-.streak-share-card > img { width: 40%; height: 150px; flex-shrink: 0; object-fit: contain; filter: drop-shadow(0 6px 4px #92723b14); }
+.streak-couple { width:54%; height:180px; flex-shrink:0; }
+.streak-couple .couple-heart { width:25px; height:25px; left:calc(50% - 12.5px); top:39%; }
 .streak-share-demo { color: #ab9577; font-size: 9px; margin: 2px 0 12px; }
 .streak-share-actions { display: flex; gap: 8px; margin-top: 13px; }
 .streak-share-button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 43px; flex: 1; padding: 10px; border-radius: 13px; background: #eecb8e; color: #805b28; border: 1px solid #e2ba77; font-size: 13px; font-weight: 600; }
-@container (max-width: 360px) { .streak-share { padding: 12px; } .streak-share-eyebrow { letter-spacing: 0; font-size: 9px; } .streak-share-card > img { width: 35%; height: 125px; } .streak-share-start { font-size: 12px; } }
+.streak-space-button { display:flex; align-items:center; justify-content:center; gap:6px; flex:1.25; min-width:0; padding:10px 5px; border:1px solid #e9bdc8; border-radius:13px; background:linear-gradient(120deg,#ffe8e6,#f0ddee); color:#ae6d86; font-size:12px; font-weight:600; }
+.streak-share-actions svg { flex-shrink:0; }
+@container (max-width: 360px) { .streak-share { padding: 12px; } .streak-share-eyebrow { letter-spacing: 0; font-size: 9px; } .streak-couple { height:150px; } .streak-share-start { font-size:12px; } .streak-share-button { font-size:12px; gap:5px; } }

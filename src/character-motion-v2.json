@@ -1,0 +1,1906 @@
+{
+  "zsh09": {
+    "src": "/assets/character-motion/zsh09-v2.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 80,
+        "y": 49,
+        "width": 199,
+        "height": 281,
+        "anchor": 46.7337
+      },
+      {
+        "x": 381,
+        "y": 49,
+        "width": 197,
+        "height": 281,
+        "anchor": 46.7005
+      },
+      {
+        "x": 683,
+        "y": 49,
+        "width": 199,
+        "height": 281,
+        "anchor": 46.9849
+      },
+      {
+        "x": 991,
+        "y": 49,
+        "width": 197,
+        "height": 281,
+        "anchor": 46.7005
+      },
+      {
+        "x": 79,
+        "y": 354,
+        "width": 200,
+        "height": 280,
+        "anchor": 46.75
+      },
+      {
+        "x": 382,
+        "y": 354,
+        "width": 199,
+        "height": 280,
+        "anchor": 46.9849
+      },
+      {
+        "x": 685,
+        "y": 354,
+        "width": 200,
+        "height": 279,
+        "anchor": 46.75
+      },
+      {
+        "x": 990,
+        "y": 354,
+        "width": 200,
+        "height": 280,
+        "anchor": 46.75
+      },
+      {
+        "x": 77,
+        "y": 656,
+        "width": 203,
+        "height": 275,
+        "anchor": 47.2906
+      },
+      {
+        "x": 379,
+        "y": 655,
+        "width": 200,
+        "height": 276,
+        "anchor": 47.5
+      },
+      {
+        "x": 683,
+        "y": 655,
+        "width": 205,
+        "height": 276,
+        "anchor": 47.0732
+      },
+      {
+        "x": 988,
+        "y": 656,
+        "width": 205,
+        "height": 275,
+        "anchor": 47.3171
+      },
+      {
+        "x": 74,
+        "y": 948,
+        "width": 206,
+        "height": 272,
+        "anchor": 47.5728
+      },
+      {
+        "x": 377,
+        "y": 948,
+        "width": 212,
+        "height": 272,
+        "anchor": 46.4623
+      },
+      {
+        "x": 681,
+        "y": 948,
+        "width": 206,
+        "height": 272,
+        "anchor": 47.0874
+      },
+      {
+        "x": 988,
+        "y": 949,
+        "width": 205,
+        "height": 271,
+        "anchor": 47.561
+      }
+    ]
+  },
+  "lyn22": {
+    "src": "/assets/character-motion/lyn22-v2.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 75,
+        "y": 31,
+        "width": 187,
+        "height": 302,
+        "anchor": 47.0588
+      },
+      {
+        "x": 388,
+        "y": 31,
+        "width": 188,
+        "height": 302,
+        "anchor": 46.2766
+      },
+      {
+        "x": 691,
+        "y": 31,
+        "width": 190,
+        "height": 302,
+        "anchor": 46.0526
+      },
+      {
+        "x": 1005,
+        "y": 31,
+        "width": 187,
+        "height": 302,
+        "anchor": 46.5241
+      },
+      {
+        "x": 74,
+        "y": 336,
+        "width": 188,
+        "height": 305,
+        "anchor": 47.8723
+      },
+      {
+        "x": 388,
+        "y": 337,
+        "width": 189,
+        "height": 304,
+        "anchor": 47.619
+      },
+      {
+        "x": 690,
+        "y": 339,
+        "width": 192,
+        "height": 302,
+        "anchor": 46.875
+      },
+      {
+        "x": 1004,
+        "y": 339,
+        "width": 190,
+        "height": 302,
+        "anchor": 46.8421
+      },
+      {
+        "x": 75,
+        "y": 647,
+        "width": 190,
+        "height": 304,
+        "anchor": 48.1579
+      },
+      {
+        "x": 693,
+        "y": 952,
+        "width": 195,
+        "height": 290,
+        "anchor": 46.9231
+      },
+      {
+        "x": 692,
+        "y": 647,
+        "width": 194,
+        "height": 304,
+        "anchor": 47.6804
+      },
+      {
+        "x": 1001,
+        "y": 648,
+        "width": 204,
+        "height": 303,
+        "anchor": 45.098
+      },
+      {
+        "x": 72,
+        "y": 952,
+        "width": 199,
+        "height": 290,
+        "anchor": 46.2312
+      },
+      {
+        "x": 386,
+        "y": 951,
+        "width": 207,
+        "height": 291,
+        "anchor": 44.9275
+      },
+      {
+        "x": 693,
+        "y": 952,
+        "width": 195,
+        "height": 290,
+        "anchor": 46.9231
+      },
+      {
+        "x": 1006,
+        "y": 953,
+        "width": 192,
+        "height": 289,
+        "anchor": 47.9167
+      }
+    ]
+  },
+  "lyn23": {
+    "src": "/assets/outfit-motion/lyn23-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 103,
+        "y": 32,
+        "width": 164,
+        "height": 289,
+        "anchor": 45.7317
+      },
+      {
+        "x": 406,
+        "y": 32,
+        "width": 163,
+        "height": 289,
+        "anchor": 45.7055
+      },
+      {
+        "x": 710,
+        "y": 33,
+        "width": 163,
+        "height": 288,
+        "anchor": 46.0123
+      },
+      {
+        "x": 1018,
+        "y": 32,
+        "width": 163,
+        "height": 289,
+        "anchor": 45.7055
+      },
+      {
+        "x": 103,
+        "y": 337,
+        "width": 164,
+        "height": 292,
+        "anchor": 46.3415
+      },
+      {
+        "x": 408,
+        "y": 337,
+        "width": 163,
+        "height": 292,
+        "anchor": 46.6258
+      },
+      {
+        "x": 711,
+        "y": 337,
+        "width": 167,
+        "height": 292,
+        "anchor": 45.8084
+      },
+      {
+        "x": 1015,
+        "y": 337,
+        "width": 167,
+        "height": 292,
+        "anchor": 45.8084
+      },
+      {
+        "x": 100,
+        "y": 642,
+        "width": 181,
+        "height": 290,
+        "anchor": 42.2652
+      },
+      {
+        "x": 408,
+        "y": 642,
+        "width": 164,
+        "height": 290,
+        "anchor": 46.6463
+      },
+      {
+        "x": 709,
+        "y": 643,
+        "width": 173,
+        "height": 290,
+        "anchor": 44.7977
+      },
+      {
+        "x": 1021,
+        "y": 643,
+        "width": 164,
+        "height": 289,
+        "anchor": 46.9512
+      },
+      {
+        "x": 100,
+        "y": 945,
+        "width": 176,
+        "height": 290,
+        "anchor": 44.0341
+      },
+      {
+        "x": 406,
+        "y": 945,
+        "width": 184,
+        "height": 290,
+        "anchor": 42.1196
+      },
+      {
+        "x": 711,
+        "y": 948,
+        "width": 171,
+        "height": 287,
+        "anchor": 45.614
+      },
+      {
+        "x": 1017,
+        "y": 942,
+        "width": 168,
+        "height": 293,
+        "anchor": 45.5357
+      }
+    ]
+  },
+  "lyn24": {
+    "src": "/assets/outfit-motion/lyn24-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 93,
+        "y": 29,
+        "width": 163,
+        "height": 292,
+        "anchor": 47.8528
+      },
+      {
+        "x": 396,
+        "y": 29,
+        "width": 163,
+        "height": 292,
+        "anchor": 48.4663
+      },
+      {
+        "x": 689,
+        "y": 29,
+        "width": 171,
+        "height": 292,
+        "anchor": 46.4912
+      },
+      {
+        "x": 1000,
+        "y": 28,
+        "width": 170,
+        "height": 293,
+        "anchor": 46.4706
+      },
+      {
+        "x": 90,
+        "y": 341,
+        "width": 167,
+        "height": 293,
+        "anchor": 47.9042
+      },
+      {
+        "x": 395,
+        "y": 340,
+        "width": 171,
+        "height": 294,
+        "anchor": 47.3684
+      },
+      {
+        "x": 690,
+        "y": 340,
+        "width": 174,
+        "height": 294,
+        "anchor": 47.1264
+      },
+      {
+        "x": 1001,
+        "y": 340,
+        "width": 174,
+        "height": 294,
+        "anchor": 46.8391
+      },
+      {
+        "x": 87,
+        "y": 652,
+        "width": 177,
+        "height": 293,
+        "anchor": 46.0452
+      },
+      {
+        "x": 395,
+        "y": 652,
+        "width": 173,
+        "height": 293,
+        "anchor": 47.1098
+      },
+      {
+        "x": 690,
+        "y": 652,
+        "width": 182,
+        "height": 293,
+        "anchor": 45.6044
+      },
+      {
+        "x": 1002,
+        "y": 652,
+        "width": 186,
+        "height": 293,
+        "anchor": 44.3548
+      },
+      {
+        "x": 89,
+        "y": 962,
+        "width": 179,
+        "height": 277,
+        "anchor": 45.8101
+      },
+      {
+        "x": 395,
+        "y": 963,
+        "width": 182,
+        "height": 276,
+        "anchor": 44.2308
+      },
+      {
+        "x": 691,
+        "y": 962,
+        "width": 180,
+        "height": 277,
+        "anchor": 46.1111
+      },
+      {
+        "x": 1003,
+        "y": 962,
+        "width": 175,
+        "height": 277,
+        "anchor": 47.1429
+      }
+    ]
+  },
+  "lyn25": {
+    "src": "/assets/outfit-motion/lyn25-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 105,
+        "y": 32,
+        "width": 157,
+        "height": 283,
+        "anchor": 46.1783
+      },
+      {
+        "x": 400,
+        "y": 32,
+        "width": 164,
+        "height": 284,
+        "anchor": 45.122
+      },
+      {
+        "x": 698,
+        "y": 32,
+        "width": 162,
+        "height": 284,
+        "anchor": 45.679
+      },
+      {
+        "x": 996,
+        "y": 32,
+        "width": 162,
+        "height": 284,
+        "anchor": 45.679
+      },
+      {
+        "x": 105,
+        "y": 339,
+        "width": 159,
+        "height": 285,
+        "anchor": 47.1698
+      },
+      {
+        "x": 401,
+        "y": 339,
+        "width": 163,
+        "height": 286,
+        "anchor": 46.0123
+      },
+      {
+        "x": 699,
+        "y": 339,
+        "width": 164,
+        "height": 286,
+        "anchor": 46.0366
+      },
+      {
+        "x": 997,
+        "y": 338,
+        "width": 163,
+        "height": 287,
+        "anchor": 46.319
+      },
+      {
+        "x": 105,
+        "y": 643,
+        "width": 167,
+        "height": 280,
+        "anchor": 44.9102
+      },
+      {
+        "x": 401,
+        "y": 643,
+        "width": 157,
+        "height": 281,
+        "anchor": 47.7707
+      },
+      {
+        "x": 697,
+        "y": 643,
+        "width": 166,
+        "height": 281,
+        "anchor": 45.4819
+      },
+      {
+        "x": 1001,
+        "y": 643,
+        "width": 153,
+        "height": 281,
+        "anchor": 49.0196
+      },
+      {
+        "x": 103,
+        "y": 947,
+        "width": 154,
+        "height": 279,
+        "anchor": 49.026
+      },
+      {
+        "x": 399,
+        "y": 947,
+        "width": 177,
+        "height": 280,
+        "anchor": 42.9379
+      },
+      {
+        "x": 698,
+        "y": 947,
+        "width": 160,
+        "height": 280,
+        "anchor": 47.8125
+      },
+      {
+        "x": 1001,
+        "y": 946,
+        "width": 161,
+        "height": 281,
+        "anchor": 46.8944
+      }
+    ]
+  },
+  "lyn26": {
+    "src": "/assets/outfit-motion/lyn26-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 92,
+        "y": 16,
+        "width": 158,
+        "height": 291,
+        "anchor": 46.2025
+      },
+      {
+        "x": 395,
+        "y": 16,
+        "width": 161,
+        "height": 291,
+        "anchor": 45.3416
+      },
+      {
+        "x": 708,
+        "y": 16,
+        "width": 161,
+        "height": 291,
+        "anchor": 45.0311
+      },
+      {
+        "x": 1022,
+        "y": 16,
+        "width": 161,
+        "height": 291,
+        "anchor": 45.3416
+      },
+      {
+        "x": 92,
+        "y": 327,
+        "width": 158,
+        "height": 293,
+        "anchor": 46.519
+      },
+      {
+        "x": 397,
+        "y": 327,
+        "width": 160,
+        "height": 293,
+        "anchor": 45.9375
+      },
+      {
+        "x": 709,
+        "y": 327,
+        "width": 161,
+        "height": 293,
+        "anchor": 46.2733
+      },
+      {
+        "x": 1022,
+        "y": 327,
+        "width": 162,
+        "height": 293,
+        "anchor": 45.679
+      },
+      {
+        "x": 92,
+        "y": 641,
+        "width": 158,
+        "height": 293,
+        "anchor": 46.8354
+      },
+      {
+        "x": 399,
+        "y": 641,
+        "width": 159,
+        "height": 293,
+        "anchor": 46.5409
+      },
+      {
+        "x": 708,
+        "y": 641,
+        "width": 165,
+        "height": 293,
+        "anchor": 44.5455
+      },
+      {
+        "x": 1024,
+        "y": 641,
+        "width": 159,
+        "height": 293,
+        "anchor": 46.2264
+      },
+      {
+        "x": 92,
+        "y": 954,
+        "width": 163,
+        "height": 293,
+        "anchor": 46.0123
+      },
+      {
+        "x": 397,
+        "y": 954,
+        "width": 170,
+        "height": 293,
+        "anchor": 43.8235
+      },
+      {
+        "x": 710,
+        "y": 954,
+        "width": 170,
+        "height": 293,
+        "anchor": 43.2353
+      },
+      {
+        "x": 1024,
+        "y": 954,
+        "width": 160,
+        "height": 293,
+        "anchor": 45.9375
+      }
+    ]
+  },
+  "lyn27": {
+    "src": "/assets/outfit-motion/lyn27-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 92,
+        "y": 12,
+        "width": 208,
+        "height": 298,
+        "anchor": 33.4135
+      },
+      {
+        "x": 397,
+        "y": 11,
+        "width": 214,
+        "height": 299,
+        "anchor": 32.7103
+      },
+      {
+        "x": 710,
+        "y": 12,
+        "width": 214,
+        "height": 298,
+        "anchor": 32.7103
+      },
+      {
+        "x": 1024,
+        "y": 11,
+        "width": 213,
+        "height": 299,
+        "anchor": 32.8638
+      },
+      {
+        "x": 91,
+        "y": 322,
+        "width": 215,
+        "height": 302,
+        "anchor": 33.0233
+      },
+      {
+        "x": 399,
+        "y": 322,
+        "width": 215,
+        "height": 302,
+        "anchor": 33.2558
+      },
+      {
+        "x": 713,
+        "y": 322,
+        "width": 214,
+        "height": 302,
+        "anchor": 33.4112
+      },
+      {
+        "x": 1027,
+        "y": 322,
+        "width": 214,
+        "height": 302,
+        "anchor": 33.6449
+      },
+      {
+        "x": 91,
+        "y": 633,
+        "width": 216,
+        "height": 302,
+        "anchor": 33.5648
+      },
+      {
+        "x": 401,
+        "y": 633,
+        "width": 212,
+        "height": 302,
+        "anchor": 33.9623
+      },
+      {
+        "x": 709,
+        "y": 634,
+        "width": 213,
+        "height": 301,
+        "anchor": 33.8028
+      },
+      {
+        "x": 1023,
+        "y": 633,
+        "width": 217,
+        "height": 302,
+        "anchor": 33.4101
+      },
+      {
+        "x": 92,
+        "y": 948,
+        "width": 214,
+        "height": 299,
+        "anchor": 33.6449
+      },
+      {
+        "x": 397,
+        "y": 948,
+        "width": 218,
+        "height": 299,
+        "anchor": 32.5688
+      },
+      {
+        "x": 712,
+        "y": 948,
+        "width": 217,
+        "height": 299,
+        "anchor": 33.4101
+      },
+      {
+        "x": 1029,
+        "y": 948,
+        "width": 210,
+        "height": 299,
+        "anchor": 33.8095
+      }
+    ]
+  },
+  "lyn28": {
+    "src": "/assets/outfit-motion/lyn28-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 109,
+        "y": 4,
+        "width": 157,
+        "height": 305,
+        "anchor": 46.8153
+      },
+      {
+        "x": 396,
+        "y": 5,
+        "width": 160,
+        "height": 304,
+        "anchor": 46.5625
+      },
+      {
+        "x": 706,
+        "y": 4,
+        "width": 161,
+        "height": 305,
+        "anchor": 46.8944
+      },
+      {
+        "x": 1000,
+        "y": 4,
+        "width": 163,
+        "height": 305,
+        "anchor": 46.6258
+      },
+      {
+        "x": 108,
+        "y": 318,
+        "width": 158,
+        "height": 304,
+        "anchor": 46.8354
+      },
+      {
+        "x": 398,
+        "y": 318,
+        "width": 158,
+        "height": 304,
+        "anchor": 47.4684
+      },
+      {
+        "x": 706,
+        "y": 318,
+        "width": 159,
+        "height": 304,
+        "anchor": 47.4843
+      },
+      {
+        "x": 1001,
+        "y": 317,
+        "width": 162,
+        "height": 305,
+        "anchor": 47.2222
+      },
+      {
+        "x": 108,
+        "y": 631,
+        "width": 168,
+        "height": 305,
+        "anchor": 43.75
+      },
+      {
+        "x": 396,
+        "y": 631,
+        "width": 151,
+        "height": 305,
+        "anchor": 50.0
+      },
+      {
+        "x": 705,
+        "y": 630,
+        "width": 172,
+        "height": 306,
+        "anchor": 43.6047
+      },
+      {
+        "x": 1002,
+        "y": 630,
+        "width": 161,
+        "height": 306,
+        "anchor": 47.205
+      },
+      {
+        "x": 108,
+        "y": 945,
+        "width": 161,
+        "height": 304,
+        "anchor": 47.205
+      },
+      {
+        "x": 393,
+        "y": 944,
+        "width": 180,
+        "height": 304,
+        "anchor": 41.9444
+      },
+      {
+        "x": 706,
+        "y": 944,
+        "width": 166,
+        "height": 305,
+        "anchor": 45.7831
+      },
+      {
+        "x": 1002,
+        "y": 944,
+        "width": 161,
+        "height": 305,
+        "anchor": 47.205
+      }
+    ]
+  },
+  "lyn29": {
+    "src": "/assets/outfit-motion/lyn29-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 108,
+        "y": 14,
+        "width": 147,
+        "height": 294,
+        "anchor": 50.0
+      },
+      {
+        "x": 402,
+        "y": 14,
+        "width": 147,
+        "height": 294,
+        "anchor": 50.0
+      },
+      {
+        "x": 701,
+        "y": 14,
+        "width": 147,
+        "height": 293,
+        "anchor": 50.0
+      },
+      {
+        "x": 996,
+        "y": 14,
+        "width": 147,
+        "height": 293,
+        "anchor": 50.0
+      },
+      {
+        "x": 108,
+        "y": 324,
+        "width": 149,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 401,
+        "y": 325,
+        "width": 150,
+        "height": 295,
+        "anchor": 50.0
+      },
+      {
+        "x": 702,
+        "y": 325,
+        "width": 149,
+        "height": 295,
+        "anchor": 50.0
+      },
+      {
+        "x": 997,
+        "y": 324,
+        "width": 151,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 108,
+        "y": 638,
+        "width": 174,
+        "height": 293,
+        "anchor": 42.5287
+      },
+      {
+        "x": 401,
+        "y": 639,
+        "width": 156,
+        "height": 292,
+        "anchor": 47.4359
+      },
+      {
+        "x": 702,
+        "y": 638,
+        "width": 167,
+        "height": 293,
+        "anchor": 44.9102
+      },
+      {
+        "x": 1001,
+        "y": 637,
+        "width": 149,
+        "height": 294,
+        "anchor": 50.0
+      },
+      {
+        "x": 109,
+        "y": 948,
+        "width": 150,
+        "height": 292,
+        "anchor": 50.0
+      },
+      {
+        "x": 404,
+        "y": 948,
+        "width": 163,
+        "height": 292,
+        "anchor": 45.7055
+      },
+      {
+        "x": 702,
+        "y": 948,
+        "width": 172,
+        "height": 292,
+        "anchor": 43.6047
+      },
+      {
+        "x": 1000,
+        "y": 948,
+        "width": 149,
+        "height": 292,
+        "anchor": 50.0
+      }
+    ]
+  },
+  "lyn30": {
+    "src": "/assets/outfit-motion/lyn30-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 113,
+        "y": 16,
+        "width": 185,
+        "height": 296,
+        "anchor": 46.2162
+      },
+      {
+        "x": 402,
+        "y": 16,
+        "width": 188,
+        "height": 295,
+        "anchor": 45.4787
+      },
+      {
+        "x": 697,
+        "y": 16,
+        "width": 187,
+        "height": 295,
+        "anchor": 45.9893
+      },
+      {
+        "x": 993,
+        "y": 15,
+        "width": 185,
+        "height": 295,
+        "anchor": 46.4865
+      },
+      {
+        "x": 113,
+        "y": 322,
+        "width": 186,
+        "height": 296,
+        "anchor": 45.9677
+      },
+      {
+        "x": 404,
+        "y": 322,
+        "width": 188,
+        "height": 296,
+        "anchor": 45.7447
+      },
+      {
+        "x": 697,
+        "y": 321,
+        "width": 187,
+        "height": 297,
+        "anchor": 45.9893
+      },
+      {
+        "x": 993,
+        "y": 321,
+        "width": 185,
+        "height": 297,
+        "anchor": 46.7568
+      },
+      {
+        "x": 112,
+        "y": 629,
+        "width": 190,
+        "height": 297,
+        "anchor": 45.5263
+      },
+      {
+        "x": 404,
+        "y": 632,
+        "width": 188,
+        "height": 293,
+        "anchor": 45.7447
+      },
+      {
+        "x": 691,
+        "y": 630,
+        "width": 195,
+        "height": 296,
+        "anchor": 47.1795
+      },
+      {
+        "x": 992,
+        "y": 629,
+        "width": 200,
+        "height": 299,
+        "anchor": 43.75
+      },
+      {
+        "x": 101,
+        "y": 937,
+        "width": 200,
+        "height": 300,
+        "anchor": 48.75
+      },
+      {
+        "x": 392,
+        "y": 939,
+        "width": 203,
+        "height": 298,
+        "anchor": 51.2315
+      },
+      {
+        "x": 696,
+        "y": 937,
+        "width": 192,
+        "height": 300,
+        "anchor": 45.3125
+      },
+      {
+        "x": 993,
+        "y": 939,
+        "width": 192,
+        "height": 298,
+        "anchor": 45.3125
+      }
+    ]
+  },
+  "lyn31": {
+    "src": "/assets/outfit-motion/lyn31-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 110,
+        "y": 10,
+        "width": 146,
+        "height": 297,
+        "anchor": 47.2603
+      },
+      {
+        "x": 403,
+        "y": 10,
+        "width": 153,
+        "height": 297,
+        "anchor": 46.0784
+      },
+      {
+        "x": 704,
+        "y": 10,
+        "width": 152,
+        "height": 297,
+        "anchor": 46.3816
+      },
+      {
+        "x": 1012,
+        "y": 10,
+        "width": 151,
+        "height": 297,
+        "anchor": 47.0199
+      },
+      {
+        "x": 106,
+        "y": 316,
+        "width": 151,
+        "height": 304,
+        "anchor": 47.0199
+      },
+      {
+        "x": 404,
+        "y": 316,
+        "width": 156,
+        "height": 304,
+        "anchor": 47.7564
+      },
+      {
+        "x": 706,
+        "y": 316,
+        "width": 156,
+        "height": 303,
+        "anchor": 46.7949
+      },
+      {
+        "x": 1012,
+        "y": 316,
+        "width": 157,
+        "height": 303,
+        "anchor": 47.1338
+      },
+      {
+        "x": 102,
+        "y": 629,
+        "width": 162,
+        "height": 304,
+        "anchor": 46.2963
+      },
+      {
+        "x": 405,
+        "y": 628,
+        "width": 159,
+        "height": 305,
+        "anchor": 47.1698
+      },
+      {
+        "x": 705,
+        "y": 628,
+        "width": 165,
+        "height": 305,
+        "anchor": 45.1515
+      },
+      {
+        "x": 1016,
+        "y": 629,
+        "width": 161,
+        "height": 304,
+        "anchor": 46.8944
+      },
+      {
+        "x": 102,
+        "y": 942,
+        "width": 180,
+        "height": 302,
+        "anchor": 41.1111
+      },
+      {
+        "x": 402,
+        "y": 942,
+        "width": 188,
+        "height": 302,
+        "anchor": 38.8298
+      },
+      {
+        "x": 705,
+        "y": 942,
+        "width": 157,
+        "height": 303,
+        "anchor": 47.1338
+      },
+      {
+        "x": 1016,
+        "y": 944,
+        "width": 150,
+        "height": 300,
+        "anchor": 48.6667
+      }
+    ]
+  },
+  "lyn32": {
+    "src": "/assets/outfit-motion/lyn32-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 117,
+        "y": 8,
+        "width": 197,
+        "height": 302,
+        "anchor": 38.0711
+      },
+      {
+        "x": 314,
+        "y": 8,
+        "width": 300,
+        "height": 302,
+        "anchor": 57.6667
+      },
+      {
+        "x": 706,
+        "y": 8,
+        "width": 205,
+        "height": 303,
+        "anchor": 37.0732
+      },
+      {
+        "x": 997,
+        "y": 8,
+        "width": 203,
+        "height": 303,
+        "anchor": 37.1921
+      },
+      {
+        "x": 117,
+        "y": 315,
+        "width": 197,
+        "height": 303,
+        "anchor": 38.3249
+      },
+      {
+        "x": 314,
+        "y": 315,
+        "width": 301,
+        "height": 303,
+        "anchor": 57.6412
+      },
+      {
+        "x": 706,
+        "y": 315,
+        "width": 207,
+        "height": 303,
+        "anchor": 36.9565
+      },
+      {
+        "x": 997,
+        "y": 315,
+        "width": 205,
+        "height": 303,
+        "anchor": 37.0732
+      },
+      {
+        "x": 116,
+        "y": 622,
+        "width": 198,
+        "height": 305,
+        "anchor": 38.3838
+      },
+      {
+        "x": 314,
+        "y": 623,
+        "width": 303,
+        "height": 304,
+        "anchor": 57.4257
+      },
+      {
+        "x": 703,
+        "y": 622,
+        "width": 209,
+        "height": 305,
+        "anchor": 37.0813
+      },
+      {
+        "x": 1003,
+        "y": 622,
+        "width": 209,
+        "height": 305,
+        "anchor": 35.8852
+      },
+      {
+        "x": 116,
+        "y": 932,
+        "width": 198,
+        "height": 303,
+        "anchor": 38.8889
+      },
+      {
+        "x": 314,
+        "y": 930,
+        "width": 304,
+        "height": 305,
+        "anchor": 56.9079
+      },
+      {
+        "x": 705,
+        "y": 931,
+        "width": 204,
+        "height": 304,
+        "anchor": 37.2549
+      },
+      {
+        "x": 997,
+        "y": 932,
+        "width": 204,
+        "height": 302,
+        "anchor": 37.0098
+      }
+    ]
+  },
+  "lyn33": {
+    "src": "/assets/outfit-motion/lyn33-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 95,
+        "y": 11,
+        "width": 156,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 390,
+        "y": 10,
+        "width": 158,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 702,
+        "y": 10,
+        "width": 160,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 1010,
+        "y": 10,
+        "width": 158,
+        "height": 296,
+        "anchor": 50.0
+      },
+      {
+        "x": 93,
+        "y": 323,
+        "width": 159,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 390,
+        "y": 323,
+        "width": 163,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 697,
+        "y": 323,
+        "width": 163,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 1008,
+        "y": 323,
+        "width": 163,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 89,
+        "y": 636,
+        "width": 166,
+        "height": 297,
+        "anchor": 49.6988
+      },
+      {
+        "x": 390,
+        "y": 636,
+        "width": 164,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 697,
+        "y": 635,
+        "width": 175,
+        "height": 298,
+        "anchor": 46.8571
+      },
+      {
+        "x": 1006,
+        "y": 635,
+        "width": 164,
+        "height": 298,
+        "anchor": 50.0
+      },
+      {
+        "x": 90,
+        "y": 949,
+        "width": 167,
+        "height": 296,
+        "anchor": 48.8024
+      },
+      {
+        "x": 388,
+        "y": 950,
+        "width": 187,
+        "height": 295,
+        "anchor": 43.8503
+      },
+      {
+        "x": 696,
+        "y": 949,
+        "width": 167,
+        "height": 296,
+        "anchor": 48.8024
+      },
+      {
+        "x": 1010,
+        "y": 949,
+        "width": 163,
+        "height": 296,
+        "anchor": 50.0
+      }
+    ]
+  },
+  "lyn34": {
+    "src": "/assets/outfit-motion/lyn34-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 82,
+        "y": 11,
+        "width": 171,
+        "height": 296,
+        "anchor": 44.7368
+      },
+      {
+        "x": 394,
+        "y": 11,
+        "width": 172,
+        "height": 296,
+        "anchor": 44.7674
+      },
+      {
+        "x": 704,
+        "y": 10,
+        "width": 169,
+        "height": 297,
+        "anchor": 44.9704
+      },
+      {
+        "x": 1016,
+        "y": 11,
+        "width": 177,
+        "height": 296,
+        "anchor": 43.7853
+      },
+      {
+        "x": 80,
+        "y": 322,
+        "width": 174,
+        "height": 298,
+        "anchor": 44.5402
+      },
+      {
+        "x": 393,
+        "y": 322,
+        "width": 174,
+        "height": 298,
+        "anchor": 44.8276
+      },
+      {
+        "x": 707,
+        "y": 322,
+        "width": 172,
+        "height": 298,
+        "anchor": 45.3488
+      },
+      {
+        "x": 1019,
+        "y": 322,
+        "width": 175,
+        "height": 298,
+        "anchor": 44.8571
+      },
+      {
+        "x": 80,
+        "y": 635,
+        "width": 188,
+        "height": 298,
+        "anchor": 41.2234
+      },
+      {
+        "x": 398,
+        "y": 636,
+        "width": 156,
+        "height": 297,
+        "anchor": 50.0
+      },
+      {
+        "x": 707,
+        "y": 636,
+        "width": 172,
+        "height": 297,
+        "anchor": 45.3488
+      },
+      {
+        "x": 1019,
+        "y": 635,
+        "width": 159,
+        "height": 298,
+        "anchor": 49.3711
+      },
+      {
+        "x": 82,
+        "y": 949,
+        "width": 168,
+        "height": 297,
+        "anchor": 46.4286
+      },
+      {
+        "x": 394,
+        "y": 949,
+        "width": 179,
+        "height": 297,
+        "anchor": 43.2961
+      },
+      {
+        "x": 707,
+        "y": 949,
+        "width": 179,
+        "height": 297,
+        "anchor": 43.2961
+      },
+      {
+        "x": 1020,
+        "y": 949,
+        "width": 173,
+        "height": 297,
+        "anchor": 44.7977
+      }
+    ]
+  },
+  "lyn35": {
+    "src": "/assets/outfit-motion/lyn35-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 72,
+        "y": 12,
+        "width": 188,
+        "height": 297,
+        "anchor": 57.4468
+      },
+      {
+        "x": 371,
+        "y": 12,
+        "width": 192,
+        "height": 297,
+        "anchor": 56.25
+      },
+      {
+        "x": 673,
+        "y": 12,
+        "width": 191,
+        "height": 297,
+        "anchor": 56.0209
+      },
+      {
+        "x": 975,
+        "y": 12,
+        "width": 190,
+        "height": 297,
+        "anchor": 57.3684
+      },
+      {
+        "x": 72,
+        "y": 322,
+        "width": 190,
+        "height": 301,
+        "anchor": 55.7895
+      },
+      {
+        "x": 371,
+        "y": 322,
+        "width": 196,
+        "height": 301,
+        "anchor": 55.3571
+      },
+      {
+        "x": 670,
+        "y": 322,
+        "width": 198,
+        "height": 302,
+        "anchor": 56.0606
+      },
+      {
+        "x": 975,
+        "y": 322,
+        "width": 194,
+        "height": 302,
+        "anchor": 56.1856
+      },
+      {
+        "x": 67,
+        "y": 637,
+        "width": 209,
+        "height": 300,
+        "anchor": 52.8708
+      },
+      {
+        "x": 368,
+        "y": 635,
+        "width": 203,
+        "height": 301,
+        "anchor": 54.1872
+      },
+      {
+        "x": 669,
+        "y": 634,
+        "width": 212,
+        "height": 303,
+        "anchor": 50.4717
+      },
+      {
+        "x": 976,
+        "y": 636,
+        "width": 202,
+        "height": 300,
+        "anchor": 59.6535
+      },
+      {
+        "x": 67,
+        "y": 948,
+        "width": 202,
+        "height": 298,
+        "anchor": 53.9604
+      },
+      {
+        "x": 373,
+        "y": 947,
+        "width": 207,
+        "height": 300,
+        "anchor": 52.657
+      },
+      {
+        "x": 672,
+        "y": 950,
+        "width": 195,
+        "height": 298,
+        "anchor": 54.6154
+      },
+      {
+        "x": 974,
+        "y": 949,
+        "width": 194,
+        "height": 298,
+        "anchor": 57.4742
+      }
+    ]
+  },
+  "zsh01": {
+    "src": "/assets/outfit-motion/zsh01-v1.webp",
+    "width": 1254,
+    "height": 1254,
+    "frames": [
+      {
+        "x": 115,
+        "y": 33,
+        "width": 187,
+        "height": 289,
+        "anchor": 39.5722
+      },
+      {
+        "x": 407,
+        "y": 32,
+        "width": 192,
+        "height": 290,
+        "anchor": 38.2812
+      },
+      {
+        "x": 702,
+        "y": 32,
+        "width": 191,
+        "height": 290,
+        "anchor": 39.5288
+      },
+      {
+        "x": 1015,
+        "y": 32,
+        "width": 194,
+        "height": 290,
+        "anchor": 39.1753
+      },
+      {
+        "x": 115,
+        "y": 336,
+        "width": 188,
+        "height": 290,
+        "anchor": 39.3617
+      },
+      {
+        "x": 407,
+        "y": 335,
+        "width": 191,
+        "height": 291,
+        "anchor": 38.7435
+      },
+      {
+        "x": 704,
+        "y": 335,
+        "width": 189,
+        "height": 291,
+        "anchor": 39.6825
+      },
+      {
+        "x": 1014,
+        "y": 335,
+        "width": 193,
+        "height": 291,
+        "anchor": 39.6373
+      },
+      {
+        "x": 115,
+        "y": 638,
+        "width": 188,
+        "height": 290,
+        "anchor": 40.4255
+      },
+      {
+        "x": 407,
+        "y": 638,
+        "width": 194,
+        "height": 290,
+        "anchor": 40.2062
+      },
+      {
+        "x": 704,
+        "y": 639,
+        "width": 189,
+        "height": 289,
+        "anchor": 41.5344
+      },
+      {
+        "x": 1013,
+        "y": 637,
+        "width": 194,
+        "height": 291,
+        "anchor": 40.9794
+      },
+      {
+        "x": 114,
+        "y": 941,
+        "width": 192,
+        "height": 286,
+        "anchor": 41.1458
+      },
+      {
+        "x": 410,
+        "y": 943,
+        "width": 191,
+        "height": 284,
+        "anchor": 41.3613
+      },
+      {
+        "x": 705,
+        "y": 942,
+        "width": 188,
+        "height": 285,
+        "anchor": 40.1596
+      },
+      {
+        "x": 1018,
+        "y": 942,
+        "width": 191,
+        "height": 286,
+        "anchor": 39.0052
+      }
+    ]
+  }
+}

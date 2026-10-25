@@ -1,0 +1,8 @@
+.character-visual { position:relative; display:block; width:100%; height:100%; overflow:hidden; pointer-events:none; }
+.character-visual > img { display:block; width:100%; height:100%; object-fit:contain; }
+.character-visual.is-normalized > img { position:absolute; left:50%; width:auto; max-width:none; object-fit:fill; }
+.character-frames { position:absolute; left:50%; display:block; width:auto; max-width:none; visibility:hidden; }
+.character-visual[data-motion-ready="true"] > img { visibility:hidden; }
+.character-visual[data-motion-ready="true"] > .character-frames { visibility:visible; }
+.companion > .character-visual { position:absolute; left:0; top:7%; width:100%; height:86%; margin:0; }
+.companion.companion-outfit:active { transform:none; }

@@ -1,0 +1,38 @@
+/* Only the three reference screens: wardrobe, personal recommendations and mood selection. */
+.wardrobe-page,.recommendation-page,.outfit-unlock-dialog {
+ --ink:#24243a; --muted:#77738c; --pink:#ff6f9f; --violet:#8c6be5;
+ --line:#eae3f3; --card:#ffffffdf; --soft:#f4effb;
+ --lift:0 6px 24px #8b6bac0d;
+ --action:linear-gradient(115deg,#ff97b0,#ff6d9e);
+ --page:radial-gradient(ellipse at 100% 0%,#e9dcff 0%,transparent 52%),radial-gradient(ellipse at 90% 95%,#fcd7ec 0%,transparent 45%),linear-gradient(145deg,#fff0ed,#fffafd 48%,#f2edff);
+}
+.wardrobe-page,.recommendation-page {background:var(--page);color:var(--ink)}
+.recommendation-back,.wardrobe-back {color:var(--ink);background:var(--card);border-color:#fff;box-shadow:var(--lift)}
+.recommendation-play {background:var(--action);color:#fff;border-color:#ff95b7;box-shadow:0 3px 8px #ef7dab20}
+.wardrobe-pedestal {background:#b59bce20;box-shadow:0 6px 12px #fff8}
+.wardrobe-wear {color:#fff;background:var(--action);border-color:#ff9abb;box-shadow:inset 0 1px 0 #fff7,0 4px 12px #e976a02b}
+.recommendation-change,.recommendation-context,.recommendation-song-info h2,.wardrobe-characters strong {color:var(--ink)}
+.recommendation-context,.recommendation-song,.recommendation-moods button,.recommendation-skeleton,.wardrobe-characters>button {background:var(--card);border-color:#fff;box-shadow:var(--lift)}
+.recommendation-context small,.recommendation-song-info p,.recommendation-state,.recommendation-loading>span,.wardrobe-header>span,.wardrobe-preview-top,.wardrobe-preview-copy>span,.wardrobe-preview-copy p,.wardrobe-collection-heading p,.wardrobe-card>small,.wardrobe-characters small,.wardrobe-footer>p {color:var(--muted)}
+.recommendation-moods button>span {display:flex;color:var(--violet)}
+.recommendation-moods button[aria-pressed=true],.wardrobe-characters>button[aria-pressed=true] {background:#ffeaf2;border-color:var(--pink);box-shadow:0 0 0 2px #ff86af0d;color:var(--ink)}
+.recommendation-song-actions {color:var(--ink)}
+.recommendation-cover {background:linear-gradient(140deg,#cbb3fa,#9ea8ee)!important;color:#fff}
+.recommendation-song:nth-child(3n+2) .recommendation-cover {background:linear-gradient(140deg,#9fe1f1,#8da8f2)!important}
+.recommendation-song:nth-child(3n) .recommendation-cover {background:linear-gradient(140deg,#ffc4da,#f48ebc)!important}
+.recommendation-state button {background:#f1e7ff;border-color:#e5d6fb;color:#7453b5}
+.recommendation-skeleton i,.recommendation-skeleton>div i {background:#eee6f5}
+.wardrobe-preview {background:radial-gradient(ellipse at 30% 40%,#fff3f7,transparent 65%),linear-gradient(130deg,#ffffffc9,#eee5ffb0);box-shadow:var(--lift)}
+.wardrobe-card-art {background:linear-gradient(145deg,#ffffffed,#f3eafcaa);border-color:#fff}
+.wardrobe-card.is-selected .wardrobe-card-art {border-color:var(--pink);background:linear-gradient(145deg,#fff0f5,#ffd6e8);box-shadow:0 0 0 2px #ff80aa12}
+.wardrobe-selected {background:var(--pink);color:#fff}
+.wardrobe-worn {background:#ffffffdf;color:#9f4f80}
+.wardrobe-characters svg {color:var(--pink)}
+.wardrobe-collection-heading h2>span {background:#f2dff4;color:#745b8e}
+.wardrobe-footer {--selection-footer-background:#faf1fc;background:var(--selection-footer-background)}
+.wardrobe-wear:disabled {color:#fff;background:var(--action);border-color:#fff;box-shadow:var(--lift)}
+.outfit-unlock-card,.outfit-unlock-dialog.is-album .outfit-unlock-card {background:var(--page);color:var(--ink);box-shadow:0 24px 80px #73547a30,inset 0 0 0 5px #fff5}
+.unlock-portrait {background:radial-gradient(circle,#fff,#eee1fc)}
+.wardrobe-state {color:var(--muted)}
+.unlock-yes {background:var(--action);box-shadow:inset 0 1px 0 #fff7,0 4px 12px #e976a02b}
+.unlock-celebration {background:radial-gradient(circle at 50% 48%,#f5dfffa8,transparent 60%)}

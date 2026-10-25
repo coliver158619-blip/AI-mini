@@ -55,6 +55,11 @@ macOS 内网预览现由用户会话的 launchd 服务 `local.ai-mini.lan` 独�
 | --- | --- |
 | `GET /api/health` | SQLite 及服务检查 |
 | `GET /api/bootstrap` | 用户、歌曲、主动问候、最新天气 |
+| `GET /api/listen-together/entry` | 陪伴空间的一起听跳转地址，返回 `{available,url}`；通过 `TOGETHER_LISTEN_URL` 配置，未配置时不跳转，见 [接入说明](../docs/companion-space.md) |
+| `GET /api/shared-diary` | 共享日记列表与今日空页，独立于个人日记 |
+| `PUT /api/shared-diary/YYYY-MM-DD` | `{note,body,revision}` 保存共同经历与可编辑正文，支持历史日期 |
+| `POST /api/shared-diary/YYYY-MM-DD/story` | `{revision}` 按已保存共同经历调用真实 AI 总结 |
+| `GET /api/together/playlist` | 共同听过的歌曲、收听次数及最近收听时间，仅计非演示 together 播放 |
 | `GET /api/location/search?q=广州` | 公共城市搜索，返回可选地点及坐标 |
 | `POST /api/weather` | `{latitude,longitude,city?}` 获取坐标天气，未命名城市时反向解析 |
 | `POST /api/chat` | `{message,scene?,conversationId?}` 场景及天气推荐，写入选定会话 |
@@ -75,8 +80,11 @@ macOS 内网预览现由用户会话的 launchd 服务 `local.ai-mini.lan` 独�
 | `GET /api/reports?period=week&offset=0` | 周/月/年聚合；`offset=-1` 为上期 |
 | `POST /api/favorites` | `{songId,favorite?}` 收藏或取消；不传布尔值则切换 |
 | `POST /api/profile` | `{name}` 改名，1—16 字 |
-| `GET /api/outfits` | 两个人物 `characters`、14 套装扮 `outfits` 和当前 `profile` |
+| `GET /api/outfits` | 两个人物 `characters`、31 套装扮 `outfits` 和当前 `profile` |
+| `POST /api/outfit/unlock` | `{outfitId}` 解锁并持久保存，重复请求幂等；当前不扣能量、不查询真实专辑 |
 | `POST /api/outfit` | `{outfitId}` 确认人物装扮（如 `lyn22` / `zsh08`），保留音乐人格，返回更新后的 `profile` |
+| `GET /api/widget/image` | 返回当前首页实际形象的 PNG 文件名 `{imageName}`，用于原生挂件 |
+| `GET /api/widget/appearance` | 返回 `imageName`、`appearanceId`、`appearanceType`、`revision`，用于 Widget 同步 |
 | `GET /api/personalities` | 16 型音乐人格、四类分组和当前 `profile` |
 | `GET /api/personality/image` | 只返回当前首页形象的 `{imageName}`；支持 `?personalityId=ENFP` 或 `?outfitId=zsh01` 查询 |
 | `POST /api/personality` | `{personalityId}` 选择音乐人格并用于首页，保留衣橱装扮 |

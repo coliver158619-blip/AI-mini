@@ -14,6 +14,9 @@ class PersonalityTest(unittest.TestCase):
         self.path = str(Path(temporary.name) / 'personality.sqlite3')
         self.config = {'TESTING': True, 'DATABASE': self.path, 'SEED_DEMO': False, 'PET_CHAT_MODE': 'local'}
         self.client = create_app(self.config).test_client()
+        # These tests exercise an already unlocked wardrobe; unlock rules have their own suite.
+        for outfit in self.client.get('/api/outfits').json['outfits']:
+            self.client.post('/api/outfit/unlock', json={'outfitId': outfit['id']})
 
     def test_catalog_contains_all_16_characters_and_four_groups(self):
         data = self.client.get('/api/personalities').json
@@ -36,7 +39,7 @@ class PersonalityTest(unittest.TestCase):
             self.assertEqual(profile['appearance']['imageUrl'], item['imageUrl'])
             restarted = create_app(self.config).test_client().get('/api/bootstrap').json['profile']
             self.assertEqual(restarted['personality'], item)
-            self.assertEqual(restarted['outfitId'], 'lyn22')
+            self.assertEqual(restarted['outfitId'], 'lyn28')
         self.client.post('/api/outfit', json={'outfitId': 'zsh02'})
         self.assertEqual(self.client.get('/api/personalities').json['profile']['personalityId'], 'ESFP')
 
@@ -66,7 +69,7 @@ class PersonalityTest(unittest.TestCase):
             self.assertEqual(image.json, {'imageName': outfit['imageName']})
             response = self.client.get(outfit['imageUrl'])
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.mimetype, 'image/png')
+            self.assertEqual(response.mimetype, 'image/webp')
             response.close()
         for query in ('outfitId=', 'outfitId=INFP', 'outfitId=zsh01&outfitId=lyn22', 'outfitId=zsh01&personalityId=INFP'):
             self.assertEqual(self.client.get('/api/personality/image?' + query).status_code, 400)
@@ -129,7 +132,7 @@ class PersonalityTest(unittest.TestCase):
         self.assertEqual(client.get('/api/bootstrap').json['profile']['personalityId'], 'ENTJ')
         with sqlite3.connect(self.path) as db:
             self.assertEqual(db.execute('SELECT * FROM profile').fetchall(), previous)
-            self.assertEqual(db.execute("SELECT value FROM app_meta WHERE key='outfit_id'").fetchone()[0], 'lyn22')
+            self.assertEqual(db.execute("SELECT value FROM app_meta WHERE key='outfit_id'").fetchone()[0], 'lyn28')
         client.post('/api/personality', json={'personalityId': 'ESFP'})
         self.assertEqual(create_app(self.config).test_client().get('/api/bootstrap').json['profile']['personalityId'], 'ESFP')
 

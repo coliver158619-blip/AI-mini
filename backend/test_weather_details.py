@@ -93,6 +93,8 @@ class WeatherDetailsTest(unittest.TestCase):
             response = self.client.post("/api/weather", json={"latitude": 23.129, "longitude": 113.264})
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.json["cached"])
+        self.assertNotRegex(response.json["greeting"], "记录|刷新|缓存|更新|检测")
+        self.assertNotIn(original["condition"], response.json["greeting"])
         self.assertEqual(response.json["city"], original["city"])
         self.assertEqual(response.json["updatedAt"], original["updatedAt"])
         self.assertNotIn("high", response.json)

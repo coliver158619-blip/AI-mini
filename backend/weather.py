@@ -82,18 +82,18 @@ def describe(code):
 
 def weather_greeting(city, condition, temperature, severe=False):
     if severe:
-        return f"{city}现在是{condition}，外面的天气有点不乖。出门多留意天气提醒，别着急，我用几首温柔的歌陪着你。"
+        return f"{city}这会儿有{condition}，出门多留意天气提醒。别着急，我陪你。"
     if "雨" in condition:
-        return f"{city}正在下雨，出门记得带伞。听听雨声也听听歌，让今天慢下来，我陪你。"
+        return f"{city}下雨了，出门记得带伞呀。要不要一起听会儿歌？"
     if "雪" in condition:
-        return f"{city}下雪啦，记得穿暖一点。给你选了几首温柔的旋律，把暖意留在耳边。"
+        return f"{city}下雪啦，记得穿暖一点。你那边能看到雪吗？"
     if temperature >= 33:
-        return f"{city}今天有 {temperature:g}°C，天气热热的。给自己倒杯水，让清爽的旋律陪你休息一会儿。"
+        return f"{city}今天挺热的，喝点水再忙吧。想听首轻快的歌吗？"
     if temperature <= 5:
-        return f"{city}现在 {temperature:g}°C，有点冷呢。多添一件衣服，我给你挑几首暖暖的歌。"
+        return f"{city}有点冷呢，出门多穿一件。回来和我聊聊今天吧。"
     if condition == "晴天":
-        return f"{city}今天晴朗，阳光正好。把好天气装进耳机，和我一起听首轻快的歌吧。"
-    return f"{city}现在是{condition}，{temperature:g}°C。不管窗外是什么颜色，我都在这里陪你听歌。"
+        return f"{city}今天阳光不错，要不要戴上耳机出去走走？"
+    return "你来啦。今天想安静听歌，还是和我聊聊天？"
 
 
 def finite_number(value):

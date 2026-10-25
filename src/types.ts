@@ -1,6 +1,6 @@
 export type Song = { id: string; title: string; artist: string; color: string; tags: string[]; audioUrl?: string; audioLabel?: string; favorite?: boolean };
 export type Character = { id: string; name: string; defaultOutfitId: string; imageUrl: string };
-export type Outfit = { characterId: string; imageName: string; id: string; name: string; description: string; tag: string; color: string; thumbnailUrl: string; imageUrl: string };
+export type Outfit = { characterId: string; imageName: string; id: string; name: string; description: string; tag: string; color: string; thumbnailUrl: string; imageUrl: string; unlockMethod: 'free' | 'energy' | 'album'; unlocked?: boolean };
 export type Personality = { id: string; name: string; description: string; groupId: string; groupName: string; color: string; accent: string; traits: string[]; musicStyles: string[]; companionship: string; imageName: string; imageUrl: string };
 export type PersonalityImage = Pick<Personality, 'imageName'>;
 export type PersonalityGroup = { id: string; name: string; color: string; accent: string };

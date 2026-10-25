@@ -189,9 +189,10 @@ class AppTest(unittest.TestCase):
             self.client.post("/api/weather", json={"latitude": 23.1, "longitude": 113.2, "city": "广州"})
         bootstrap = self.client.get("/api/bootstrap").json
         self.assertTrue(bootstrap["weather"]["cached"])
-        self.assertIn("上次记录", bootstrap["greeting"])
+        self.assertNotRegex(bootstrap["greeting"], "记录|刷新|缓存|检测")
+        self.assertIn("上次", bootstrap["weather"]["notice"])
         chat = self.client.post("/api/chat", json={"message": "根据天气推荐音乐"}).json
-        self.assertIn("上次记录", chat["reply"])
+        self.assertNotRegex(chat["reply"], "记录|刷新|缓存|检测")
         self.assertNotEqual(chat["mood"], "开心")
         dates = [entry["date"] for entry in self.client.get("/api/diary").json["entries"]]
         self.assertIn(yesterday.date().isoformat(), dates)

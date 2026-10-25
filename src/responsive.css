@@ -31,7 +31,7 @@ body { padding: 0; background: #fcf7ee; }
   background-position: center top; background-size: cover; background-repeat: no-repeat;
 }
 .app-shell.with-player { --player-space: 85px; }
-.app-shell > :is(.more-page, .personality-page, .wardrobe-page, .diary-screen, .report-page, .recommendation-page, .connection-state),
+.app-shell > :is(.more-page, .personality-page, .wardrobe-page, .companion-space, .diary-screen, .report-page, .recommendation-page, .connection-state),
 .home-weather-frame > :is(.home-page, .weather-page) {
   width: 100%; max-width: none; min-width: 0; min-height: var(--surface-height);
   /* Transparent borders reserve space without leaving the page background. */
@@ -107,18 +107,21 @@ body { padding: 0; background: #fcf7ee; }
 }
 
 .home-nav { padding: 12px clamp(16px, 4.5cqw, 28px) 0; flex-shrink: 0; }
-.home-page { display: flex; flex-direction: column; height: var(--surface-height); }
+.home-page { display:flex; flex-direction:column; height:var(--surface-height); min-height:var(--surface-height); }
 .home-content { flex-shrink: 0; padding: 8px clamp(16px, 4.5cqw, 28px) clamp(24px, 3.2dvh, 32px); background: transparent; }
-.room-scene { display: flex; flex-direction: column; flex: 1 1 0; height: auto; min-height: min-content; background: transparent; }
+.room-scene { display:flex; flex-direction:column; flex:1 1 0; height:auto; min-height:0; background:transparent; }
 .room-scene::after { content: none; }
-.companion-stage { flex: 1 1 0; min-height: min-content; display: grid; grid-template-rows: auto minmax(100px, 1fr) auto; align-items: center; justify-items: center; gap: 8px; padding: 12px 0 10px; }
-.companion-stage .companion { position: relative; left: auto; bottom: auto; width: min(80%, 430px); height: 100%; min-height: 0; max-height: 380px; contain: size; }
-.companion-stage .companion img { transform: none; }
-.companion-stage .companion.companion-outfit { width: min(80%, 430px); }
-.companion-stage .speech-bubble { position: relative; top: auto; bottom: auto; right: auto; width: min(230px, calc(100% - 140px)); flex-shrink: 0; border-radius: 19px; animation: fadeIn .35s ease both; }
-.companion-stage .speech-bubble::before { left: 42%; bottom: -9px; border: 0; width: 16px; height: 16px; background: #fffef9; transform: rotate(45deg); }
-.companion-stage .companion-caption { position: relative; bottom: auto; left: auto; }
-.home-page .room-shortcuts { top: 100px; right: clamp(16px, 4.5cqw, 28px); gap: 10px; }
+.companion-stage { position:relative; flex:1 1 0; min-height:0; }
+.companion-stage .companion { position:absolute; left:50%; bottom:55px; transform:translateX(-50%); width:min(80%,430px); height:clamp(240px,82cqw,340px); min-height:0; contain:size; }
+.companion-stage .companion.companion-outfit { width:min(80%,430px); }
+.companion-stage .companion.companion-outfit:active { transform:translateX(-50%); }
+.companion-stage .speech-bubble { position:absolute; top:0; bottom:auto; left:50%; right:auto; transform:translateX(-50%); width:max-content; min-width:min(230px,calc(100% - 108px)); max-width:min(720px,calc(100% - 32px)); max-height:none; overflow:visible; border-radius:19px; animation:fadeIn .35s ease both; }
+.companion-stage .speech-bubble::before { left:calc(50% - 8px); bottom:-8px; border:0; width:16px; height:16px; background:#fffef9; transform:rotate(45deg); }
+.companion-stage .bubble-copy { display:block; -webkit-line-clamp:unset; overflow:visible; white-space:normal; overflow-wrap:anywhere; }
+.companion-stage .hourly-song-main strong { display:block; -webkit-line-clamp:unset; overflow:visible; }
+.companion-stage .hourly-song-main small { white-space:normal; overflow:visible; text-overflow:clip; overflow-wrap:anywhere; }
+.companion-stage .companion-caption { position:absolute; bottom:7px; left:50%; transform:translateX(-50%); }
+.home-page .room-shortcuts { top: 42%; right: clamp(16px, 4.5cqw, 28px); gap: 10px; }
 .home-page .room-shortcut { min-width: 44px; min-height: 44px; width: 48px; height: 54px; border-radius: 15px; }
 .streak-avatar-wrap { position: relative; display: block; width: 42px; height: 42px; flex-shrink: 0; }
 .streak-avatar-wrap .streak-avatar-character { width: 38px; height: 38px; background-size: 64px auto; background-position: center 0; border: 2px solid #fffaf0; }
@@ -166,7 +169,7 @@ body { padding: 0; background: #fcf7ee; }
   .companion-stage .bubble-caption { margin-bottom: 5px; }
   .companion-stage .companion-caption { gap: 5px; }
   .companion-stage .companion-caption > button { font-size: 17px; }
-  .home-page .room-shortcuts { top: 90px; }
+
 }
 
 /* Component width also covers a narrow host container inside a wider client window. */
@@ -209,4 +212,48 @@ body { padding: 0; background: #fcf7ee; }
 /* iOS zooms small editable text on focus; keep the rest of the design unchanged. */
 @supports (-webkit-touch-callout: none) {
   .chat-form input, .settings-form > input, .diary-personal-note textarea, .report-modal textarea { font-size: 16px; }
+}
+
+@media (orientation: landscape) and (max-height: 550px) { .companion-stage .companion { height:220px; min-height:220px; } }
+
+/* Keep room for the full greeting and song without changing the figure scale. */
+.home-page .home-nav { padding-top:8px; }
+.home-page .home-status { gap:6px; }
+.home-page .streak-pill { padding-block:6px; }
+.home-page .streak-avatar-wrap { height:34px; width:34px; }
+.home-page .streak-avatar-wrap .streak-avatar-character { width:32px; height:32px; }
+.home-page .home-status .weather-pill { padding-block:5px; }
+.home-page .energy-card { min-height:48px; padding-block:7px; }
+.home-page .hot-activities { min-height:40px; padding-block:8px; }
+.home-page .home-content { padding-bottom:24px; }
+.companion-stage .speech-bubble { padding:10px 12px; }
+.companion-stage .bubble-copy { line-height:1.65; }
+
+@media (max-width:360px) and (max-height:740px) {
+ .companion-stage .hourly-song-main > svg:first-child { display:none; }
+}
+
+/* Portrait browsers share one center line; browser chrome never moves the figure sideways. */
+.home-page { --home-figure-height: clamp(120px, calc(var(--page-height) - 420px), 340px); }
+.home-page .home-nav { padding-bottom:14px; }
+.companion-stage .companion, .companion-stage .companion.companion-outfit {
+ left:50%; width:min(80%,430px); height:min(82cqw,var(--home-figure-height)); min-height:0;
+ bottom:48px; transform:translateX(-50%);
+}
+.companion-stage .speech-bubble { top:0; max-width:min(720px,calc(100% - 32px)); }
+.companion-stage .companion-caption { left:50%; bottom:0; }
+.home-page .room-shortcuts { top:42%; bottom:auto; flex-direction:column; }
+.companion-stage .speech-bubble { min-width:min(230px,calc(100% - 148px)); max-width:min(720px,calc(100% - 148px)); }
+/* A genuinely wide, short viewport has room for text left and controls right. */
+@media (min-width:700px) and (max-height:550px) {
+ .home-page { position:relative; --home-figure-height:220px; }
+ .home-page .home-content { position:absolute; bottom:var(--safe-bottom); right:var(--safe-right); width:190px; padding:8px 12px 24px; }
+ .home-page .home-nav { padding-inline:12px; }
+ .home-page .home-status { gap:4px; }
+ .home-status .weather-pill { padding:4px 8px; }
+ .companion-stage .speech-bubble { left:12px; transform:none; min-width:0; max-width:calc(50% - 130px); }
+ .companion-stage .speech-bubble::before { left:auto; right:-6px; bottom:20px; }
+ .home-page .room-shortcuts { right:20px; top:112px; bottom:auto; flex-direction:column; }
+ .companion-stage .companion, .companion-stage .companion.companion-outfit { bottom:42px; }
+ .companion-stage .companion-caption { bottom:0; }
 }

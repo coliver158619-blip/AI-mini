@@ -1,3 +1,4 @@
+import { roomFetch } from './api';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSun, Droplets, LoaderCircle, LocateFixed, MapPin, RefreshCw, Search, Snowflake, Sun, Thermometer } from 'lucide-react';
 import WeatherScene, { getCityScene } from './WeatherScene';
@@ -45,7 +46,7 @@ export function WeatherIcon({ code, size = 22 }: { code: number; size?: number }
 }
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, options);
+  const response = await roomFetch(url, options);
   let data;
   try { data = await response.json(); }
   catch { throw new Error('暂时连接不上天气服务，请稍后重试。'); }

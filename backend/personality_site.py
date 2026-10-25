@@ -11,7 +11,7 @@ class PersonalitySiteSync:
         self.app = app
         self.url = app.config.get('PERSONALITY_SITE_URL', '').rstrip('/')
         self.token = app.config.get('PERSONALITY_SITE_SYNC_TOKEN', '')
-        self.enabled = bool(self.url and self.token)
+        self.enabled = bool(self.url and self.token) and not app.config.get('AUTH_ENABLED', False)
         if self.enabled and not self.url.startswith('https://'):
             raise ValueError('PERSONALITY_SITE_URL 需为 HTTPS 地址')
         self.pending = threading.Event()

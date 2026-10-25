@@ -1,0 +1,286 @@
+{
+  "groups": [
+    {
+      "id": "gentle",
+      "name": "温柔旋律",
+      "color": "#e4efdf",
+      "accent": "#769563"
+    },
+    {
+      "id": "rhythm",
+      "name": "律动现场",
+      "color": "#ffead3",
+      "accent": "#c88b44"
+    },
+    {
+      "id": "creative",
+      "name": "灵感声场",
+      "color": "#eee3fb",
+      "accent": "#9470bd"
+    },
+    {
+      "id": "quiet",
+      "name": "静心时光",
+      "color": "#e1eef8",
+      "accent": "#6f96b5"
+    }
+  ],
+  "images": [
+    {
+      "id": "ENFJ",
+      "name": "民谣",
+      "englishName": "Folk",
+      "gender": "male",
+      "pairId": "folk",
+      "groupId": "gentle",
+      "description": "在风与树叶间，轻轻唱起生活里的小故事。",
+      "traits": [
+        "自然",
+        "清新",
+        "温暖"
+      ],
+      "imageName": "ENFJ.png",
+      "imageUrl": "/assets/music-images/ENFJ.webp"
+    },
+    {
+      "id": "ENFP",
+      "name": "民谣",
+      "englishName": "Folk",
+      "gender": "female",
+      "pairId": "folk",
+      "groupId": "gentle",
+      "description": "在风与树叶间，轻轻唱起生活里的小故事。",
+      "traits": [
+        "自然",
+        "清新",
+        "温暖"
+      ],
+      "imageName": "ENFP.png",
+      "imageUrl": "/assets/music-images/ENFP.webp"
+    },
+    {
+      "id": "INFJ",
+      "name": "R&B",
+      "englishName": "R&B",
+      "gender": "male",
+      "pairId": "rnb",
+      "groupId": "gentle",
+      "description": "跟着松弛的节拍，把心事唱得温柔又有律动。",
+      "traits": [
+        "律动",
+        "松弛",
+        "丝滑"
+      ],
+      "imageName": "INFJ.png",
+      "imageUrl": "/assets/music-images/INFJ.webp"
+    },
+    {
+      "id": "INFP",
+      "name": "R&B",
+      "englishName": "R&B",
+      "gender": "female",
+      "pairId": "rnb",
+      "groupId": "gentle",
+      "description": "跟着松弛的节拍，把心事唱得温柔又有律动。",
+      "traits": [
+        "律动",
+        "松弛",
+        "丝滑"
+      ],
+      "imageName": "INFP.png",
+      "imageUrl": "/assets/music-images/INFP.webp"
+    },
+    {
+      "id": "ENTP",
+      "name": "摇滚",
+      "englishName": "Rock",
+      "gender": "male",
+      "pairId": "rock",
+      "groupId": "rhythm",
+      "description": "跟着吉他和鼓点，让今天的热爱尽情发声。",
+      "traits": [
+        "吉他",
+        "热烈",
+        "力量"
+      ],
+      "imageName": "ENTP.png",
+      "imageUrl": "/assets/music-images/ENTP.webp"
+    },
+    {
+      "id": "ENTJ",
+      "name": "摇滚",
+      "englishName": "Rock",
+      "gender": "female",
+      "pairId": "rock",
+      "groupId": "rhythm",
+      "description": "跟着吉他和鼓点，让今天的热爱尽情发声。",
+      "traits": [
+        "吉他",
+        "热烈",
+        "力量"
+      ],
+      "imageName": "ENTJ.png",
+      "imageUrl": "/assets/music-images/ENTJ.webp"
+    },
+    {
+      "id": "ESTP",
+      "name": "Hip-Hop",
+      "englishName": "Hip-Hop",
+      "gender": "male",
+      "pairId": "hiphop",
+      "groupId": "rhythm",
+      "description": "把心情放进节奏，让每一个当下自由发光。",
+      "traits": [
+        "说唱",
+        "街头",
+        "节拍"
+      ],
+      "imageName": "ESTP.png",
+      "imageUrl": "/assets/music-images/ESTP.webp"
+    },
+    {
+      "id": "ESFP",
+      "name": "Hip-Hop",
+      "englishName": "Hip-Hop",
+      "gender": "female",
+      "pairId": "hiphop",
+      "groupId": "rhythm",
+      "description": "把心情放进节奏，让每一个当下自由发光。",
+      "traits": [
+        "说唱",
+        "街头",
+        "节拍"
+      ],
+      "imageName": "ESFP.png",
+      "imageUrl": "/assets/music-images/ESFP.webp"
+    },
+    {
+      "id": "INTJ",
+      "name": "电音",
+      "englishName": "Electronic",
+      "gender": "male",
+      "pairId": "electronic",
+      "groupId": "creative",
+      "description": "在合成器和声波里，遇见下一段闪亮的灵感。",
+      "traits": [
+        "合成器",
+        "未来",
+        "探索"
+      ],
+      "imageName": "INTJ.png",
+      "imageUrl": "/assets/music-images/INTJ.webp"
+    },
+    {
+      "id": "INTP",
+      "name": "电音",
+      "englishName": "Electronic",
+      "gender": "female",
+      "pairId": "electronic",
+      "groupId": "creative",
+      "description": "在合成器和声波里，遇见下一段闪亮的灵感。",
+      "traits": [
+        "合成器",
+        "未来",
+        "探索"
+      ],
+      "imageName": "INTP.png",
+      "imageUrl": "/assets/music-images/INTP.webp"
+    },
+    {
+      "id": "ISTP",
+      "name": "流行",
+      "englishName": "Pop",
+      "gender": "male",
+      "pairId": "pop",
+      "groupId": "creative",
+      "description": "把熟悉的旋律放进日常，每一首都想和你分享。",
+      "traits": [
+        "轻快",
+        "明亮",
+        "共鸣"
+      ],
+      "imageName": "ISTP.png",
+      "imageUrl": "/assets/music-images/ISTP.webp"
+    },
+    {
+      "id": "ISFP",
+      "name": "流行",
+      "englishName": "Pop",
+      "gender": "female",
+      "pairId": "pop",
+      "groupId": "creative",
+      "description": "把熟悉的旋律放进日常，每一首都想和你分享。",
+      "traits": [
+        "轻快",
+        "明亮",
+        "共鸣"
+      ],
+      "imageName": "ISFP.png",
+      "imageUrl": "/assets/music-images/ISFP.webp"
+    },
+    {
+      "id": "ESFJ",
+      "name": "古典",
+      "englishName": "Classical",
+      "gender": "male",
+      "pairId": "classical",
+      "groupId": "quiet",
+      "description": "让细腻的弦乐与琴声，陪你慢慢走过每个片刻。",
+      "traits": [
+        "管弦",
+        "优雅",
+        "层次"
+      ],
+      "imageName": "ESFJ.png",
+      "imageUrl": "/assets/music-images/ESFJ-v2.webp"
+    },
+    {
+      "id": "ESTJ",
+      "name": "古典",
+      "englishName": "Classical",
+      "gender": "female",
+      "pairId": "classical",
+      "groupId": "quiet",
+      "description": "让细腻的弦乐与琴声，陪你慢慢走过每个片刻。",
+      "traits": [
+        "管弦",
+        "优雅",
+        "层次"
+      ],
+      "imageName": "ESTJ.png",
+      "imageUrl": "/assets/music-images/ESTJ.webp"
+    },
+    {
+      "id": "ISTJ",
+      "name": "古风",
+      "englishName": "Chinese Style",
+      "gender": "male",
+      "pairId": "guofeng",
+      "groupId": "quiet",
+      "description": "一缕笛声，一段清韵，把山水与诗意唱进心里。",
+      "traits": [
+        "国风",
+        "笛韵",
+        "诗意"
+      ],
+      "imageName": "ISTJ.png",
+      "imageUrl": "/assets/music-images/ISTJ-v2.webp"
+    },
+    {
+      "id": "ISFJ",
+      "name": "古风",
+      "englishName": "Chinese Style",
+      "gender": "female",
+      "pairId": "guofeng",
+      "groupId": "quiet",
+      "description": "一缕笛声，一段清韵，把山水与诗意唱进心里。",
+      "traits": [
+        "国风",
+        "笛韵",
+        "诗意"
+      ],
+      "imageName": "ISFJ.png",
+      "imageUrl": "/assets/music-images/ISFJ-v2.webp"
+    }
+  ]
+}

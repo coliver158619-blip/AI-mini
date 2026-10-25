@@ -3,7 +3,7 @@ import './more.css'
 import type { Outfit, Personality, Profile } from './types'
 
 export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality'
-type Props = { onBack: () => void; onAction: (action: MoreAction) => void; personality?: Personality; outfit?: Outfit; appearance?: Profile['appearance'] }
+type Props = { onBack: () => void; onAction: (action: MoreAction) => void; personality?: Personality; outfit?: Outfit; appearance?: Profile['appearance']; onLogout?: () => void; loggingOut?: boolean }
 
 // Original reference artwork, kept unmodified. Coordinates use its 877 × 1793 canvas.
 const artwork = {
@@ -50,7 +50,7 @@ function MoreCard({ action, kind, label, description, art, wide, imageUrl, onAct
   </button>
 }
 
-export default function More({ onBack, onAction, personality, outfit, appearance }: Props) {
+export default function More({ onBack, onAction, personality, outfit, appearance, onLogout, loggingOut }: Props) {
   const characterUrl = personality?.imageUrl || '/assets/music-images/INFP.webp'
   return <main className="more-page"><div className="more-content">
     <header className="more-header">
@@ -85,6 +85,7 @@ export default function More({ onBack, onAction, personality, outfit, appearance
         <MoreCard action="recommendations" label="为你推荐" description="发现想听的歌" art="note" onAction={onAction} />
       </div>
     </section>
+    {onLogout && <button className="more-logout" disabled={loggingOut} onClick={onLogout}>{loggingOut ? '正在退出…' : '退出当前小屋'}</button>}
   </div></main>
 }
 

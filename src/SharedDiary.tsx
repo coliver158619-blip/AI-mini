@@ -5,15 +5,15 @@ import './diary.css';
 import './shared-space.css';
 
 type Entry = { date: string; note: string; body: string; revision: number; source: string; updatedAt: string | null };
-const draftKey = 'shared-diary-drafts-v1';
 const blank = (date: string): Entry => ({ date, note: '', body: '', revision: 0, source: 'manual', updatedAt: null });
-function readDrafts(): Record<string, Entry> {
+function readDrafts(draftKey: string): Record<string, Entry> {
  try { const value = JSON.parse(localStorage.getItem(draftKey) || '{}'); return Object.fromEntries(Object.entries(value).filter(([, entry]) => entry && typeof entry === 'object' && typeof (entry as Entry).note === 'string' && typeof (entry as Entry).body === 'string' && Number.isInteger((entry as Entry).revision))) as Record<string, Entry>; } catch { return {}; }
 }
 
-export default function SharedDiary({ onBack }: { onBack: () => void }) {
+export default function SharedDiary({ onBack, userId = 'legacy' }: { onBack: () => void; userId?: string }) {
+ const draftKey = userId === 'legacy' ? 'shared-diary-drafts-v1' : `shared-diary-drafts-v1:${userId}`;
  const [entries, setEntries] = useState<Entry[]>([]), [day, setDay] = useState(''), [today, setToday] = useState('');
- const [drafts, setDrafts] = useState(readDrafts), [loading, setLoading] = useState(true), [loadError, setLoadError] = useState('');
+ const [drafts, setDrafts] = useState(() => readDrafts(draftKey)), [loading, setLoading] = useState(true), [loadError, setLoadError] = useState('');
  const [busy, setBusy] = useState<'save' | 'ai' | null>(null), [status, setStatus] = useState(''), [error, setError] = useState(''), [retry, setRetry] = useState(0);
  const saved = entries.find(item => item.date === day) || blank(day), current = drafts[day] || saved;
  const dirty = current.note !== saved.note || current.body !== saved.body;

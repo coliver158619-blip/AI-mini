@@ -1,4 +1,4 @@
-"""Single-user H5 music companion with durable SQLite storage.
+"""Nickname-based H5 music companion with durable SQLite storage.
 
 Run from the project root: python -m backend.app
 """
@@ -21,6 +21,7 @@ from flask import Flask, current_app, g, jsonify, request, send_file, send_from_
 from werkzeug.exceptions import HTTPException
 
 from .audio import generate_preview
+from .accounts import register_accounts
 from .chat_text import clean_assistant_text
 from .conversations import init_conversations, register_conversations, selected_id
 from .diary_story import context_for_day, generate_story, story_state
@@ -57,15 +58,15 @@ def now():
 def get_db():
     if "db" not in g:
         from flask import current_app
-        g.db = sqlite3.connect(current_app.config["DATABASE"], timeout=10)
+        g.db = sqlite3.connect(getattr(g, "user_database", current_app.config["DATABASE"]), timeout=10)
         g.db.row_factory = sqlite3.Row
         g.db.execute("PRAGMA foreign_keys = ON")
         g.db.execute("PRAGMA busy_timeout = 10000")
     return g.db
 
 
-def init_db(app):
-    target = Path(app.config["DATABASE"])
+def init_db(app, target=None, seed_demo=None):
+    target = Path(target or app.config["DATABASE"])
     target.parent.mkdir(parents=True, exist_ok=True)
     with sqlite3.connect(target, timeout=10) as db:
         db.execute("PRAGMA journal_mode = WAL")
@@ -164,7 +165,7 @@ def init_db(app):
         if db.execute("SELECT 1 FROM app_meta WHERE key = 'initialized'").fetchone():
             return
         today = now().date()
-        seeded = app.config["SEED_DEMO"]
+        seeded = app.config["SEED_DEMO"] if seed_demo is None else seed_demo
         db.execute("INSERT OR IGNORE INTO profile VALUES (1, ?, ?, ?)", ("乌萨奇", (today - timedelta(days=127) if seeded else today).isoformat(), 1080 if seeded else 0))
         if seeded:
             rng = random.Random(20260922)
@@ -475,8 +476,13 @@ def start_diary_scheduler(app):
     def worker():
         while not stopped.is_set():
             try:
-                with app.app_context():
-                    run_scheduled_diary()
+                targets = app.extensions['room_databases']() if app.config['AUTH_ENABLED'] else [Path(app.config['DATABASE'])]
+                for target in targets:
+                    if target.name == 'accounts.sqlite3':
+                        continue
+                    with app.app_context():
+                        g.user_database = str(target)
+                        run_scheduled_diary()
             except Exception as error:
                 app.logger.warning("Diary scheduler failed: %s", type(error).__name__)
             stopped.wait(15)
@@ -569,6 +575,7 @@ def create_app(test_config=None):
     app.config.update(DATABASE=os.getenv("APP_DATABASE_PATH", str(ROOT / "backend" / "data" / "companion.sqlite3")), SEED_DEMO=os.getenv("SEED_DEMO", "true").lower() in ("true", "1", "yes"), MAX_CONTENT_LENGTH=32 * 1024)
     if test_config:
         app.config.update(test_config)
+    app.config.setdefault('AUTH_ENABLED', not app.testing and os.getenv('AUTH_ENABLED', 'true').lower() not in ('false', '0'))
     app.config.setdefault('PERSONALITY_SITE_URL', os.getenv('PERSONALITY_SITE_URL', ''))
     app.config.setdefault('PERSONALITY_SITE_SYNC_TOKEN', os.getenv('PERSONALITY_SITE_SYNC_TOKEN', ''))
     app.config.setdefault('TOGETHER_LISTEN_URL', os.getenv('TOGETHER_LISTEN_URL', '').strip())
@@ -576,6 +583,7 @@ def create_app(test_config=None):
     init_db(app)
     with app.app_context():
         init_conversations(get_db(), now().isoformat())
+    register_accounts(app, get_db, init_db, get_profile, now)
     register_conversations(app, get_db, now)
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
@@ -960,6 +968,7 @@ def create_app(test_config=None):
     def profile():
         name = valid_text(json_body().get("name"), "名字", 16)
         with get_db() as db:
+            name = app.extensions['rename_room'](db, name)
             db.execute("UPDATE profile SET name = ? WHERE id = 1", (name,))
         return jsonify(profile=get_profile())
 
@@ -1011,6 +1020,16 @@ def create_app(test_config=None):
     @app.route("/api/<path:path>", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
     def unknown_api(path):
         return jsonify(error="接口不存在"), 404
+
+    @app.get('/assets/music-images/<image_name>')
+    @app.get('/assets/music-image-motion/<image_name>')
+    @app.get('/assets/report-companions/<image_name>')
+    def music_image_asset(image_name):
+        folder = request.path.split('/')[2]
+        if not image_name.endswith('.webp'):
+            return jsonify(error='图片不存在'), 404
+        return send_from_directory(ROOT / 'public' / 'assets' / folder, image_name,
+                                   conditional=True, mimetype='image/webp', max_age=86400)
 
     @app.get('/assets/character-motion/<image_name>')
     def character_motion_asset(image_name):

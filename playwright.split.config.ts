@@ -33,7 +33,7 @@ export default defineConfig({
    env: {
     HOST: '127.0.0.1', PORT: '5001', FLASK_DEBUG: '0',
     PYTHONPATH: resolve('.python-deps'), APP_DATABASE_PATH: database,
-    SEED_DEMO: 'true', PET_CHAT_MODE: 'local', PET_CHAT_BASE_URL: '',
+    SEED_DEMO: 'true', AUTH_ENABLED: 'false', PET_CHAT_MODE: 'local', PET_CHAT_BASE_URL: '',
    },
   },
   {

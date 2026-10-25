@@ -71,14 +71,14 @@ export default function Personality({ onBack, onProfile, onSaved }: Props) {
      <div><h3><Heart size={16}/>陪伴风格</h3><p>{selected.companionship}</p></div>
     </section>
     <section className="personality-catalog" aria-labelledby="personality-catalog-title">
-     <div className="personality-catalog-heading"><h2 id="personality-catalog-title">16 种音乐形象</h2><span>选一个此刻喜欢的角色</span></div>
+     <div className="personality-catalog-heading"><h2 id="personality-catalog-title">8 对音乐形象</h2><span>16 个角色 · 男生女生各 8 个</span></div>
      <div className="personality-filters" role="group" aria-label="曲风分组">
       {[{ id: 'all', name: '全部' }, ...groups].map(group => <button key={group.id} aria-pressed={filter === group.id} disabled={saving} onClick={() => setFilter(group.id)}>{group.name}</button>)}
      </div>
      <div className="personality-grid" role="group" aria-label="选择音乐形象">
-      {visible.map(item => <button key={item.id} aria-label={`查看 ${item.name}`} aria-pressed={selectedId === item.id} className={selectedId === item.id ? 'is-selected' : ''} disabled={saving}
+      {visible.map(item => <button key={item.id} aria-label={`查看 ${item.name} · ${item.gender === 'male' ? '男生' : '女生'}`} aria-pressed={selectedId === item.id} className={selectedId === item.id ? 'is-selected' : ''} disabled={saving}
        style={{ '--tile-color': item.color } as CSSProperties} onClick={() => { setSelectedId(item.id); setSaveError(''); }}>
-       <span className="personality-tile-art"><CharacterVisual id={item.id} src={item.imageUrl} alt="" centerSubject/>{currentId === item.id && <i>已选</i>}{selectedId === item.id && <Check size={13}/>}</span><strong>{item.name}</strong><small>{item.musicStyles[1]}</small>
+       <span className="personality-tile-art"><CharacterVisual id={item.id} src={item.imageUrl} alt="" centerSubject/>{currentId === item.id && <i>已选</i>}{selectedId === item.id && <Check size={13}/>}</span><strong>{item.name}</strong><small>{item.gender === 'male' ? '男生' : '女生'} · {item.musicStyles[1]}</small>
       </button>)}
      </div>
      <p className="personality-note">角色设定 · 自由选择，随时可以更换</p>

@@ -41,7 +41,7 @@ class PersonalityTest(unittest.TestCase):
             self.assertEqual(restarted['personality'], item)
             self.assertEqual(restarted['outfitId'], 'lyn28')
         self.client.post('/api/outfit', json={'outfitId': 'zsh02'})
-        self.assertEqual(self.client.get('/api/personalities').json['profile']['personalityId'], 'ESFP')
+        self.assertEqual(self.client.get('/api/personalities').json['profile']['personalityId'], item['id'])
 
     def test_invalid_payloads_never_change_selection(self):
         self.client.post('/api/personality', json={'personalityId': 'ENTJ'})
@@ -97,7 +97,7 @@ class PersonalityTest(unittest.TestCase):
             image = self.client.get('/api/personality/image', query_string={'personalityId': item['id']}).json
             response = self.client.get(item['imageUrl'])
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.mimetype, 'image/png')
+            self.assertEqual(response.mimetype, 'image/webp')
             self.assertEqual(image['imageName'], item['imageName'])
             self.assertEqual(response.data, (Path(__file__).resolve().parent.parent / 'public' / item['imageUrl'].lstrip('/')).read_bytes())
             cached = self.client.get(item['imageUrl'], headers={'If-None-Match': response.headers['ETag']})

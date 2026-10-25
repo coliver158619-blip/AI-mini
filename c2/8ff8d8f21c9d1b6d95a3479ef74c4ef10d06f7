@@ -1,0 +1,90 @@
+src/relationship-pages.css
+  s_bc3e1980fa79c9::t_2371a07915a601 1-71
+src/relationship-preview.ts
+  s_bc3e1980fa79c9::t_7093ef2518b8bd 1
+  s_bc3e1980fa79c9::t_8c52752e94e997 2-6
+scripts/measure_couple_subjects.py
+  s_bc3e1980fa79c9::t_5bb8415d8f12df 1-17
+playwright.relationship.config.ts
+  s_bc3e1980fa79c9::t_a8167b30cb7ff3 1-3
+src/CoupleCharacters.tsx
+  s_bc3e1980fa79c9::t_aba4dfbe112fde 3,12-14,17
+  s_bc3e1980fa79c9::t_c07efa0a2527f1 1,9
+src/CompanionEnergy.tsx
+  s_bc3e1980fa79c9::t_8bca78aad86aa0 1,3-4,6-10,12-13,15-24,26,28-34,36-41
+  s_bc3e1980fa79c9::t_2371a07915a601 2,5,11,14,25,27,35
+src/couple-characters.css
+  s_bc3e1980fa79c9::t_c07efa0a2527f1 5-9
+src/SparkPage.tsx
+  s_bc3e1980fa79c9::t_8bca78aad86aa0 1-3,6-17,19-32,34
+  s_bc3e1980fa79c9::t_2371a07915a601 5,18,33
+  s_bc3e1980fa79c9::t_9d3cc0f60893ce 35
+src/usePairSpark.ts
+  s_bc3e1980fa79c9::t_8c52752e94e997 4,14-15
+  s_bc3e1980fa79c9::t_8bca78aad86aa0 1-3,5-13,16-22
+tests/music-interaction.spec.ts
+  s_bc3e1980fa79c9::t_b487556d1c7785 4-32
+tests/relationship.spec.ts
+  s_bc3e1980fa79c9::t_a8167b30cb7ff3 1-80
+src/couple-subject-offsets.json
+  s_bc3e1980fa79c9::t_9056475eefb681 1-33
+playwright.wardrobe.config.ts
+  s_bc3e1980fa79c9::t_902c3939d7fa7c 17
+src/App.tsx
+  s_bc3e1980fa79c9::t_5b58d95abe4d0a 11-12,28,40,232,236,259,267-268
+src/CharacterVisual.tsx
+  s_bc3e1980fa79c9::t_434057b72fe046 7,18,21,36-37
+src/CompanionSpace.tsx
+  s_bc3e1980fa79c9::t_76409c67cd2557 5,34,56-57
+src/Personality.tsx
+  s_44fa422e891a30::t_4ffb2d941005bf 65,81
+src/character-frames.ts
+  s_bc3e1980fa79c9::t_430be92986345b 9,14,19
+src/page-route.ts
+  s_bc3e1980fa79c9::t_b46d3caab97ebd 3
+src/personality.css
+  s_44fa422e891a30::t_e44b978a9e5b26 35
+src/types.ts
+  s_bc3e1980fa79c9::t_a4f2e79a5b4ebc 7
+tests/app.spec.ts
+  s_bc3e1980fa79c9::t_cb53bf0e0c97a7 503-506
+tests/mobile-interactions.spec.ts
+  s_bc3e1980fa79c9::t_589417b4ca9eb7 63-64,67,69-73
+tests/personality.spec.ts
+  s_bc3e1980fa79c9::t_90c0426965dc3d 29,31-33
+tests/pink-theme.spec.ts
+  s_bc3e1980fa79c9::t_44b09c7ce6d582 19
+tests/wardrobe.spec.ts
+  s_bc3e1980fa79c9::t_a05c30472d5dbd 85,89-91,102-105
+src/companion-space.css
+  s_bc3e1980fa79c9::t_9e2626dffa0f82 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "c28ff8d8f21c9d1b6d95a3479ef74c4ef10d06f7",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_44fa422e891a30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15c64-c4af-7263-95c6-220797e3b8db",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

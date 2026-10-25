@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ChevronRight, Disc3, Heart, LoaderCircle, MapPin, Pause, Play, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Check, ChevronRight, Disc3, Heart, LoaderCircle, MapPin, Pause, Play, RefreshCw } from 'lucide-react';
 import { api, ApiError } from './api';
 import { WeatherIcon, type WeatherData } from './Weather';
 import type { Integration, Song } from './types';
 import './recommendations.css';
 
 const moods = [
- { name: '放松一下', icon: '☕' }, { name: '开心加倍', icon: '☀' },
- { name: '专注时刻', icon: '✎' }, { name: '陪我入睡', icon: '☾' }, { name: '有点难过', icon: '♡' },
+ { name: '放松一下', icon: '☕' }, { name: '开心加倍', icon: '☀️' },
+ { name: '专注时刻', icon: '✏️' }, { name: '陪我入睡', icon: '🌙' }, { name: '有点难过', icon: '❤️' },
 ] as const;
 type Props = {
  mode: 'personal' | 'mood'; weather: WeatherData | null;
@@ -75,15 +75,15 @@ export default function Recommendations(props: Props) {
   return () => { clearTimeout(timer); request.current?.abort(); };
  }, [mode, loadAttempt]);
 
- return <main className="recommendation-page">
+ return <main className={`recommendation-page recommendation-${mode}`}>
   <header className="recommendation-header"><button className="recommendation-back" aria-label="返回更多玩法" onClick={props.onBack}><ArrowLeft size={22}/></button><h1>{title}</h1><button className="recommendation-change" disabled={!canGenerate || loading} onClick={() => void generate(scene)}><RefreshCw size={16}/>换一换</button></header>
   <button className="recommendation-context" onClick={props.onLocation} aria-label="选择天气与位置">{weather ? <WeatherIcon code={weather.code} size={21}/> : <MapPin size={21}/>}<span>{weather ? `${weather.city} · ${weather.condition} ${Math.round(weather.temperature)}°` : '选择天气与位置'}</span>{weather?.cached && <small>上次记录</small>}<ChevronRight size={16}/></button>
-  {mode === 'mood' && <div className="recommendation-moods" aria-label="选择心情">{moods.map(mood => <button key={mood.name} aria-pressed={scene === mood.name} disabled={!weather || loading} onClick={() => { if (mood.name !== scene || !songs.length) void generate(mood.name); }}><span aria-hidden="true">{mood.icon}</span>{mood.name}</button>)}</div>}
+  {mode === 'mood' && <div className="recommendation-moods" aria-label="选择心情">{moods.map(mood => <button key={mood.name} aria-pressed={scene === mood.name} disabled={!weather || loading} onClick={() => { if (mood.name !== scene || !songs.length) void generate(mood.name); }}><span aria-hidden="true">{mood.icon}</span>{mood.name}{scene === mood.name && <i className="mood-selected" aria-hidden="true"><Check size={20}/></i>}</button>)}</div>}
   {!loading && !songs.length && !error && (!weather ? <div className="recommendation-state"><MapPin size={34}/><p>选好城市，为你生成今天的歌单</p><button onClick={props.onLocation}>选择城市</button></div> : mode === 'mood' && !scene ? <div className="recommendation-state"><Disc3 size={34}/><p>选一种心情，听一份专属歌单</p></div> : null)}
   {loading && <div className="recommendation-loading" role="status"><span><LoaderCircle className="spin" size={18}/>{songs.length ? '正在更新歌曲推荐…' : '正在读取歌曲推荐…'}</span>{!songs.length && [0, 1, 2].map(i => <div className="recommendation-skeleton" key={i}><i/><div><i/><i/></div></div>)}</div>}
   {error && <div className="recommendation-state" role="alert"><p>{error}</p><button disabled={(!loadFailed && !canGenerate) || loading} onClick={() => loadFailed ? setLoadAttempt(value => value + 1) : void generate(scene)}>{loadFailed ? '重新读取' : '重新推荐'}</button></div>}
-  {songs.length > 0 && <div className="recommendation-cards">{songs.map(song => <article className="recommendation-song" key={song.id}>
-   <div className="recommendation-cover" style={{ background: `linear-gradient(145deg, ${song.color || '#e8bc7a'}, #fff3d9)` }}><Disc3 size={34}/></div>
+  {songs.length > 0 && <div className="recommendation-cards">{songs.map((song, index) => <article className="recommendation-song" key={song.id}>
+   <div className="recommendation-cover" aria-hidden="true" style={{ backgroundPosition: `${(index % 3) * 50}% ${mode === 'mood' ? 100 : 0}%` }}/>
    <div className="recommendation-song-info"><h2>{song.title}</h2><p>{song.artist}</p></div>
    <div className="recommendation-song-actions"><button onClick={() => props.onFavorite(song)} aria-label={`${props.favorites.includes(song.id) ? '取消收藏' : '收藏'}${song.title}`}><Heart size={21} fill={props.favorites.includes(song.id) ? 'currentColor' : 'none'}/></button><button className="recommendation-play" onClick={() => props.onPlay(song)} aria-label={`播放${song.title}`}>{props.playingId === song.id ? <Pause size={18} fill="currentColor"/> : <Play size={18} fill="currentColor"/>}</button></div>
   </article>)}</div>}

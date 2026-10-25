@@ -6,6 +6,7 @@
  --action:linear-gradient(115deg,#ff97b0,#ff6d9e);
  --page:radial-gradient(ellipse at 100% 0%,#e9dcff 0%,transparent 52%),radial-gradient(ellipse at 90% 95%,#fcd7ec 0%,transparent 45%),linear-gradient(145deg,#fff0ed,#fffafd 48%,#f2edff);
 }
+.recommendation-page.recommendation-page {--ink:#11133f;--muted:#77718f}
 .wardrobe-page,.recommendation-page {background:var(--page);color:var(--ink)}
 .recommendation-back,.wardrobe-back {color:var(--ink);background:var(--card);border-color:#fff;box-shadow:var(--lift)}
 .recommendation-play {background:var(--action);color:#fff;border-color:#ff95b7;box-shadow:0 3px 8px #ef7dab20}
@@ -17,9 +18,6 @@
 .recommendation-moods button>span {display:flex;color:var(--violet)}
 .recommendation-moods button[aria-pressed=true],.wardrobe-characters>button[aria-pressed=true] {background:#ffeaf2;border-color:var(--pink);box-shadow:0 0 0 2px #ff86af0d;color:var(--ink)}
 .recommendation-song-actions {color:var(--ink)}
-.recommendation-cover {background:linear-gradient(140deg,#cbb3fa,#9ea8ee)!important;color:#fff}
-.recommendation-song:nth-child(3n+2) .recommendation-cover {background:linear-gradient(140deg,#9fe1f1,#8da8f2)!important}
-.recommendation-song:nth-child(3n) .recommendation-cover {background:linear-gradient(140deg,#ffc4da,#f48ebc)!important}
 .recommendation-state button {background:#f1e7ff;border-color:#e5d6fb;color:#7453b5}
 .recommendation-skeleton i,.recommendation-skeleton>div i {background:#eee6f5}
 .wardrobe-preview {background:radial-gradient(ellipse at 30% 40%,#fff3f7,transparent 65%),linear-gradient(130deg,#ffffffc9,#eee5ffb0);box-shadow:var(--lift)}
@@ -36,3 +34,4 @@
 .wardrobe-state {color:var(--muted)}
 .unlock-yes {background:var(--action);box-shadow:inset 0 1px 0 #fff7,0 4px 12px #e976a02b}
 .unlock-celebration {background:radial-gradient(circle at 50% 48%,#f5dfffa8,transparent 60%)}
+

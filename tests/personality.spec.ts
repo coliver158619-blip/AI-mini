@@ -3,28 +3,28 @@ import { expect, test, type Page } from '@playwright/test';
 async function openPersonality(page: Page) {
  await page.goto('/');
  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
- await page.getByRole('button', { name: '音乐人格', exact: true }).click();
- await expect(page.getByRole('heading', { name: '音乐人格', exact: true })).toBeVisible();
- await expect(page.getByRole('group', { name: '选择音乐人格' }).getByRole('button')).toHaveCount(16);
+ await page.getByRole('button', { name: '音乐形象', exact: true }).click();
+ await expect(page.getByRole('heading', { name: '音乐形象', exact: true })).toBeVisible();
+ await expect(page.getByRole('group', { name: '选择音乐形象' }).getByRole('button')).toHaveCount(16);
 }
 
 test.beforeEach(async ({ request }) => { await request.post('/api/personality', { data: { personalityId: 'INFP' } }); });
 
-test('人格分组、预览、保存、刷新以及首页与火花头像联动', async ({ page, request }) => {
+test('曲风分组、预览、保存、刷新以及首页与火花头像联动', async ({ page, request }) => {
  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
  await openPersonality(page);
- await page.getByRole('group', { name: '人格分组' }).getByRole('button', { name: '分析家', exact: true }).click();
- await expect(page.getByRole('group', { name: '选择音乐人格' }).getByRole('button')).toHaveCount(4);
- await page.getByRole('button', { name: '查看 INTJ 构筑旋律的人', exact: true }).click();
- await expect(page.locator('.personality-details')).toContainText('电子氛围');
+ await page.getByRole('group', { name: '曲风分组' }).getByRole('button', { name: '灵感声场', exact: true }).click();
+ await expect(page.getByRole('group', { name: '选择音乐形象' }).getByRole('button')).toHaveCount(4);
+ await page.getByRole('button', { name: '查看 电子', exact: true }).click();
+ await expect(page.locator('.personality-details')).toContainText('Electronic');
  expect((await (await request.get('/api/bootstrap')).json()).profile.personalityId).toBe('INFP');
- await page.getByRole('button', { name: '选择这个音乐人格', exact: true }).click();
- await expect(page.getByRole('button', { name: '当前音乐人格', exact: true })).toBeDisabled();
+ await page.getByRole('button', { name: '选择这个音乐形象', exact: true }).click();
+ await expect(page.getByRole('button', { name: '当前音乐形象', exact: true })).toBeDisabled();
  await page.getByRole('button', { name: '返回更多玩法' }).click();
- await expect(page.getByRole('button', { name: '音乐人格', exact: true })).toContainText('当前 INTJ');
+ await expect(page.getByRole('button', { name: '音乐形象', exact: true })).toContainText('当前 电子');
  await page.getByRole('button', { name: '返回首页' }).click();
- await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/personalities/INTJ.png');
- await expect(page.locator('.streak-avatar-character')).toHaveAttribute('style', /INTJ.png/);
+ await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
+ await expect(page.locator('.streak-avatar-character img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
  await expect(page.locator('.streak-share-card img')).toHaveCount(2);
  const pair = (await (await request.get('/api/bootstrap')).json()).profile.characterOutfitIds;
@@ -32,36 +32,36 @@ test('人格分组、预览、保存、刷新以及首页与火花头像联动',
  await expect(page.locator('.streak-share-card .couple-girl')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.zsh}.webp`);
  await page.getByRole('button', { name: '关闭面板' }).click();
  await page.reload();
- await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/personalities/INTJ.png');
+ await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await page.screenshot({ path: 'test-results/personality-home.png', fullPage: true, animations: 'disabled' });
  await openPersonality(page);
- await expect(page.getByRole('button', { name: '查看 INTJ 构筑旋律的人' })).toHaveAttribute('aria-pressed', 'true');
+ await expect(page.getByRole('button', { name: '查看 电子' })).toHaveAttribute('aria-pressed', 'true');
  expect(errors).toEqual([]);
 });
 
 test('加载和保存失败可重试，保存期间阻止重复操作', async ({ page }) => {
  let loadFails = true;
  await page.route('**/api/personalities', route => loadFails ? route.fulfill({ status: 503, json: { error: '人格图鉴暂时连接不上' } }) : route.continue());
- await page.goto('/'); await page.getByRole('button', { name: '更多玩法', exact: true }).click(); await page.getByRole('button', { name: '音乐人格', exact: true }).click();
+ await page.goto('/'); await page.getByRole('button', { name: '更多玩法', exact: true }).click(); await page.getByRole('button', { name: '音乐形象', exact: true }).click();
  await expect(page.getByRole('alert')).toContainText('人格图鉴暂时连接不上');
  loadFails = false; await page.getByRole('button', { name: '重新加载' }).click();
- await page.getByRole('button', { name: '查看 ENFP 追风逐拍者' }).click();
+ await page.getByRole('button', { name: '查看 独立民谣' }).click();
  let saveFails = true; let resolve: () => void = () => {};
  const pending = new Promise<void>(done => { resolve = done; });
  await page.route('**/api/personality', async route => { if (saveFails) return route.fulfill({ status: 503, json: { error: '保存暂时失败' } }); await pending; await route.continue(); });
- await page.getByRole('button', { name: '选择这个音乐人格', exact: true }).click();
+ await page.getByRole('button', { name: '选择这个音乐形象', exact: true }).click();
  await expect(page.getByRole('alert')).toContainText('保存暂时失败');
- await expect(page.getByRole('button', { name: '查看 ENFP 追风逐拍者' })).toHaveAttribute('aria-pressed', 'true');
+ await expect(page.getByRole('button', { name: '查看 独立民谣' })).toHaveAttribute('aria-pressed', 'true');
  saveFails = false;
- await page.getByRole('button', { name: '选择这个音乐人格', exact: true }).click();
+ await page.getByRole('button', { name: '选择这个音乐形象', exact: true }).click();
  await expect(page.getByRole('button', { name: '正在保存…' })).toBeDisabled();
  await expect(page.getByRole('button', { name: '返回更多玩法' })).toBeDisabled();
- resolve(); await expect(page.getByRole('button', { name: '当前音乐人格', exact: true })).toBeDisabled();
+ resolve(); await expect(page.getByRole('button', { name: '当前音乐形象', exact: true })).toBeDisabled();
 });
 
 test('16 张素材均可浏览，手机和横屏布局无溢出', async ({ page }) => {
  await openPersonality(page);
- for (const tile of await page.getByRole('group', { name: '选择音乐人格' }).getByRole('button').all()) {
+ for (const tile of await page.getByRole('group', { name: '选择音乐形象' }).getByRole('button').all()) {
   await tile.click();
   await expect.poll(() => page.locator('.personality-stage img').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
  }
@@ -84,7 +84,7 @@ test('人格与衣橱的底部遮挡覆盖安全区和播放器预留区，列�
   await page.setViewportSize(device);
   for (const player of [false, true]) {
    for (const menu of [
-    { name: '音乐人格', footer: '.personality-footer', grid: '.personality-grid', color: [250, 247, 240] },
+    { name: '音乐形象', footer: '.personality-footer', grid: '.personality-grid', color: [250, 247, 240] },
     { name: '形象', footer: '.wardrobe-footer', grid: '.wardrobe-grid', color: [250, 245, 238] },
    ]) {
     await page.goto('/');
@@ -99,7 +99,7 @@ test('人格与衣橱的底部遮挡覆盖安全区和播放器预留区，列�
     await page.getByRole('button', { name: '更多玩法', exact: true }).click();
     await page.getByRole('button', { name: menu.name, exact: true }).click();
     const grid = page.locator(menu.grid), footer = page.locator(menu.footer);
-    await expect(grid.locator(':scope > button')).toHaveCount(menu.name === '音乐人格' ? 16 : 14);
+    await expect(grid.locator(':scope > button')).toHaveCount(menu.name === '音乐形象' ? 16 : 14);
     await grid.evaluate(el => scrollTo(0, scrollY + el.getBoundingClientRect().top - innerHeight * .6));
     await expect(footer).toBeVisible();
     const coverage = await footer.evaluate((el, selector) => {

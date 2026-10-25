@@ -8,6 +8,19 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Reuse coherent complete poses when a generated cell switches hands or blinks
+# both eyes during a wink. Keep the approved two atlases completely untouched.
+POSE_MAPS = {
+    'lyn27': {10: 11, 13: 11}, 'lyn30': {6: 5, 7: 0, 11: 10},
+    'lyn35': {6: 5, 7: 0},
+    'zsh01': {6: 5, 7: 0}, 'zsh02': {6: 5, 7: 0},
+    'zsh04': {6: 5, 7: 0, 13: 10, 14: 8},
+    'zsh05': {6: 5, 7: 0, 13: 10, 14: 8},
+    'zsh06': {6: 5, 7: 0}, 'zsh10': {6: 5, 7: 0},
+    'zsh11': {6: 5, 7: 0, 14: 8},
+    'zsh15': {12: 11, 13: 10, 14: 8},
+}
+
 
 def measure(path):
     image = Image.open(path).convert('RGBA')
@@ -42,8 +55,12 @@ def main():
     for path in sorted((ROOT / 'output/motion-all-sources').glob('*.png')):
         assert path.stem in valid and path.stem not in ('lyn22', 'zsh09')
         image, frames = measure(path)
+        originals = list(frames)
+        for target_frame, source_frame in {15: 0, **POSE_MAPS.get(path.stem, {})}.items():
+            frames[target_frame] = originals[source_frame]
         dest = target / f'{path.stem}-v1.webp'
-        image.save(dest, 'WEBP', quality=90, method=6)
+        if not dest.exists() or dest.stat().st_mtime < path.stat().st_mtime:
+            image.save(dest, 'WEBP', quality=90, method=6)
         registry[path.stem] = dict(src=f'/assets/outfit-motion/{dest.name}', width=image.width, height=image.height, frames=frames)
         report.append(dict(id=path.stem, bytes=dest.stat().st_size, heights=[f['height'] for f in frames]))
     registry_path.write_text(json.dumps(registry, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

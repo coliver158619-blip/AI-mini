@@ -257,3 +257,11 @@ body { padding: 0; background: #fcf7ee; }
  .companion-stage .companion, .companion-stage .companion.companion-outfit { bottom:42px; }
  .companion-stage .companion-caption { bottom:0; }
 }
+
+/* Anchor the shortcut stack to its own more button, independent of the figure. */
+.home-tools { position:relative; width:48px; flex:0 0 48px; align-self:flex-start; z-index:2; }
+.home-page .home-tools .room-shortcuts { top:calc(100% + 14px); right:0; bottom:auto; gap:10px; flex-direction:column; }
+.home-more-glass { position:relative; display:grid; place-items:center; width:48px; height:48px; border-radius:50%; border:1px solid #ffffffc7; background:linear-gradient(145deg,#ffffff7a,#fff0ce19 55%,#edd8f333); box-shadow:inset 0 1px 3px #ffffffe6,inset 0 -2px 4px #bb9d6620,0 4px 12px #8f764c18; -webkit-backdrop-filter:blur(10px) saturate(1.25); backdrop-filter:blur(10px) saturate(1.25); }
+.home-more-glass::before { content:''; position:absolute; inset:3px 7px auto; height:13px; border-radius:50%; background:linear-gradient(#ffffff8c,#ffffff00); pointer-events:none; }
+.home-more-glass span { position:relative; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-size:17px; font-weight:800; letter-spacing:-.7px; color:#bc7a51; background:linear-gradient(115deg,#c98b37 4%,#d4798f 36%,#9674c2 67%,#68a799 96%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; filter:drop-shadow(0 1px 0 #ffffffb3); transform:rotate(-7deg); }
+.home-more-glass:active { background-color:#fff4; }

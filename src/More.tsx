@@ -51,7 +51,7 @@ function MoreCard({ action, kind, label, description, art, wide, imageUrl, onAct
 }
 
 export default function More({ onBack, onAction, personality, outfit, appearance }: Props) {
-  const characterUrl = personality?.imageUrl || '/assets/personalities/INFP.png'
+  const characterUrl = personality?.imageUrl || '/assets/music-images/INFP.webp'
   return <main className="more-page"><div className="more-content">
     <header className="more-header">
       <button className="more-back" aria-label="返回首页" onClick={onBack}><ChevronLeft strokeWidth={1.8} /></button>
@@ -61,7 +61,7 @@ export default function More({ onBack, onAction, personality, outfit, appearance
       <h2 id="more-ai-title"><MoreArt kind="paw" className="more-section-art" />AI 陪伴</h2>
       <div className="more-grid">
         <MoreCard action="reports" label="音乐报告" description="查看听歌报告" art="note" onAction={onAction} />
-        <MoreCard action="personality" label="音乐人格" description={`当前 ${personality?.id || 'INFP'}`} art="personality" imageUrl={characterUrl} onAction={onAction} />
+        <MoreCard action="personality" label="音乐形象" description={`当前 ${personality?.name || '梦幻流行'}`} art="personality" imageUrl={characterUrl} onAction={onAction} />
         <MoreCard action="chat" label="AI聊天" description="和搭子聊聊心情" art="chat" imageUrl={appearance?.imageUrl || characterUrl} wide onAction={onAction} />
       </div>
     </section>

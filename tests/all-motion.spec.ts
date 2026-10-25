@@ -1,6 +1,7 @@
 import {expect,test} from '@playwright/test';
-import atlases from '../src/character-motion-v2.json';
-import metrics from '../src/character-metrics.json';
+import {readFileSync} from 'node:fs';
+const atlases:Record<string,{src:string;width:number;height:number;frames:{x:number;y:number;width:number;height:number}[]}>=JSON.parse(readFileSync('src/character-motion-v2.json','utf8'));
+const metrics=JSON.parse(readFileSync('src/character-metrics.json','utf8'));
 
 test('全部装扮均有独立完整动作素材',()=>{
  expect(Object.keys(atlases).sort()).toEqual(Object.keys(metrics).sort());

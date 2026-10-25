@@ -103,7 +103,7 @@ export default function Wardrobe({ onBack, onProfile, onSaved }: Props) {
       {saving ? <LoaderCircle className="spin" size={18}/> : isWorn ? <CheckCheck size={18}/> : <Shirt size={18}/>}
       {saving ? '正在保存…' : isWorn ? '已穿戴' : '穿上这套'}
      </button>
-     <p>{isWorn ? '这套装扮正在小屋里陪伴你' : '确认后回到首页，音乐人格仍会保留'}</p>
+     <p>{isWorn ? '这套装扮正在小屋里陪伴你' : '确认后回到首页，音乐形象仍会保留'}</p>
     </footer>
    </>}
   {unlocking && <OutfitUnlock outfit={unlocking} onClose={() => setUnlocking(null)} onUnlocked={outfit => {
@@ -111,3 +111,4 @@ export default function Wardrobe({ onBack, onProfile, onSaved }: Props) {
   }}/>}
  </main>;
 }
+

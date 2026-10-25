@@ -82,13 +82,13 @@ test('两个人物的31套装扮可试穿，确认后返回首页并更新接口
  }
  await page.getByRole('button', { name: '穿上这套', exact: true }).click();
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
- await expect(page.locator('.streak-avatar-character')).toHaveAttribute('style', /zsh08.webp/);
+ await expect(page.locator('.streak-avatar-character img')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
  expect((await (await request.get('/api/personality/image')).json()).imageName).toBe('zsh08.png');
  expect((await (await request.get('/api/bootstrap')).json()).profile.personalityId).toBe('ENTJ');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
- await expect(page.locator('.streak-share-card .couple-girl')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
- await expect(page.locator('.streak-share-card img')).toHaveCount(2);
- await page.getByRole('button', { name: '关闭面板' }).click();
+ await expect(page.locator('.streak-couple .couple-girl')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
+ await expect(page.locator('.streak-couple img')).toHaveCount(2);
+ await page.getByRole('button', { name: '返回音乐小屋' }).click();
  await page.reload(); await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
  await openWardrobe(page);
  await expect(page.getByRole('button', { name: '已穿戴', exact: true })).toBeDisabled();
@@ -99,10 +99,10 @@ test('两个人物的31套装扮可试穿，确认后返回首页并更新接口
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/characters/web-v1/lyn26.webp');
  // Restore the saved music personality; the character outfit stays saved.
  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
- await page.getByRole('button', { name: '音乐人格', exact: true }).click();
- await expect(page.getByRole('button', { name: '查看 ENTJ 节奏领航员' })).toHaveAttribute('aria-pressed', 'true');
- await page.getByRole('button', { name: '选择这个音乐人格', exact: true }).click();
- await expect(page.getByRole('button', { name: '当前音乐人格', exact: true })).toBeDisabled();
+ await page.getByRole('button', { name: '音乐形象', exact: true }).click();
+ await expect(page.getByRole('button', { name: '查看 摇滚' })).toHaveAttribute('aria-pressed', 'true');
+ await page.getByRole('button', { name: '选择这个音乐形象', exact: true }).click();
+ await expect(page.getByRole('button', { name: '当前音乐形象', exact: true })).toBeDisabled();
  const profile = (await (await request.get('/api/bootstrap')).json()).profile;
  expect(profile.outfitId).toBe('lyn26'); expect(profile.appearance.imageName).toBe('ENTJ.png');
  expect(profile.characterOutfitIds).toEqual({ lyn: 'lyn26', zsh: 'zsh08' });

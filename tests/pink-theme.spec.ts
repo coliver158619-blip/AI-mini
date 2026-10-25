@@ -16,7 +16,7 @@ test('火花天数与陪伴天数一致，整套页面视觉预览',async({page,
  await expect(page.locator('.companion .character-visual')).toHaveAttribute('data-motion-ready','true');
  const capture=async(name:string)=>{await page.waitForTimeout(400);await page.screenshot({path:`test-results/pink-${name}.png`,fullPage:true,animations:'disabled'});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy()};
  await capture('home');
- await page.getByRole('button',{name:/听歌续火花/}).click();await capture('energy');
+ await page.getByRole('button',{name:/听歌续火花/}).click();await capture('spark');
  await page.getByRole('button',{name:'进入陪伴空间',exact:true}).click();await capture('space');
  await page.getByRole('button',{name:'共享日记',exact:true}).click();await page.locator('.shared-experience textarea').waitFor();await capture('shared-diary');
  await page.goto('/');await page.getByRole('button',{name:'日记',exact:true}).click();await page.locator('.diary-book').waitFor();await capture('diary');

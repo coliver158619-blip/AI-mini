@@ -1,0 +1,71 @@
+.relationship-page { min-height:var(--screen-height,100dvh); color:#303039; padding:calc(20px + var(--safe-top,0px)) max(18px,var(--safe-right,0px)) calc(28px + var(--safe-bottom,0px) + var(--player-space,0px)) max(18px,var(--safe-left,0px)); }
+.relationship-content { max-width:660px; margin:0 auto; }
+.spark-page { background:radial-gradient(ellipse at 95% 12%,#e9dcff,transparent 52%),radial-gradient(ellipse at 3% 42%,#ffe0ec,transparent 52%),linear-gradient(155deg,#fff4ef,#faf4ff 64%,#ffedf3); }
+.personal-energy-page { background:radial-gradient(ellipse at 5% 8%,#deefff,transparent 48%),radial-gradient(ellipse at 98% 40%,#e5defe,transparent 48%),linear-gradient(150deg,#f4faff,#f7f5ff 70%,#fceff6); }
+.relationship-header { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+.relationship-header > button { width:40px; height:40px; flex-shrink:0; display:grid; place-items:center; border-radius:50%; background:#ffffffbf; border:1px solid #fff; }
+.relationship-header h1 { font-size:20px; font-weight:700; outline:none; }
+.relationship-eyebrow { display:flex; align-items:center; justify-content:center; gap:6px; color:#957c9f; font-size:11px; letter-spacing:1px; }
+.spark-hero,.personal-bond { text-align:center; padding-top:8px; }
+.spark-hero h2,.personal-bond h2 { font-size:19px; font-weight:600; margin:12px 0 0; line-height:1.6; }
+.spark-hero h2 b { font-size:32px; font-weight:750; color:#cd79aa; font-variant-numeric:tabular-nums; }
+.spark-hero .streak-couple { width:min(100%,390px); height:260px; margin:6px auto 0; }
+.spark-names { display:flex; justify-content:center; align-items:center; gap:25px; font-size:12px; letter-spacing:2px; font-weight:700; }
+.spark-names i { font-style:normal; color:#b68be0; }
+.spark-hero > p,.personal-bond > p { color:#96889d; font-size:11px; margin:11px 0 23px; }
+.relationship-card { background:#ffffffd9; border:1px solid #fff; border-radius:26px; padding:20px; margin-top:16px; box-shadow:0 8px 28px #66518408; }
+.relationship-card-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.relationship-card-heading > span { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:650; }
+.relationship-card-heading svg { color:#e889a6; }
+.relationship-card-heading small { color:#9c90a5; font-size:10px; }
+.spark-number { display:flex; align-items:baseline; gap:8px; margin:17px 0 14px; }
+.spark-number > strong { font-size:52px; font-weight:750; line-height:1; letter-spacing:-2px; background:linear-gradient(110deg,#ff9a77,#ea77ac 60%,#b58ae6); background-clip:text; -webkit-background-clip:text; color:transparent; }
+.spark-number > span { font-size:12px; color:#9f879b; }
+.spark-number > svg { margin-left:auto; align-self:center; color:#f1a3b7; filter:drop-shadow(0 4px 6px #f2b7c34d); }
+.relationship-progress { height:7px; border-radius:12px; background:#f1e8f1; overflow:hidden; }
+.relationship-progress > span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#ffbb9a,#e78fc4,#b697ee); }
+.relationship-progress-caption { color:#96899e; font-size:10px; line-height:1.7; margin:10px 0 0; }
+.relationship-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:20px; text-align:center; }
+.relationship-stats > div+div { border-left:1px solid #f0eaf3; }
+.relationship-stats strong { display:block; font-size:23px; font-weight:650; font-variant-numeric:tabular-nums; }
+.relationship-stats small { font-size:10px; font-weight:400; color:#8b8194; }
+.relationship-stats div > span { display:block; font-size:10px; color:#968b9e; margin-top:5px; }
+.relationship-actions { display:flex; gap:10px; margin-top:18px; }
+.relationship-primary,.relationship-secondary { min-height:49px; padding:13px 12px; display:flex; align-items:center; justify-content:center; gap:7px; font-size:12px; font-weight:650; border-radius:17px; border:1px solid #fff9; }
+.relationship-primary { flex:1.5; color:#fff; background:linear-gradient(115deg,#ec9db2,#b896e7); box-shadow:0 5px 15px #c68dc52b; }
+.relationship-secondary { flex:1; background:#ffffffb3; color:#92759c; }
+.relationship-primary:disabled { background:#e8e8f4; color:#9994ac; box-shadow:none; }
+.relationship-links { display:grid; gap:10px; margin-top:18px; }
+.relationship-links > button { display:flex; align-items:center; gap:12px; border:1px solid #fff; border-radius:20px; background:#ffffffa8; padding:16px; text-align:left; }
+.relationship-links > button > svg:first-child { color:#bd8fd4; flex-shrink:0; }
+.relationship-links > button > svg:last-child { margin-left:auto; color:#ab99b3; flex-shrink:0; }
+.relationship-links b { display:block; font-size:13px; font-weight:600; }
+.relationship-links small { display:block; margin-top:5px; font-size:10px; color:#9a8ba0; }
+.relationship-rules { color:#9a8d9f; font-size:10px; line-height:1.9; margin-top:22px; }
+.relationship-rules summary { cursor:pointer; }
+.relationship-rules p { margin-top:8px; }
+.relationship-error { font-size:12px; line-height:1.8; margin-top:15px; color:#a66e85; }
+.relationship-error button { margin-top:8px; padding:7px 14px; border-radius:15px; background:#f3ebfa; color:#675587; }
+.relationship-loading { margin:22px 0; font-size:12px; color:#92849f; }
+.personal-bond h2 { font-size:18px; }
+.personal-bond h2 b { color:#8b85d5; }
+.personal-bond-art { width:260px; max-width:100%; height:245px; position:relative; margin:12px auto 0; }
+.personal-bond-art > button { position:absolute; width:175px; height:225px; left:50%; top:0; transform:translateX(-50%); padding:0; background:none; border:0; }
+.personal-orbit { position:absolute; inset:25px 18px 20px; border-radius:50%; border:1px solid #fff; background:radial-gradient(circle,#fff9,#e9e7ff55 65%,#fff5); box-shadow:0 0 0 12px #ffffff29; }
+.personal-bond-badge { position:absolute; right:8px; bottom:24px; display:flex; align-items:center; gap:4px; border-radius:15px; padding:7px 10px; border:1px solid #fff; background:#f6f1ffeb; color:#9a86c7; font-size:10px; }
+.personal-energy-number { margin:17px 0 14px; }
+.personal-energy-number strong { font-size:42px; line-height:1; color:#8a88cf; font-weight:700; }
+.personal-energy-number > span { color:#a29bad; font-size:12px; }
+.personal-growth .relationship-progress { background:#eaeaf6; }
+.personal-growth .relationship-progress > span { background:linear-gradient(90deg,#98cce8,#aba1ea); }
+.personal-growth .relationship-card-heading svg { color:#a29ae0; }
+.personal-levels { display:flex; justify-content:space-between; margin-top:10px; font-size:9px; color:#b8b2c6; }
+.personal-levels > span { display:flex; flex-direction:column; align-items:center; gap:5px; }
+.personal-levels i { width:5px; height:5px; border-radius:50%; background:#d8d4e4; }
+.personal-levels .is-reached { color:#9489ba; }
+.personal-levels .is-reached i { background:#a399d7; }
+.personal-links > button > svg:first-child { color:#959ece; }
+.personal-feed { width:100%; margin-top:18px; background:linear-gradient(110deg,#9cbfe5,#a69cda); }
+.relationship-data-note { display:block; font-size:9px; color:#aaa1b4; margin-top:14px; }
+@media(max-width:359px) { .relationship-header { gap:8px; }.relationship-header h1{font-size:18px}.relationship-card{padding:16px}.relationship-card-heading small{font-size:9px}.relationship-primary,.relationship-secondary{font-size:11px;gap:5px;padding-inline:8px}.spark-hero .streak-couple{height:230px}.relationship-stats strong{font-size:21px} }
+@media(min-width:800px) { .relationship-content { max-width:660px; }.spark-hero .streak-couple{height:290px} }

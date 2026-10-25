@@ -60,40 +60,17 @@ test('播放器显示时更多玩法也完整显示，入口仍可打开', async
  await expect(page.getByRole('heading', { name: '音乐人格', exact: true })).toBeVisible();
 });
 
-test('火花面板随下拉移动，松手关闭，短拉和横向划动不会误关闭', async ({ page }) => {
+test('火花入口打开独立页面，划动不会误关闭，可返回小屋', async ({ page, browserName }) => {
+ test.skip(browserName !== 'chromium', '触摸手势验证使用 Chromium CDP；导航另由双浏览器测试覆盖');
  await page.goto('/');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
- const sheet = page.locator('.bottom-sheet');
- const header = page.locator('.sheet-heading h2, .chat-title');
- await sheet.evaluate(el => Promise.all(el.getAnimations().map(animation => animation.finished)));
- const original = await sheet.boundingBox();
- const heading = await header.boundingBox();
- await swipe(page, { x: heading!.x + heading!.width / 2, y: heading!.y + 10 }, { x: 0, y: 34 });
- await expect(sheet).toBeVisible();
- await expect.poll(async () => Math.abs((await sheet.boundingBox())!.y - original!.y) < 2).toBe(true);
- await swipe(page, { x: heading!.x + 20, y: heading!.y + 10 }, { x: 120, y: 15 });
- await expect(sheet).toBeVisible();
- await swipe(page, { x: heading!.x + 40, y: heading!.y + 10 }, { x: 0, y: 160 }, async () => {
-  await expect.poll(async () => (await sheet.boundingBox())!.y > original!.y + 70).toBe(true);
- });
- await expect(sheet).toHaveCount(0);
- await expect(page.getByRole('button', { name: /听歌续火花/ })).toBeFocused();
-});
-
-test('火花面板内容未到顶部时向下滑只滚动内容，到顶部后可下拉关闭', async ({ page }) => {
- await page.setViewportSize({ width: 320, height: 568 });
- await page.goto('/');
- await page.getByRole('button', { name: /听歌续火花/ }).click();
- const content = page.locator('.energy-detail');
- await page.locator('.bottom-sheet').evaluate(el => Promise.all(el.getAnimations().map(animation => animation.finished)));
- await content.evaluate(el => { el.scrollTop = el.scrollHeight; });
- expect(await content.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
- const rect = await content.boundingBox();
- await swipe(page, { x: rect!.x + 15, y: rect!.y + 80 }, { x: 0, y: 110 });
- await expect(page.locator('.bottom-sheet')).toBeVisible();
- await content.evaluate(el => { el.scrollTop = 0; });
- await swipe(page, { x: rect!.x + 15, y: rect!.y + 80 }, { x: 0, y: 160 });
+ await expect(page).toHaveURL(/#\/spark$/);
  await expect(page.locator('.bottom-sheet')).toHaveCount(0);
+ const heading = await page.locator('.relationship-header h1').boundingBox();
+ await swipe(page, { x: heading!.x + 20, y: heading!.y + 10 }, { x: 0, y: 160 });
+ await expect(page.getByRole('heading', { name: '听歌续火花', exact: true })).toBeVisible();
+ await page.getByRole('button', { name: '返回音乐小屋' }).click();
+ await expect(page.locator('.energy-card')).toBeVisible();
 });
 
 test('头像和耳机角标在同一框内对齐，小屏长昵称不挤压布局', async ({ page, request }) => {

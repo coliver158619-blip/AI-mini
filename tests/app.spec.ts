@@ -500,7 +500,10 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 
     const rect = el.getBoundingClientRect(); return rect.bottom <= innerHeight && rect.bottom >= innerHeight - 40;
    })).toBe(true);
   }
-  for (const selector of ['.energy-card', '.room-shortcuts button:last-child', '.companion-caption > button']) {
+  await page.locator('.energy-card').click();
+  await checkPage('.personal-energy-page');
+  await page.getByRole('button', { name: '返回音乐小屋' }).click();
+  for (const selector of ['.room-shortcuts button:last-child', '.companion-caption > button']) {
    await page.locator(selector).click();
    await expect.poll(() => page.locator('.bottom-sheet').evaluate(el => {
     const r = el.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight + 1;

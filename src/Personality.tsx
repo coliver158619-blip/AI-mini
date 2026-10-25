@@ -62,7 +62,7 @@ export default function Personality({ onBack, onProfile, onSaved }: Props) {
    : selected && <>
     <section className="personality-hero" aria-label="音乐形象预览">
      <div className="personality-hero-top"><span><Sparkles size={13}/>{selected.groupName}</span><span aria-live="polite">{isCurrent ? <><Check size={12}/>当前音乐形象</> : '正在浏览'}</span></div>
-     <div className="personality-stage"><span aria-hidden="true"/><button className="personality-greet" aria-label={`和${selected.name}打招呼`} onClick={() => setReaction(value => value + 1)}><CharacterVisual key={selected.id} id={selected.id} src={selected.imageUrl} alt={selected.name} animated reaction={reaction} onLoad={() => { setLoadedImage(selected.imageUrl); setImageError(''); }} onError={() => setImageError(selected.imageUrl)}/></button></div>
+     <div className="personality-stage"><span aria-hidden="true"/><button className="personality-greet" aria-label={`和${selected.name}打招呼`} onClick={() => setReaction(value => value + 1)}><CharacterVisual key={selected.id} id={selected.id} src={selected.imageUrl} alt={selected.name} animated centerSubject reaction={reaction} onLoad={() => { setLoadedImage(selected.imageUrl); setImageError(''); }} onError={() => setImageError(selected.imageUrl)}/></button></div>
      {imageError === selected.imageUrl && <p role="alert" className="personality-error">图片加载失败，请重新打开页面。</p>}
      <div className="personality-intro" aria-live="polite"><strong>{selected.musicStyles[1]}</strong><h2>{selected.name}</h2><p>{selected.description}</p><div className="personality-tags">{selected.traits.map(trait => <span key={trait}>{trait}</span>)}</div></div>
     </section>
@@ -78,7 +78,7 @@ export default function Personality({ onBack, onProfile, onSaved }: Props) {
      <div className="personality-grid" role="group" aria-label="选择音乐形象">
       {visible.map(item => <button key={item.id} aria-label={`查看 ${item.name}`} aria-pressed={selectedId === item.id} className={selectedId === item.id ? 'is-selected' : ''} disabled={saving}
        style={{ '--tile-color': item.color } as CSSProperties} onClick={() => { setSelectedId(item.id); setSaveError(''); }}>
-       <span className="personality-tile-art"><img src={item.imageUrl} alt="" draggable={false}/>{currentId === item.id && <i>已选</i>}{selectedId === item.id && <Check size={13}/>}</span><strong>{item.name}</strong><small>{item.musicStyles[1]}</small>
+       <span className="personality-tile-art"><CharacterVisual id={item.id} src={item.imageUrl} alt="" centerSubject/>{currentId === item.id && <i>已选</i>}{selectedId === item.id && <Check size={13}/>}</span><strong>{item.name}</strong><small>{item.musicStyles[1]}</small>
       </button>)}
      </div>
      <p className="personality-note">角色设定 · 自由选择，随时可以更换</p>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowUpRight, BookHeart, Headphones, Heart, ListMusic, LoaderCircle, Music2 } from 'lucide-react';
 import CoupleCharacters from './CoupleCharacters';
 import { api } from './api';
+import {usePairSpark} from './usePairSpark';
 import type { Profile } from './types';
 import './companion-space.css';
 
@@ -30,7 +31,7 @@ export default function CompanionSpace({ profile, onBack, onNotice, onDiary, onP
   } finally { window.clearTimeout(timer); busy.current = false; setOpening(false); }
  }
 
- const energy = Math.max(0, Math.min(100, profile.energy / Math.max(1, profile.energyMax) * 100));
+ const {data: spark, error: sparkError, retry: retrySpark} = usePairSpark(profile);
  return <main className="companion-space">
   <div className="companion-space-content">
    <header className="space-header">
@@ -52,8 +53,8 @@ export default function CompanionSpace({ profile, onBack, onNotice, onDiary, onP
     <span className="space-touch-hint">轻点我们，收下一份小小的回应</span>
    </section>
    <section className="space-bottom">
-    <div className="space-energy"><span><Heart size={14} fill="currentColor"/>陪伴能量</span><strong>{profile.energy}<small> / {profile.energyMax}</small></strong></div>
-    <div className="space-energy-track" role="progressbar" aria-label="陪伴能量" aria-valuenow={profile.energy} aria-valuemin={0} aria-valuemax={profile.energyMax}><span style={{ width: `${energy}%` }}/></div>
+    <div className="space-energy"><span><Music2 size={14}/>双人火花</span><strong>{spark && !sparkError ? spark.value : '—'}{spark && !sparkError && <small> / {spark.next}</small>}</strong></div>
+    {spark && !sparkError ? <div className="space-energy-track" role="progressbar" aria-label="双人火花" aria-valuenow={spark.value} aria-valuemin={0} aria-valuemax={spark.next}><span style={{ width: `${spark.value / spark.next * 100}%` }}/></div> : sparkError ? <p className="space-footnote" role="alert">{sparkError} <button onClick={retrySpark}>重试</button></p> : <p className="space-footnote" role="status">正在打开两人的音乐时光…</p>}
     <button className="space-listen" onClick={() => void listenTogether()} disabled={opening}>
      <span className="space-listen-icon">{opening ? <LoaderCircle className="spin" size={24}/> : <Headphones size={25}/>}</span>
      <span><strong>{opening ? '正在打开…' : '一起听'}<Music2 size={15}/></strong><small>让同一首歌，靠近两颗心</small></span><ArrowUpRight size={21}/>

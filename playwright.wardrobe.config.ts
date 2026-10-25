@@ -14,6 +14,6 @@ export default defineConfig({
  webServer: [
   { command: `${python} -m backend.app`, url: `${backendURL}/api/health`, timeout: 30000,
    env: { HOST: '127.0.0.1', PORT: '5090', FLASK_DEBUG: '0', PET_CHAT_MODE: 'local', SEED_DEMO: 'false', APP_DATABASE_PATH: join(mkdtempSync(join(tmpdir(), 'wardrobe-tests-')), 'test.sqlite3') } },
-  { command: 'node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5190 --strictPort', url: frontendURL, timeout: 30000, env: { API_PROXY_TARGET: backendURL } },
+  { command: 'node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5190 --strictPort', url: frontendURL, timeout: 30000, env: { API_PROXY_TARGET: backendURL, VITE_RELATIONSHIP_PREVIEW: 'false' } },
  ],
 });

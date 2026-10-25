@@ -26,11 +26,11 @@ test('曲风分组、预览、保存、刷新以及首页与火花头像联动',
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await expect(page.locator('.streak-avatar-character img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await page.getByRole('button', { name: /听歌续火花/ }).click();
- await expect(page.locator('.streak-share-card img')).toHaveCount(2);
+ await expect(page.locator('.streak-couple img')).toHaveCount(2);
  const pair = (await (await request.get('/api/bootstrap')).json()).profile.characterOutfitIds;
- await expect(page.locator('.streak-share-card .couple-boy')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.lyn}.webp`);
- await expect(page.locator('.streak-share-card .couple-girl')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.zsh}.webp`);
- await page.getByRole('button', { name: '关闭面板' }).click();
+ await expect(page.locator('.streak-couple .couple-boy')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.lyn}.webp`);
+ await expect(page.locator('.streak-couple .couple-girl')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.zsh}.webp`);
+ await page.getByRole('button', { name: '返回音乐小屋' }).click();
  await page.reload();
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await page.screenshot({ path: 'test-results/personality-home.png', fullPage: true, animations: 'disabled' });

@@ -1,6 +1,35 @@
 import {expect,test} from '@playwright/test';
 import {musicImages} from '../src/music-images';
 
+test('16 个形象的预览、静态回退和缩略卡片按人物主体居中',async({page})=>{
+ await page.goto('/#/personality');
+ for(const width of [320,390,844]){
+  await page.setViewportSize({width,height:844});
+  for(const image of musicImages){
+   await page.getByRole('button',{name:`查看 ${image.name}`,exact:true}).click();
+   const character=page.locator('.personality-stage .character-visual');
+   await expect(character).toHaveAttribute('data-motion-ready','true');
+   const offsets=await page.evaluate(id=>{
+    const headOffset=(element:HTMLImageElement|HTMLCanvasElement,container:Element)=>{
+     const w=element instanceof HTMLImageElement?element.naturalWidth:element.width,h=element instanceof HTMLImageElement?element.naturalHeight:element.height;
+     const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d')!;ctx.drawImage(element,0,0);const p=ctx.getImageData(0,0,w,h).data;
+     let top=h,bottom=0,left=w,right=0;
+     for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(p[(y*w+x)*4+3]>128){top=Math.min(top,y);bottom=Math.max(bottom,y)}
+     for(let y=top;y<top+(bottom-top)*.32;y++)for(let x=0;x<w;x++)if(p[(y*w+x)*4+3]>128){left=Math.min(left,x);right=Math.max(right,x)}
+     const r=element.getBoundingClientRect(),card=container.getBoundingClientRect(),scale=Math.min(r.width/w,r.height/h);
+     return r.x+(r.width-w*scale)/2+(left+right+1)/2*scale-(card.x+card.width/2);
+    };
+    const stage=document.querySelector('.personality-stage')!,tile=document.querySelector(`.personality-tile-art [data-character="${id}"]`)!;
+    return [headOffset(stage.querySelector('canvas')!,stage),headOffset(stage.querySelector('img')!,stage),headOffset(tile.querySelector('img')!,tile)];
+   },image.id);
+   for(const offset of offsets)expect(Math.abs(offset),`${image.id} width=${width} offsets=${offsets}`).toBeLessThan(1.5);
+  }
+ }
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'查看 摇滚',exact:true}).click();
+ await page.locator('.personality-header').scrollIntoViewIfNeeded();
+ await page.screenshot({path:`output/music-centered-${test.info().project.name}.png`,fullPage:true});
+});
+
 test('客户端链接冷启动、刷新、浏览器前后退和未知路由',async({page})=>{
  await page.goto('/#/companion-space');await expect(page.getByRole('heading',{name:'陪伴空间',exact:true})).toBeVisible();
  await page.reload();await expect(page.getByRole('heading',{name:'陪伴空间',exact:true})).toBeVisible();

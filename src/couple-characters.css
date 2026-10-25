@@ -2,10 +2,8 @@
 .couple-figure { position:relative; display:block; width:50%; height:min(90cqh,65cqw); min-width:0; flex-shrink:0; padding:0; border:0; background:none; filter:drop-shadow(0 8px 5px #94715b24); }
 .couple-figure.is-boy { transform:scaleX(-1); }
 .couple-figure:focus-visible { outline:2px solid #d99fb7; border-radius:15px; }
-.couple-heart { position:absolute; z-index:2; top:34%; left:calc(50% - 18px); width:36px; height:36px; color:#e98eae; filter:drop-shadow(0 3px 5px #df729a40); }
-.couple-heart > svg { width:100%; height:100%; animation:coupleHeartbeat 1.65s ease-in-out infinite; }
-.couple-heart i { position:absolute; inset:-6px; border:1px solid #f5bad0; border-radius:50%; animation:coupleRipple 2.4s ease-out infinite; }
-.couple-heart i:last-child { animation-delay:1.2s; }
-@keyframes coupleHeartbeat { 0%,45%,100% { transform:scale(1); } 12% { transform:scale(1.2); } 25% { transform:scale(1.02); } 34% { transform:scale(1.13); } }
-@keyframes coupleRipple { from { opacity:.7; transform:scale(.7); } to { opacity:0; transform:scale(1.7); } }
-@media(prefers-reduced-motion:reduce) { .couple-heart > svg,.couple-heart i { animation:none; } .couple-heart i { display:none; } }
+.couple-note { position:absolute; z-index:2; top:34%; left:50%; transform:translateX(-50%); width:36px; height:36px; pointer-events:none; filter:drop-shadow(0 2px 2px #8b65c330); }
+.couple-note > svg { display:block; width:100%; height:100%; overflow:visible; animation:coupleNoteBounce 1.65s ease-in-out infinite; }
+/* Only vertical motion keeps the note equally spaced between both figures. */
+@keyframes coupleNoteBounce { 0%,45%,100% { transform:translateY(0); } 16% { transform:translateY(-5px); } 30% { transform:translateY(-1px); } 36% { transform:translateY(-3px); } }
+@media(prefers-reduced-motion:reduce) { .couple-note > svg { animation:none; } }

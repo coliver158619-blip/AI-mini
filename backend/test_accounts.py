@@ -6,6 +6,7 @@ from unittest.mock import patch
 from backend.app import create_app
 from backend.outfits import OUTFITS
 from backend.personalities import PERSONALITIES
+from backend.accounts import COOKIE
 
 
 class AccountsTest(unittest.TestCase):
@@ -51,6 +52,42 @@ class AccountsTest(unittest.TestCase):
         self.assertEqual(self.b.post('/api/outfit', json={'outfitId':locked}).status_code, 403)
         self.login(self.b, '小蓝')
         self.assertEqual(self.b.get('/api/outfits').json['profile']['outfitId'], locked)
+
+    def test_widget_cookie_sharing_and_account_isolation(self):
+        first = self.login(self.a)
+        self.login(self.b, '小粉', 'female')
+        for client, outfit in [(self.a, 'lyn28'), (self.b, 'zsh09')]:
+            self.assertEqual(client.post('/api/outfit', json={'outfitId': outfit}).status_code, 200)
+            response = client.get('/api/widget/appearance')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json['imageName'], outfit + '.png')
+            self.assertIn('no-store', response.headers['Cache-Control'])
+
+        native = self.app.test_client()
+        for path in ['/api/widget/appearance', '/api/widget/image']:
+            # A user identifier alone cannot replace the login session.
+            response = native.get(path, headers={'X-Music-User': first['user']['id']})
+            self.assertEqual(response.status_code, 401)
+            self.assertEqual(response.json['code'], 'LOGIN_REQUIRED')
+        native.set_cookie(COOKIE, self.a.get_cookie(COOKIE).value)
+        self.assertEqual(native.get('/api/widget/appearance').json, self.a.get('/api/widget/appearance').json)
+        self.assertEqual(native.get('/api/widget/image').json, {'imageName': 'lyn28.png'})
+        self.a.post('/api/auth/logout')
+        self.assertEqual(native.get('/api/widget/appearance').status_code, 401)
+        self.assertEqual(self.b.get('/api/widget/image').json, {'imageName': 'zsh09.png'})
+
+    def test_widget_native_nickname_reentry(self):
+        self.login(self.a)
+        self.a.post('/api/outfit', json={'outfitId': 'lyn28'})
+        self.a.post('/api/auth/complete')
+        # A native client may establish its own cookie session for an existing nickname.
+        response = self.b.post('/api/auth/login', json={'nickname': '小蓝'}, base_url='https://room.example')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json['isNew'])
+        cookie = response.headers['Set-Cookie']
+        for attribute in ['HttpOnly', 'Secure', 'SameSite=Lax', 'Path=/']:
+            self.assertIn(attribute, cookie)
+        self.assertEqual(self.b.get('/api/widget/image', base_url='https://room.example').json, {'imageName': 'lyn28.png'})
 
     def test_pool_and_gender_for_every_possible_selection(self):
         self.assertEqual(len(PERSONALITIES), 16)

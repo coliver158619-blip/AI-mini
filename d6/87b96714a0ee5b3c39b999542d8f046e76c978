@@ -1,0 +1,22 @@
+backend/test_accounts.py
+  s_bc3e1980fa79c9::t_23b673dd7cc9f0 9
+  s_bc3e1980fa79c9::t_e574e454585270 56-91
+docs/widget-api.md
+  s_bc3e1980fa79c9::t_1358a0be11d243 3-15,25,28-32,57-106,118,121-122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "d687b96714a0ee5b3c39b999542d8f046e76c978",
+  "prompts": {},
+  "sessions": {
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

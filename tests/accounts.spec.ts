@@ -1,6 +1,37 @@
 import { test, expect, type Page } from '@playwright/test';
 
 const freshName = (prefix: string) => prefix + Date.now().toString(36);
+
+test('failed session check shows nickname entry and can recover by signing in', async ({ page, context }) => {
+ const nickname = freshName('重连');
+ await context.request.post('/api/auth/login', { data: { nickname, gender: 'female' } });
+ await context.request.post('/api/auth/complete');
+ await page.route('**/api/auth/session', route => route.abort('failed'));
+ await page.goto('/#/companion-space');
+ await expect(page.getByLabel('AI 形象昵称', { exact: true })).toBeVisible();
+ await expect(page.getByRole('alert')).toContainText('暂时没有连接上');
+ await page.unroute('**/api/auth/session');
+ await page.getByLabel('AI 形象昵称', { exact: true }).fill(nickname);
+ await page.getByRole('button', { name: '遇见我的音乐搭子' }).click();
+ await expect(page.locator('.home-page')).toBeVisible();
+ expect(new URL(page.url()).hash).toBe('');
+});
+
+for (const failure of ['network', 'expired'] as const) {
+ test(`room load ${failure} returns to nickname entry without a reload loop`, async ({ page, context }) => {
+  await context.request.post('/api/auth/login', { data: { nickname: freshName('恢复'), gender: 'male' } });
+  await context.request.post('/api/auth/complete');
+  await page.route('**/api/bootstrap', route => failure === 'network' ? route.abort('failed') : route.fulfill({ status: 401, json: { code: 'LOGIN_REQUIRED', error: '先输入昵称，回到你的音乐小屋吧' } }));
+  let navigations = 0;
+  page.on('framenavigated', frame => { if (frame === page.mainFrame()) navigations++; });
+  await page.goto('/');
+  await expect(page.getByLabel('AI 形象昵称', { exact: true })).toBeVisible();
+  await expect(page.locator('.connection-state')).toHaveCount(0);
+  await page.getByLabel('AI 形象昵称', { exact: true }).fill('可以重新输入');
+  expect(navigations).toBe(1);
+ });
+}
+
 async function register(page: Page, nickname: string, gender: '男生' | '女生') {
  await page.goto('/');
  await page.getByLabel('AI 形象昵称', { exact: true }).fill(nickname);
@@ -45,11 +76,12 @@ test('different devices start at entry; nickname restores only its own room', as
  const first = await (await page.request.get('/api/bootstrap')).json();
  const device = await browser.newContext({ viewport: { width: 393, height: 852 } });
  const other = await device.newPage();
- await other.goto('http://127.0.0.1:5190/');
+ await other.goto('http://127.0.0.1:5190/#/reports');
  await expect(other.getByLabel('AI 形象昵称', { exact: true })).toBeVisible();
  await other.getByLabel('AI 形象昵称', { exact: true }).fill(nickname);
  await other.getByRole('button', { name: '遇见我的音乐搭子' }).click();
  await expect(other.locator('.home-page')).toBeVisible();
+ expect(new URL(other.url()).hash).toBe('');
  const restored = await (await device.request.get('http://127.0.0.1:5190/api/bootstrap')).json();
  expect(restored.profile.appearance).toEqual(first.profile.appearance);
  await device.close();

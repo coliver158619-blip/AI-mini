@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ArrowRight, Check, LoaderCircle, Music2, Sparkles } from 'lucide-react';
 import App from './App';
 import { api, post, setApiUser } from './api';
@@ -45,21 +45,22 @@ function GenerateRoom({ user, profile, onEnter, onExit }: { user: User; profile:
 }
 
 export default function AuthRoot() {
- const [session, setSession] = useState<Session | null>(null), [error, setError] = useState(''), [retry, setRetry] = useState(0);
+ const [session, setSession] = useState<Session | null>(null), [error, setError] = useState('');
  const [name, setName] = useState(''), [gender, setGender] = useState<'male' | 'female' | ''>(''), [busy, setBusy] = useState(false);
  const accept = (value: Session) => { setApiUser(value.user?.id || ''); setSession(value); setError(''); };
- useEffect(() => { let cancelled = false; api<Session>('/api/auth/session').then(value => { if (!cancelled) accept(value); }).catch(cause => { if (!cancelled) setError(cause.message); }); return () => { cancelled = true; }; }, [retry]);
+ const returnToEntry = useCallback(() => { setApiUser(''); setSession({ enabled: true, user: null }); setError('暂时没有连接上，请重新输入昵称进入小屋'); }, []);
+ useEffect(() => { let cancelled = false; api<Session>('/api/auth/session').then(value => { if (!cancelled) accept(value); }).catch(() => { if (!cancelled) returnToEntry(); }); return () => { cancelled = true; }; }, [returnToEntry]);
  useEffect(() => { const expired = () => { accept({ enabled: true, user: null }); setError('重新输入昵称，回到你的小屋吧'); }; window.addEventListener('music-session-ended', expired); return () => window.removeEventListener('music-session-ended', expired); }, []);
  const logout = async () => { await post('/api/auth/logout', {}); accept({ enabled: true, user: null }); setName(''); setGender(''); history.replaceState(null, '', location.pathname + location.search); };
  if (session?.enabled === false) return <App/>;
- if (session?.user?.onboardingComplete) return <App key={session.user.id} userId={session.user.id} onLogout={logout}/>;
+ if (session?.user?.onboardingComplete) return <App key={session.user.id} userId={session.user.id} onLogout={logout} onConnectionError={returnToEntry}/>;
  if (session?.user && session.profile) return <GenerateRoom key={session.user.id} user={session.user} profile={session.profile} onExit={logout} onEnter={async () => { const result = await post<{user:User}>('/api/auth/complete', {}); history.replaceState(null, '', location.pathname + location.search); accept({ enabled: true, user: result.user }); }}/>;
- if (!session) return <main className="entry-page"><section className="entry-card entry-loading"><Music2 size={40}/><h1>你的小屋，马上就好</h1>{error ? <><p role="alert" className="entry-error">{error}</p><button className="entry-primary" onClick={() => { setError(''); setRetry(value => value + 1); }}>重新连接</button></> : <LoaderCircle className="spin"/>}</section></main>;
+ if (!session) return <main className="entry-page"><section className="entry-card entry-loading"><Music2 size={40}/><h1>你的小屋，马上就好</h1><LoaderCircle className="spin"/></section></main>;
  return <main className="entry-page"><section className="entry-card">
   <div className="entry-brand"><Music2 size={30}/></div>
   <span className="entry-eyebrow">NICE TO MEET YOU</span>
   <h1>给陪伴，起个名字</h1><p className="entry-subtitle">一段旋律，一位懂你的音乐搭子</p>
-  <form onSubmit={async event => { event.preventDefault(); if (busy) return; setBusy(true); setError(''); try { const result = await post<Session>('/api/auth/login', { nickname: name, gender }); accept({ ...result, enabled: true }); } catch (cause) { setError(cause instanceof Error ? cause.message : '暂时没有连接上，再试一次吧'); } finally { setBusy(false); } }}>
+  <form onSubmit={async event => { event.preventDefault(); if (busy) return; setBusy(true); setError(''); try { const result = await post<Session>('/api/auth/login', { nickname: name, gender }); history.replaceState(null, '', location.pathname + location.search); accept({ ...result, enabled: true }); } catch (cause) { setError(cause instanceof Error ? cause.message : '暂时没有连接上，再试一次吧'); } finally { setBusy(false); } }}>
    <label className="entry-label" htmlFor="entry-name">AI 形象昵称</label>
    <input id="entry-name" className="entry-name" value={name} onChange={event => setName(event.target.value)} placeholder="想怎么称呼你的搭子？" autoComplete="username" maxLength={16} required disabled={busy}/>
    <div className="entry-label entry-gender-label">选择搭子的性别<span>新朋友第一次见面时选择</span></div>

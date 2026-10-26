@@ -6,7 +6,7 @@
 
 - 首页：`https://desktop-rjgij1s.tailc7b3e2.ts.net/`
 - 陪伴空间：`https://desktop-rjgij1s.tailc7b3e2.ts.net/#/companion-space`
-- 新设备输入已有昵称后保留目标路由；首次生成完成后进入首页。
+- 输入昵称登录成功后统一进入首页，不保留登录前的二级页面路由；首次生成完成后同样进入首页。已登录状态下刷新二级页面仍保留当前页面。
 
 ## 会话接口
 

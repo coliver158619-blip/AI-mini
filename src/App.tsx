@@ -31,7 +31,7 @@ function Cover({ song, small = false }: { song: Song; small?: boolean }) {
  return <span className={`album-cover ${small ? 'small' : ''}`} style={{ background: `linear-gradient(145deg, ${song.color || '#e4af63'}, #fff5d5)` }}><Disc3 size={small ? 23 : 30}/><span className="cover-grain"/></span>;
 }
 
-export default function App({ userId = 'legacy', onLogout }: { userId?: string; onLogout?: () => Promise<void> }) {
+export default function App({ userId = 'legacy', onLogout, onConnectionError }: { userId?: string; onLogout?: () => Promise<void>; onConnectionError?: () => void }) {
  const playStorageKey = userId === 'legacy' ? 'music-pending-plays' : `music-pending-plays:${userId}`;
  const [loggingOut, setLoggingOut] = useState(false);
  useVisualViewport();
@@ -77,8 +77,8 @@ export default function App({ userId = 'legacy', onLogout }: { userId?: string; 
    setData(bootstrap); setBubble(companionGreeting(bootstrap.greeting)); setMessages(history.messages); setConversationId(history.conversationId); setRename(bootstrap.profile.name);
    setFavorites(bootstrap.songs.filter(s => s.favorite).map(s => s.id));
    if (bootstrap.weather) setWeather(bootstrap.weather);
-  } catch (e) { setError(e instanceof Error ? e.message : '连接失败'); }
- }, []);
+  } catch (e) { if (onConnectionError) onConnectionError(); else setError(e instanceof Error ? e.message : '连接失败'); }
+ }, [onConnectionError]);
  useEffect(() => { void load(); }, [load]);
  useHourlyRecommendation({
   enabled: Boolean(data?.integration?.configured && data.integration.state !== 'disabled' && !error),

@@ -39,6 +39,41 @@ def register_star_charge(app, get_db, now, json_body, valid_text, upstream, all_
                 raise ValueError('请选择 2000 年至今天之间的日期')
         return artist
 
+    def reward_key(scope, stage):
+        if scope != 'total':
+            validate(scope)
+        return f'charge_reward:{scope}:{stage}'
+
+    def claimed_stages(scope):
+        return [stage for stage in (0, 400, 800, 1600) if get_db().execute(
+            'SELECT 1 FROM app_meta WHERE key=?', (reward_key(scope, stage),)).fetchone()]
+
+    @app.get('/api/charge/rewards/<scope>')
+    def charge_rewards(scope):
+        return jsonify(claimed=claimed_stages(scope))
+
+    @app.post('/api/charge/rewards/<scope>')
+    def claim_charge_reward(scope):
+        stage = json_body().get('stage')
+        if type(stage) is not int or stage not in (0, 400, 800, 1600):
+            raise ValueError('请选择有效的电量阶段')
+        key = reward_key(scope, stage)
+        with get_db() as db:
+            db.execute('BEGIN IMMEDIATE')
+            already = bool(db.execute('SELECT 1 FROM app_meta WHERE key=?', (key,)).fetchone())
+            if not already:
+                if scope == 'total':
+                    energy = db.execute('SELECT energy FROM profile WHERE id=1').fetchone()[0]
+                else:
+                    _, name, aliases = validate(scope)
+                    rows = db.execute('SELECT s.artist,p.seconds FROM plays p JOIN songs s ON s.id=p.song_id').fetchall()
+                    energy = sum(row['seconds'] for row in rows if matches(row['artist'], name, aliases)) // 3600
+                if energy < stage:
+                    return jsonify(error='电量尚未达到该阶段，继续听歌充电吧'), 409
+                # Existing Demo benefits stay unchanged; persist only explicit gift acceptance.
+                db.execute('INSERT OR IGNORE INTO app_meta(key,value) VALUES (?,?)', (key, now().isoformat()))
+        return jsonify(claimed=claimed_stages(scope), alreadyClaimed=already)
+
     def entry(artist_id, day):
         row = get_db().execute('SELECT * FROM star_diary WHERE artist_id=? AND date=?', (artist_id, day)).fetchone()
         return dict(date=day, note=row['note'] if row else '', body=row['body'] if row else '',

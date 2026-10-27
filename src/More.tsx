@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, Music2, Sparkles, MessageCircle, Shirt, Trop
 import './more.css'
 import type { Outfit, Personality, Profile } from './types'
 
-export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality' | 'companion-space'
+export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality' | 'companion-space' | 'rankings'
 type Props = { onBack: () => void; onAction: (action: MoreAction) => void; personality?: Personality; outfit?: Outfit; appearance?: Profile['appearance']; onLogout?: () => void; loggingOut?: boolean }
 
 // Preserve the original icon slot proportions while updating the artwork.
@@ -69,7 +69,7 @@ export default function More({ onBack, onAction, personality, outfit, appearance
     <section className="more-section" aria-labelledby="more-events-title">
       <h2 id="more-events-title"><MoreArt kind="heart" className="more-section-art" />运营活动</h2>
       <div className="more-grid">
-        <MoreCard kind="ranking" label="打榜" description="粉丝应援" art="trophy" onAction={onAction} />
+        <MoreCard action="rankings" label="打榜" description="看看彼此的充电排行" art="trophy" onAction={onAction} />
         <MoreCard kind="blindbox" label="盲盒" description="限定装扮" art="gift" onAction={onAction} />
       </div>
     </section>

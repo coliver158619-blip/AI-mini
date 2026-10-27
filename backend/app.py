@@ -29,6 +29,7 @@ from .diary_inputs import read_inputs, save_inputs, save_attachment
 from .shared_space import register_shared_space
 from .star_charge import register_star_charge
 from .network import lan_access
+from .rankings import register_rankings
 from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID, outfit_catalog, unlocked_outfit_ids
 from .appearance import appearance_state
 from .personalities import GROUPS, PERSONALITIES, PERSONALITIES_BY_ID, personality_for_id
@@ -600,6 +601,7 @@ def create_app(test_config=None):
     app.extensions["kugou"] = upstream
     register_shared_space(app, get_db, now, all_songs, json_body, valid_text, upstream)
     register_star_charge(app, get_db, now, json_body, valid_text, upstream, all_songs)
+    register_rankings(app, get_profile)
     site_sync = PersonalitySiteSync(app)
     app.extensions['personality_site_sync'] = site_sync
 

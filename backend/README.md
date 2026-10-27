@@ -80,6 +80,10 @@ macOS 内网预览现由用户会话的 launchd 服务 `local.ai-mini.lan` 独�
 | `GET /api/reports?period=week&offset=0` | 周/月/年聚合；`offset=-1` 为上期 |
 | `POST /api/favorites` | `{songId,favorite?}` 收藏或取消；不传布尔值则切换 |
 | `POST /api/profile` | `{name}` 改名，1—16 字 |
+| `GET /api/rankings/stars?q=张韶涵` | 搜索明星目录（示例） |
+| `GET /api/rankings/star?starId=lyn&offset=0&limit=50` | 指定明星的前 1000 位用户与当前用户排名（示例） |
+| `GET /api/rankings/personal` | 当前小屋与明星的前 100 名（示例） |
+| `GET /api/rankings/personal/search?q=周杰伦` | 在所有明星中搜索个人原始名次，标记是否进入前 100 |
 | `GET /api/outfits` | 两个人物 `characters`、31 套装扮 `outfits` 和当前 `profile` |
 | `POST /api/outfit/unlock` | `{outfitId}` 解锁并持久保存，重复请求幂等；当前不扣能量、不查询真实专辑 |
 | `POST /api/outfit` | `{outfitId}` 确认人物装扮（如 `lyn22` / `zsh08`），保留音乐人格，返回更新后的 `profile` |

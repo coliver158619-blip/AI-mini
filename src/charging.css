@@ -38,7 +38,7 @@
 .charge-milestone button small { font-size:8px; color:#b1a1b3; }
 .charge-milestone.is-reached button { color:#cc84ae; }
 .charge-milestone .gift-lid { transform-origin:24px 20px; transition:transform .3s; }
-.charge-milestone.is-reached .gift-lid { transform:translate(-3px,-8px) rotate(-14deg); }
+.charge-milestone.is-opened .gift-lid { transform:translate(-3px,-8px) rotate(-14deg); }
 .gift-spark { fill:#edbe67; }
 .charge-benefit { position:absolute; bottom:calc(100% + 12px); left:50%; transform:translateX(-50%) translateY(4px); z-index:8; width:190px; max-width:65vw; padding:13px 14px; border-radius:15px; background:#fff8fc; border:1px solid #edc8dd; box-shadow:0 8px 28px #95618d26; color:#785d7b; font-size:11px; line-height:1.8; text-align:left; opacity:0; visibility:hidden; transition:.16s ease; pointer-events:none; }
 .charge-benefit b,.charge-benefit span,.charge-benefit small { display:block; }
@@ -82,3 +82,9 @@
 @keyframes charge-welcome-enter { 0% { opacity:0; } 15%,85% { opacity:1; } 100% { opacity:0; } }
 @media(max-width:359px) { .star-charge-scene { gap:6px; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr); }.star-charge-companion{height:220px}.star-wheel-wrap > small{font-size:8px}.spark-number > strong{font-size:39px}.spark-number > svg{width:35px}.spark-number > span{font-size:10px}.charge-mode-toggle{font-size:13px} }
 @media(prefers-reduced-motion:reduce) { .star-avatar-ring::before,.star-charge-note,.charge-welcome,.charge-welcome-fill,.charge-welcome strong { animation:none; }.star-wheel-option { transition:none; } }
+
+.charge-milestone.is-ready button>svg { animation:gift-ready-wiggle 2.6s ease-in-out infinite; transform-origin:50% 85%; }
+.charge-claim-error { display:flex; flex-wrap:wrap; align-items:center; gap:8px; color:#986784; font-size:12px; margin-top:12px; }
+.charge-claim-error button { color:#8654cc; text-decoration:underline; min-height:36px; }
+@keyframes gift-ready-wiggle { 0%,55%,100%{transform:rotate(0)} 60%,72%{transform:rotate(-9deg)} 66%,78%{transform:rotate(9deg)} 84%{transform:rotate(-4deg)} 90%{transform:rotate(4deg)} }
+@media(prefers-reduced-motion:reduce) { .charge-milestone.is-ready button>svg{animation:none;filter:drop-shadow(0 0 4px #bd87ec88)} }

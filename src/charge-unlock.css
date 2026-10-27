@@ -4,18 +4,21 @@
 .unlock-header { display:grid; grid-template-columns:44px 1fr 44px; align-items:center; text-align:center; font-size:16px; font-weight:650; }
 .unlock-header button { width:44px; height:44px; display:grid; place-items:center; color:#847795; }
 .unlock-heading { text-align:center; margin-top:clamp(18px,4dvh,44px); }
-.unlock-heading h1 { font-size:clamp(28px,8vw,38px); line-height:1.3; }
+.unlock-heading h1 { font-size:clamp(34px,9vw,48px); font-weight:850; letter-spacing:-1px; line-height:1.3; }
 .unlock-heading p { margin-top:12px; font-size:15px; color:#8d829e; }
 .unlock-dots { display:flex; justify-content:center; gap:10px; margin-top:18px; }
 .unlock-dots i { width:7px; height:7px; border-radius:50%; background:#e4d6fa; }
 .unlock-dots i.is-current { background:#9865e8; }
 .unlock-art { position:relative; flex:1 0 auto; width:100%; min-height:250px; height:clamp(250px,42dvh,410px); max-height:410px; isolation:isolate; }
-.unlock-gift { position:absolute; width:72%; height:80%; left:14%; bottom:0; overflow:visible; filter:drop-shadow(0 12px 12px #b38bd338); }
-.unlock-lid { transform-origin:120px 145px; animation:unlock-pop 1.8s cubic-bezier(.2,.7,.2,1) both; }
+.unlock-gift { position:absolute; width:90%; height:100%; left:5%; bottom:0; overflow:visible; filter:drop-shadow(0 9px 10px #b38bd338); }
+.unlock-lid { transform-origin:160px 200px; animation:unlock-pop 1.8s cubic-bezier(.2,.7,.2,1) both; }
+.unlock-box-light { animation:unlock-glow 1.8s .5s both; }
 .unlock-aura { position:absolute; inset:12% 0 0; background:radial-gradient(ellipse,#fff 15%,#efcafa80 40%,transparent 68%); animation:unlock-glow 2s ease-out both; }
-.unlock-reward { position:absolute; inset:20% 12% 20%; display:flex; justify-content:center; align-items:center; gap:20px; color:#ae79e7; z-index:2; pointer-events:none; animation:unlock-rise 1.6s .4s both; }
-.unlock-shirt { width:66px; height:66px; fill:#ead5fb; transform:rotate(-12deg); }
-.unlock-voice { width:50px; height:50px; padding:10px; border-radius:50%; color:#fff; background:#b381ec; }
+.unlock-reward { position:absolute; inset:26% 12% 26%; display:flex; justify-content:center; align-items:center; gap:24px; color:#ae79e7; z-index:2; pointer-events:none; animation:unlock-rise 1.6s .4s both; filter:drop-shadow(0 5px 8px #be99e64d); }
+.unlock-shirt { width:83px; height:83px; fill:#d9b9f9; stroke:#f3e1ff; stroke-width:1.2; transform:rotate(-12deg); }
+.unlock-voice { position:relative; display:grid; place-items:center; width:58px; height:58px; border:2px solid #dfc0ff; border-radius:50%; color:#fff; background:linear-gradient(140deg,#deb9fc,#9c6de9); box-shadow:inset 0 2px 5px #ffffff80; transform:rotate(10deg); }
+.unlock-voice::after { content:''; position:absolute; right:6px; bottom:-5px; width:15px; height:15px; background:#ab80ed; clip-path:polygon(0 0,100% 0,85% 100%); }
+.unlock-voice svg { width:34px; height:34px; }
 .unlock-particles { position:absolute; inset:0; pointer-events:none; }
 .unlock-particles span { position:absolute; left:calc(10% + var(--particle)*15%); top:calc(22% + var(--particle)*7%); color:#d0a0f4; animation:unlock-spark 1.8s calc(.5s + var(--particle)*.1s) both; }
 .unlock-particles span:nth-child(even) { color:#efa4dc; }
@@ -25,8 +28,17 @@
 .unlock-benefit h2 svg { color:#a67ce5; }
 .unlock-benefit p { margin-top:15px; font-size:14px; line-height:1.8; color:#81758f; text-align:center; }
 .unlock-benefit small { display:block; margin-top:10px; color:#978ba6; text-align:center; font-size:11px; }
+.unlock-benefit-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin-top:22px; }
+.unlock-benefit-grid>div { position:relative; display:flex; flex-direction:column; align-items:center; gap:9px; color:#82748f; font-size:13px; }
+.unlock-benefit-grid>div+div::before { content:''; position:absolute; left:0; top:15px; bottom:2px; width:1px; background:#ece3f4; }
+.unlock-benefit-grid svg { width:34px; height:34px; color:#b27be9; fill:#ead9fb; filter:drop-shadow(0 2px 1px #d2b5e959); }
+.unlock-member { display:flex; justify-content:center; align-items:center; gap:16px; margin-top:16px; padding:15px 10px; border-radius:20px; background:linear-gradient(120deg,#faf4ff,#f7f1ff); }
+.unlock-member svg { width:36px; height:36px; fill:#b383ed; color:#ac79e7; filter:drop-shadow(0 3px 2px #d9b9ee); }
+.unlock-member b { font-size:clamp(18px,5vw,25px); }
+.unlock-benefit-complete { padding-block:24px; }.unlock-benefit-complete p { font-size:17px; margin-top:10px; }
+.unlock-error { color:#a34879; font-size:12px; line-height:1.6; margin-bottom:12px; }
 .charge-unlock .unlock-actions { display:block; padding-top:24px; text-align:center; }
-.charge-unlock .unlock-accept { width:100%; min-height:50px; padding:12px 18px; border-radius:28px; color:white; background:linear-gradient(110deg,#9665eb,#ef8aca); font-size:16px; font-weight:650; }
+.charge-unlock .unlock-accept { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; min-height:54px; padding:12px 18px; border-radius:30px; color:white; background:linear-gradient(110deg,#9665eb,#ef8aca); font-size:18px; font-weight:700; box-shadow:0 10px 24px #c18ade26,inset 0 1px 1px #fff8; }
 .charge-unlock .unlock-replay { min-height:44px; margin-top:8px; padding:10px 20px; color:#8e80a2; font-size:13px; background:transparent; }
 .unlock-ticket { width:88px; height:114px; border:2px solid white; border-radius:16px; background:linear-gradient(130deg,#fff4f1,#f3d8ff); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; transform:rotate(-12deg); box-shadow:0 8px 20px #bd83df2b; }
 .unlock-ticket b { font-size:29px; }
@@ -40,7 +52,7 @@
 .unlock-stage-2 .unlock-particles span { animation-name:unlock-notes; animation-duration:2.6s; }
 .unlock-heart { position:absolute; width:100%; height:83%; top:0; color:#eba1df; fill:#f8dcf577; animation:unlock-bloom 2.8s .3s both; }
 .unlock-stage-3 .unlock-lid { animation-name:unlock-finale; animation-duration:2.8s; }
-.unlock-stage-3 .unlock-reward { inset:20% 5% 20%; }
+.unlock-stage-3 .unlock-reward { inset:27% 5% 27%; }
 .unlock-stars { display:flex; align-items:center; gap:9px; }.unlock-stars svg { width:39px; height:39px; animation:unlock-spark 1.3s .9s both; }.unlock-stars svg:nth-child(2){animation-delay:1.1s;transform:translateY(-20px)}.unlock-stars svg:nth-child(3){animation-delay:1.3s;transform:translateY(-20px)}.unlock-stars svg:nth-child(4){animation-delay:1.5s}
 @keyframes unlock-pop { 0%,15%{transform:translateY(0) rotate(0)} 25%{transform:rotate(-7deg)} 35%{transform:rotate(6deg)} 65%{transform:translate(-15px,-80px) rotate(-20deg)} 100%{transform:translate(-10px,-65px) rotate(-16deg)} }
 @keyframes unlock-lift { 0%,20%{transform:translateY(0)} 70%,100%{transform:translateY(-90px) rotate(9deg)} }
@@ -55,3 +67,4 @@
 @keyframes unlock-bloom { from{opacity:0;scale:.15} 70%{opacity:1;scale:1.08} to{opacity:1;scale:1} }
 @media(max-height:700px) { .unlock-content{padding-top:env(safe-area-inset-top,0px)}.unlock-heading{margin-top:10px}.unlock-heading h1{font-size:28px}.unlock-art{height:250px;min-height:250px}.unlock-benefit{padding:16px}.unlock-actions{padding-top:16px} }
 @media(prefers-reduced-motion:reduce) { .charge-unlock *{animation-duration:.01ms!important;animation-delay:0ms!important} }
+@media(min-width:700px) { .charge-unlock{width:520px;height:min(940px,96dvh);border-radius:30px}.unlock-content{padding-inline:32px}.unlock-art{min-height:290px}.unlock-heading{margin-top:18px} }

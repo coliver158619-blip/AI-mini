@@ -2,8 +2,8 @@
 .bottom-sheet.chat-sheet{position:relative;isolation:isolate;height:100%;max-height:100%;padding-bottom:0;border-radius:0;box-shadow:none;color:#0e1b3e;background:radial-gradient(ellipse at 8% 4%,#e6ddff 0,transparent 25%),radial-gradient(ellipse at 77% 39%,#e8dfff 0,transparent 32%),radial-gradient(ellipse at 5% 63%,#ffe2ed 0,transparent 27%),radial-gradient(ellipse at 97% 93%,#d8baff 0,transparent 34%),linear-gradient(125deg,#fff9ec,#fff4f4 52%,#fff4e2);animation:fadeIn .2s}
 .chat-sheet .chat-topbar{padding:40px 18px 0;display:flex;justify-content:space-between;margin:0}
 .chat-circle{width:45px;height:45px;border:1px solid #fff;border-radius:50%;display:grid;place-items:center;background:#ffffffb8;box-shadow:0 5px 14px #ebbeae19;color:#14213f}
-.chat-title{font:600 32px/1.4 'Noto Serif SC','Songti SC',SimSun,serif;margin:18px 24px 15px;letter-spacing:1px;flex-shrink:0}
-.chat-sheet .chat-context{position:relative;flex-wrap:nowrap;gap:8px;padding:0 24px 17px;border:0;color:#77849e;font-size:11px;flex-shrink:0;min-width:0}
+
+.chat-sheet .chat-context{position:relative;flex-wrap:nowrap;gap:8px;padding:12px 24px 17px;border:0;color:#77849e;font-size:11px;flex-shrink:0;min-width:0}
 .chat-presence{display:flex;align-items:center;gap:7px;flex:1;min-width:0;line-height:1.5;overflow-wrap:anywhere}
 .chat-presence i{width:7px;height:7px;border-radius:50%;background:#08c27a;flex-shrink:0}
 .chat-session-actions{display:flex;gap:8px;flex-shrink:0}
@@ -32,7 +32,7 @@
 /* WebView keyboards may shrink only VisualViewport, not CSS viewport height. */
 @container chat (max-height:500px){
  .chat-sheet .chat-topbar{padding-top:8px}.chat-circle{width:32px;height:32px}
- .chat-title{margin-block:3px;font-size:23px}.chat-sheet .chat-context{padding-bottom:7px}
+ .chat-sheet .chat-context{padding-bottom:7px}
  .chat-sheet .chat-quick-actions{padding-block:5px}.chat-sheet .chat-form{padding-bottom:8px}
  .chat-sheet .chat-form input{min-height:40px;padding-block:8px}.chat-sheet .chat-form>button{width:40px;height:40px}
 }
@@ -41,5 +41,5 @@
 .chat-history-panel header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.chat-history-panel h3{font-size:18px}.chat-history-panel>button{display:block;text-align:left;width:100%;padding:14px;border-radius:14px;margin:5px 0;background:#f3eeff}.chat-history-panel>button[aria-current=true]{background:#e6eefe;outline:1px solid #b6cfff}.chat-history-panel strong{display:block;font-size:14px}.chat-history-panel span{display:block;font-size:11px;margin-top:7px;color:#8490a9}
 @media(min-width:700px) and (pointer:fine){.sheet-backdrop.chat-backdrop{padding-block:25px}.bottom-sheet.chat-sheet{border-radius:28px}}
 @media(max-width:359px){.chat-sheet .chat-context{padding-inline:16px;gap:6px;font-size:10px}.chat-session-actions{gap:5px}.chat-session-actions button{width:30px}.chat-sheet .chat-context>.chat-provider{font-size:8px;padding:10px 7px}.chat-sheet .chat-messages{padding-inline:16px}.chat-sheet .chat-quick-actions{padding-inline:16px;gap:7px}.chat-sheet .chat-quick-actions button{font-size:12px;padding-inline:10px}.chat-sheet .message-content>p{font-size:13px}}
-@media(max-height:700px){.chat-sheet .chat-topbar{padding-top:18px}.chat-title{margin-block:12px;font-size:28px}.chat-sheet .chat-form{padding-bottom:18px}.chat-sheet .chat-context{padding-bottom:12px}}
-@media(max-height:450px){.chat-sheet .chat-topbar{padding-top:8px}.chat-circle{width:32px;height:32px}.chat-title{margin-block:3px;font-size:23px}.chat-sheet .chat-context{padding-bottom:7px}.chat-sheet .chat-quick-actions{padding-block:5px}.chat-sheet .chat-form{padding-bottom:8px}.chat-sheet .chat-form input{min-height:40px;padding-block:8px}.chat-sheet .chat-form>button{width:40px;height:40px}}
+@media(max-height:700px){.chat-sheet .chat-topbar{padding-top:18px}.chat-sheet .chat-form{padding-bottom:18px}.chat-sheet .chat-context{padding-bottom:12px}}
+@media(max-height:450px){.chat-sheet .chat-topbar{padding-top:8px}.chat-circle{width:32px;height:32px}.chat-sheet .chat-context{padding-bottom:7px}.chat-sheet .chat-quick-actions{padding-block:5px}.chat-sheet .chat-form{padding-bottom:8px}.chat-sheet .chat-form input{min-height:40px;padding-block:8px}.chat-sheet .chat-form>button{width:40px;height:40px}}

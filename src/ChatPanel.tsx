@@ -35,7 +35,6 @@ export default function ChatPanel(props: Props) {
  const disabled = props.sending || busy;
  return <>
   <header className="chat-topbar sheet-heading"><button className="chat-circle" aria-label="关闭面板" onClick={props.onClose}><ChevronLeft size={28}/></button><button className="chat-circle" aria-label="对话更多选项" onClick={() => void openHistory()} disabled={disabled}><MoreHorizontal size={28}/></button></header>
-  <h2 className="chat-title">我在，慢慢说。</h2>
   <div className="chat-context"><span className="chat-presence"><i/>{props.weather}</span><div className="chat-session-actions"><button title="开启新对话" aria-label="开启新对话" onClick={() => void select()} disabled={disabled}><MessageSquarePlus size={21}/></button><button title="选择历史对话" aria-label="选择历史对话" onClick={() => void openHistory()} disabled={disabled}><History size={22}/></button></div><span className="chat-provider">{props.provider}</span></div>
   <div className="chat-messages" aria-live="polite">
    <div className="chat-message assistant"><AppearanceAvatar appearance={props.appearance} className="message-avatar"/><div className="message-content"><p>{props.greeting}</p></div></div>

@@ -417,7 +417,7 @@ test('对话参考布局展示及窄屏适配', async ({ page }) => {
   { id: 4, role: 'assistant', content: '晚上好啊，小满。广州这会儿云层薄薄的，风也松了下来，是那种下班后想给自己留一段空白的天气。\n\n今天先不用急着说话，让音乐来搭把手。', songs: [] },
  ] } }));
  await page.goto('/'); await page.getByRole('button', { name: '和音乐搭子聊天' }).click();
- await expect(page.locator('.chat-title')).toHaveText('我在，慢慢说。');
+ await expect(page.locator('.chat-title')).toHaveCount(0);
  await page.locator('.chat-messages').evaluate(el => { el.scrollTop = 0; });
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-chat.png' });
  for (const width of [320, 390, 430, 768]) {

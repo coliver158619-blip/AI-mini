@@ -88,7 +88,7 @@ test('头像和耳机角标在同一框内对齐，小屏长昵称不挤压布�
  }
 });
 
-test('聊天标题可下拉关闭，短拉回弹、横滑不关闭，草稿与焦点保留', async ({ page }) => {
+test('聊天顶栏可下拉关闭，短拉回弹、横滑不关闭，草稿与焦点保留', async ({ page }) => {
  await page.goto('/');
  const trigger = page.getByRole('button', { name: '和音乐搭子聊天', exact: true });
  await trigger.click();
@@ -97,8 +97,8 @@ test('聊天标题可下拉关闭，短拉回弹、横滑不关闭，草稿与�
  const input = page.getByRole('textbox', { name: '对搭子说点什么' });
  await input.fill('下次接着聊的草稿');
  const original = await sheet.boundingBox();
- const header = await page.locator('.sheet-heading h2, .chat-title').boundingBox();
- const start = { x: header!.x + 20, y: header!.y + 10 };
+ const header = await page.locator('.chat-topbar').boundingBox();
+ const start = { x: header!.x + header!.width / 2, y: header!.y + 10 };
  await swipe(page, start, { x: 0, y: 34 });
  await expect.poll(async () => Math.abs((await sheet.boundingBox())!.y - original!.y) < 2).toBe(true);
  await swipe(page, start, { x: 120, y: 15 });
@@ -159,7 +159,7 @@ test('键盘可视区域下聊天仍能下拉关闭，输入和历史列表操�
  await swipe(page, { x: field!.x + 30, y: field!.y + 10 }, { x: 0, y: 120 });
  await expect(page.locator('.chat-sheet')).toBeVisible();
  await expect(input).toHaveValue('键盘下的草稿');
- const header = await page.locator('.sheet-heading h2, .chat-title').boundingBox();
- await swipe(page, { x: header!.x + 20, y: header!.y + 10 }, { x: 0, y: 140 });
+ const header = await page.locator('.chat-topbar').boundingBox();
+ await swipe(page, { x: header!.x + header!.width / 2, y: header!.y + 10 }, { x: 0, y: 140 });
  await expect(page.locator('.chat-sheet')).toHaveCount(0);
 });

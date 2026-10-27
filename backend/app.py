@@ -492,6 +492,8 @@ def start_diary_scheduler(app):
 
 def report_data(period, offset):
     start, end = period_bounds(period, offset)
+    demo_start = get_db().execute("SELECT value FROM app_meta WHERE key='demo_report_start'").fetchone()
+    available_start = demo_start[0] if demo_start else None
     rows = plays_between(start, end)
     songs = {song["id"]: song for song in all_songs()}
     song_seconds, song_plays, day_seconds, mood_seconds, artist_seconds, artist_plays = (Counter() for _ in range(6))
@@ -517,6 +519,8 @@ def report_data(period, offset):
     trend = []
     for step in range({"week": 7, "month": 6, "year": 5}[period] - 1, -1, -1):
         trend_start, trend_end = period_bounds(period, offset - step)
+        if available_start and trend_end.isoformat() < available_start:
+            continue
         trend_rows = plays_between(trend_start, trend_end)
         label = str(trend_start.year) if period == "year" else f"{trend_start.month}月" if period == "month" else f"{trend_start.month}/{trend_start.day}"
         trend.append({"label": label, "minutes": minutes(sum(r["seconds"] for r in trend_rows)), "songCount": len({r["song_id"] for r in trend_rows})})
@@ -537,7 +541,7 @@ def report_data(period, offset):
     title = f"这一{period_name}，音乐是你的{top_mood}小天地" if rows else "下一段音乐故事，等你开启"
     body = f"{len(day_seconds)} 天有音乐相伴，{minutes(total)} 分钟留给自己。你最常听的{top_mood}旋律，记录着只属于你的生活节奏。" if rows else "这一段时间还没有听歌记录。播放一首音乐后，你的报告就会开始生长。"
     return {
-        "period": period, "offset": offset, "label": label, "startDate": start.isoformat(), "endDate": end.isoformat(),
+        "period": period, "offset": offset, "label": label, "startDate": start.isoformat(), "endDate": end.isoformat(), "availableStartDate": available_start,
         "isDemo": any(row["is_demo"] for row in rows),
         "summary": {"minutes": minutes(total), "songCount": len(song_seconds), "playCount": sum(song_plays.values()), "activeDays": len(day_seconds), "favoriteCount": favorites, "topMood": top_mood, "companionDays": get_profile()["days"]},
         "comparison": {"minutesPercent": round((total - previous_seconds) / previous_seconds * 100) if previous_seconds else None},
@@ -763,6 +767,10 @@ def create_app(test_config=None):
     @app.get("/api/diary")
     def diary():
         dates = {row[0] for row in get_db().execute("SELECT DISTINCT substr(listened_at, 1, 10) FROM plays UNION SELECT date FROM diary_notes UNION SELECT date FROM weather_snapshots UNION SELECT substr(created_at, 1, 10) FROM messages UNION SELECT substr(created_at, 1, 10) FROM recommendation_requests UNION SELECT date FROM diary_stories UNION SELECT date FROM diary_inputs UNION SELECT date FROM diary_editions")}
+        demo_start = get_db().execute("SELECT value FROM app_meta WHERE key='demo_diary_start'").fetchone()
+        if demo_start:
+            # The demo presentation starts here; older saved entries remain in the database.
+            dates = {day for day in dates if day >= demo_start[0]}
         dates.add(now().date().isoformat())
         entries = [diary_entry(date.fromisoformat(day)) for day in sorted(dates, reverse=True)]
         return jsonify(entries=entries, total=len(entries))

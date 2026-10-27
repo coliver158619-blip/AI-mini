@@ -7,6 +7,7 @@ for(const size of [{width:393,height:852,top:59,bottom:34},{width:393,height:700
  await page.route('**/api/recommendations/hourly',route=>route.fulfill({json:{songs:[{id:'sunny-window',title:'最长的电影',artist:'周杰伦',tags:[],color:'#e4af63'}],pending:false,createdAt:new Date().toISOString(),nextAt:new Date(Date.now()+3600000).toISOString(),source:'kugou'}}));
  await page.goto('/');
  await page.evaluate(({top,bottom})=>{document.documentElement.style.setProperty('--safe-top',`${top}px`);document.documentElement.style.setProperty('--safe-bottom',`${bottom}px`)},size);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toBeVisible();
  await expect(page.locator('.companion .character-visual')).toHaveAttribute('data-motion-ready','true');
  const geometry=()=>page.evaluate(()=>{
@@ -47,6 +48,6 @@ test('首帧时间提前也不消失，三种动作始终有像素并保持稳�
 
 test('旧后台状态文案不会出现在首页或聊天欢迎语',async({page})=>{
  await page.route('**/api/bootstrap',async route=>{const data=await(await route.fetch()).json();data.greeting='上次记录（10月24日20:48）天气可能已经变化，刷新后我再为你挑歌。';data.weather={city:'广州',condition:'阴天',temperature:26,code:3,cached:true,greeting:data.greeting,updatedAt:'2026-10-24T20:48:00+08:00'};data.integration={configured:false,state:'disabled'};await route.fulfill({json:data})});
- await page.goto('/');await expect(page.locator('.bubble-copy')).toHaveText('你来啦，今天过得怎么样？陪你听会儿歌，慢慢聊。');
+ await page.goto('/');await expect(page.locator('.bubble-copy')).not.toBeEmpty();await expect(page.locator('.bubble-copy')).not.toContainText(/记录|刷新|缓存/);
  await page.getByRole('button',{name:'和音乐搭子聊天',exact:true}).click();await expect(page.locator('.chat-messages')).not.toContainText(/记录|刷新|缓存/);
 });

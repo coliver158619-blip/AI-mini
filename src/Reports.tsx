@@ -11,6 +11,7 @@ type Report = {
   offset: number;
   label: string;
   startDate: string;
+  availableStartDate?: string | null;
   endDate: string;
   isDemo: boolean;
   summary: { minutes: number; songCount: number; playCount: number; activeDays: number; favoriteCount: number; topMood: string; companionDays: number };
@@ -46,7 +47,7 @@ function Trend({ values, kind }: { values: NonNullable<Report['trend']>; kind: P
   const labels = ['平静', '浅浅微笑', '开心', '笑眼弯弯', '开怀大笑'];
   const selectedValue = selected === null ? null : values[selected];
   return <div className="report-trend">
-    <div className="report-chart-heading"><span>{kind === 'year' ? '近 5 年的音乐足迹' : '近 6 个月的陪伴'}</span><small>听歌时长 / 分钟</small></div>
+    <div className="report-chart-heading"><span>{kind === 'year' ? `近 ${values.length} 年的音乐足迹` : `近 ${values.length} 个月的陪伴`}</span><small>听歌时长 / 分钟</small></div>
     <svg viewBox="0 0 320 140" role="group" aria-label="听歌时长趋势，点击表情查看数值">
       <defs><linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#ffd16c" stopOpacity=".42"/><stop offset="100%" stopColor="#ffb65f" stopOpacity="0"/></linearGradient><radialGradient id={`${gradientId}-shine`} cx="30%" cy="20%" r="80%"><stop stopColor="#fff" stopOpacity=".85"/><stop offset=".4" stopColor="#fff" stopOpacity="0"/><stop offset="1" stopColor="#a36d21" stopOpacity=".18"/></radialGradient></defs>
       {[28, 48, 68, 100].map(y => <line key={y} x1="16" y1={y} x2="304" y2={y} stroke="#e8e5eb" strokeDasharray="3 4"/>)}
@@ -146,7 +147,7 @@ export default function Reports({ onBack, onPlay, appearance }: { onBack: () => 
   function openCalendar() { setCalendarDate(report?.startDate || today); setShowCalendar(true); }
 
   function chooseDate() {
-    if (!calendarDate || calendarDate > today) return;
+    if (!calendarDate || calendarDate > today || (report?.availableStartDate && calendarDate < report.availableStartDate)) return;
     const target = new Date(`${calendarDate}T00:00:00Z`);
     const current = new Date(`${today}T00:00:00Z`);
     let difference = target.getUTCFullYear() - current.getUTCFullYear();
@@ -194,7 +195,7 @@ export default function Reports({ onBack, onPlay, appearance }: { onBack: () => 
       }}>{periodNames[value]}报</button>)}
     </div>
     <div className="report-date-nav">
-      <button onClick={() => setOffset(value => Math.max(-60, value - 1))} disabled={offset <= -60} className="report-icon-button" aria-label={`上一${periodNames[period]}`}><ChevronLeft size={17}/></button>
+      <button onClick={() => setOffset(value => Math.max(-60, value - 1))} disabled={loading || offset <= -60 || Boolean(report?.availableStartDate && report.startDate <= report.availableStartDate)} className="report-icon-button" aria-label={`上一${periodNames[period]}`}><ChevronLeft size={17}/></button>
       <span>{loading ? '正在翻阅音乐足迹…' : report?.label || '音乐报告'}</span>
       <button onClick={() => setOffset(value => Math.min(0, value + 1))} disabled={offset >= 0} className="report-icon-button" aria-label={`下一${periodNames[period]}`}><ChevronRight size={17}/></button>
     </div>

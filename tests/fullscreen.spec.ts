@@ -60,6 +60,7 @@ test('推荐气泡展开时仍然完整显示首页', async ({ page }) => {
   pending: false, createdAt: new Date().toISOString(), nextAt: new Date(Date.now() + 3600000).toISOString(), source: 'kugou',
  } }));
  await page.goto('/'); await safeArea(page, 59, 34);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toBeVisible();
  await checkHome(page, 34, false, true);
  await page.screenshot({ path: 'test-results/fullscreen-hourly.png', animations: 'disabled' });

@@ -22,6 +22,8 @@ import { useHourlyRecommendation } from './useHourlyRecommendation';
 import { useVisualViewport } from './useVisualViewport';
 import { usePullToDismiss } from './usePullToDismiss';
 import { companionGreeting } from './companion-greeting';
+import { randomHomeGreeting } from './home-greetings';
+import HomeSpeechBubble from './HomeSpeechBubble';
 import type { Bootstrap, Integration, Message, Profile, Song } from './types';
 
 const scenes = [{ name: '放松一下', icon: '☕', query: '有点累，想放松一下' }, { name: '开心加倍', icon: '☀', query: '今天很开心，推荐轻快的音乐' }, { name: '专注时刻', icon: '✎', query: '我要专注工作，推荐适合学习的音乐' }, { name: '陪我入睡', icon: '☾', query: '准备睡觉了，想听助眠音乐' }, { name: '有点难过', icon: '♡', query: '今天有点难过，陪陪我吧' }];
@@ -56,6 +58,9 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
  const [activeScene, setActiveScene] = useState('');
  const [recommendations, setRecommendations] = useState<Song[]>([]);
  const [hourlySong, setHourlySong] = useState<Song | null>(null);
+ const [tapSong, setTapSong] = useState<Song | null>(null);
+ const recentGreetings = useRef<string[]>([]);
+ const lastTapSong = useRef('');
  const [toast, setToast] = useState('');
  const [current, setCurrent] = useState<Song | null>(null);
  const [playing, setPlaying] = useState(false);
@@ -66,6 +71,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
  const audio = useRef<HTMLAudioElement>(null);
  const livePlayback = useRef({ id: '', sessionId: '', seconds: 0, lastTime: 0, context: 'solo' as 'solo' | 'together' });
  const tapCount = useRef(0);
+ const companionRef = useRef<HTMLButtonElement>(null);
  const pendingPlays = useRef<{ songId: string; seconds: number; sessionId: string; eventId: string; context?: 'solo' | 'together' }[]>((() => { try { return JSON.parse(localStorage.getItem(playStorageKey) || '[]'); } catch { return []; } })());
  const syncing = useRef(false);
 
@@ -74,7 +80,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
   setError('');
   try {
    const [bootstrap, history] = await Promise.all([api<Bootstrap & { weather?: WeatherData }>('/api/bootstrap'), api<{ messages: Message[]; conversationId: string }>('/api/messages')]);
-   setData(bootstrap); setBubble(companionGreeting(bootstrap.greeting)); setMessages(history.messages); setConversationId(history.conversationId); setRename(bootstrap.profile.name);
+   setData(bootstrap); const greeting = randomHomeGreeting(recentGreetings.current); recentGreetings.current = [greeting]; setBubble(greeting); setMessages(history.messages); setConversationId(history.conversationId); setRename(bootstrap.profile.name);
    setFavorites(bootstrap.songs.filter(s => s.favorite).map(s => s.id));
    if (bootstrap.weather) setWeather(bootstrap.weather);
   } catch (e) { if (onConnectionError) onConnectionError(); else setError(e instanceof Error ? e.message : '连接失败'); }
@@ -87,7 +93,6 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
    const song = result.songs[0];
    setHourlySong(song);
    setRecommendations(old => [...new Map([...old, song].map(item => [item.id, item])).values()]);
-   setBubble('这首歌想和你一起听，你觉得怎么样？');
 
   },
  });
@@ -97,7 +102,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
    if (document.hidden) return;
    try {
     const result = await post<WeatherData & { songs?: Song[] }>('/api/weather', { latitude: weather.latitude, longitude: weather.longitude, city: weather.city });
-    setWeather(result); if (!result.cached) setBubble(companionGreeting(result.greeting));
+    setWeather(result);
    } catch { /* The saved observation stays visible with its original time. */ }
   };
   if (Date.now() - new Date(weather.updatedAt).getTime() > 30 * 60 * 1000) void refresh();
@@ -208,11 +213,20 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
  };
  const tapCompanion = () => {
   setReaction(value => value + 1); tapCount.current += 1;
-  const greetings = ['嗨，我在呢。今天有什么想和我分享的？', '要不要一起听会儿歌？你挑一首，我陪你。', '见到你真好。忙了一天，来歇一会儿吧。'];
-  setBubble(greetings[(tapCount.current - 1) % greetings.length]);
+  const greeting = randomHomeGreeting(recentGreetings.current);
+  recentGreetings.current = [...recentGreetings.current.slice(-5), greeting];
+  setBubble(greeting);
+  if (tapCount.current % 3 === 0) {
+   const songs = [...new Map([...(hourlySong ? [hourlySong] : []), ...recommendations, ...(data?.songs || [])].map(song => [song.id, song])).values()];
+   const choices = songs.filter(song => song.id !== lastTapSong.current);
+   const pool = choices.length ? choices : songs;
+   const song = hourlySong && hourlySong.id !== lastTapSong.current ? hourlySong : pool[Math.floor(Math.random() * pool.length)] || null;
+   lastTapSong.current = song?.id || '';
+   setTapSong(song);
+  } else setTapSong(null);
  };
  const openWeather = () => { weatherReturn.current = page; setPage('weather'); };
- const onWeather = (value: WeatherData) => { setWeather(value); setBubble(companionGreeting(value.greeting)); };
+ const onWeather = (value: WeatherData) => { setWeather(value); };
  const integrationLabel = data?.integration?.state === 'error' ? '融入AI · 连接异常'
   : data?.mode === 'kugou' ? '融入AI · 已连接'
    : data?.mode === 'kugou-pending' ? '融入AI · 待连接'
@@ -249,11 +263,11 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
     </header>
 
     <div className="companion-stage">
-    <div className={`speech-bubble${hourlySong ? ' has-hourly-song' : ''}`}>
-     <button className="bubble-chat" onClick={() => setDrawer('chat')} aria-label="和音乐搭子聊天"><span className="bubble-caption"><span className="online-dot"/>你的音乐搭子 <Sparkles size={12}/></span><span className="bubble-copy">{bubble}</span></button>
-     {hourlySong && <div className="hourly-song" aria-label="搭子每小时推荐" aria-live="polite"><button className="hourly-song-main" onClick={() => play(hourlySong)} aria-label={`播放${hourlySong.title}`}><Disc3 size={24}/><span><strong>{hourlySong.title}</strong><small>{hourlySong.artist}</small></span>{playing && current?.id === hourlySong.id ? <Pause size={15}/> : <Play size={15}/>}</button><button className="hourly-song-heart" onClick={() => void favorite(hourlySong)} aria-label={`${favorites.includes(hourlySong.id) ? '取消收藏' : '收藏'}${hourlySong.title}`}><Heart size={17} fill={favorites.includes(hourlySong.id) ? 'currentColor' : 'none'}/></button></div>}
-    </div>
-    <button className="companion companion-outfit" onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><CharacterVisual key={data.profile.appearance.id} id={data.profile.appearance.id} src={data.profile.appearance.imageUrl} alt={`${data.profile.appearance.name}音乐搭子`} animated reaction={reaction}/></button>
+    <HomeSpeechBubble profile={data.profile} figureRef={companionRef} hasSong={Boolean(tapSong)}>
+     <button className="bubble-chat" onClick={() => setDrawer('chat')} aria-label="和音乐搭子聊天"><span className="bubble-copy" aria-live="polite">{bubble}</span></button>
+     {tapSong && <div className="hourly-song" aria-label="搭子推荐歌曲"><button className="hourly-song-main" onClick={() => play(tapSong)} aria-label={`播放${tapSong.title}`}><Disc3 size={24}/><span><strong>{tapSong.title}</strong><small>{tapSong.artist}</small></span>{playing && current?.id === tapSong.id ? <Pause size={15}/> : <Play size={15}/>}</button><button className="hourly-song-heart" onClick={() => void favorite(tapSong)} aria-label={`${favorites.includes(tapSong.id) ? '取消收藏' : '收藏'}${tapSong.title}`}><Heart size={17} fill={favorites.includes(tapSong.id) ? 'currentColor' : 'none'}/></button></div>}
+    </HomeSpeechBubble>
+    <button ref={companionRef} className="companion companion-outfit" onClick={tapCompanion} aria-label="摸摸小人，听听他的问候"><CharacterVisual key={data.profile.appearance.id} id={data.profile.appearance.id} src={data.profile.appearance.imageUrl} alt={`${data.profile.appearance.name}音乐搭子`} animated reaction={reaction}/></button>
     <div className="companion-caption"><button onClick={() => setDrawer('settings')}>{data.profile.name}<Pencil size={12}/></button><span>已经陪你走过 <b>{data.profile.days}</b> 天 <Heart size={11}/></span></div>
     </div>
    </section>

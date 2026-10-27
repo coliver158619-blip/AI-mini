@@ -5,6 +5,7 @@ for(const size of [{width:393,height:852,top:59,bottom:34},{width:320,height:568
  await page.route('**/api/recommendations/hourly',route=>route.fulfill({json:{songs:[{id:'preview',title:'最长的电影',artist:'周杰伦',tags:[],color:'#e4af63'}],pending:false,createdAt:new Date().toISOString(),nextAt:new Date(Date.now()+3600000).toISOString(),source:'kugou'}}));
  await page.goto('/');
  await page.evaluate(({top,bottom})=>{document.documentElement.style.setProperty('--safe-top',`${top}px`);document.documentElement.style.setProperty('--safe-bottom',`${bottom}px`)},size);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toBeVisible();
  const before=await page.locator('.companion').boundingBox();
  await page.locator('.bubble-copy').evaluate(el=>el.textContent='上次记录（10月24日20:48）广州市是阴天。天气可能已经变化，刷新后我再为你挑歌；现在也可以告诉我，你想听什么样的音乐？');

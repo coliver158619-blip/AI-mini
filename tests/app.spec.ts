@@ -83,7 +83,7 @@ test('首页小人可互动，手机没有横向溢出', async ({ page }) => {
  expect(errors).toEqual([]);
 });
 
-test('小人每小时主动推荐一首歌，刷新不重复，离开首页暂缓触发', async ({ page }) => {
+test('后台每小时备好推荐，第三次点击展示，刷新不重复生成，离开首页暂缓触发', async ({ page }) => {
  const start = new Date('2026-10-01T12:00:00+08:00');
  await page.clock.install({ time: start });
  await page.clock.pauseAt(new Date(start.getTime() + 1000));
@@ -100,17 +100,24 @@ test('小人每小时主动推荐一首歌，刷新不重复，离开首页暂�
  });
  await page.goto('/'); await page.getByRole('button', { name: '更多玩法', exact: true }).waitFor();
  await page.clock.runFor(500);
+ await expect(page.locator('.hourly-song')).toHaveCount(0);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toContainText('第1小时的歌');
  await expect(page.getByRole('dialog')).toHaveCount(0);
  expect(generated).toBe(1);
  await page.screenshot({ animations: 'disabled', path: 'docs/preview-hourly-recommendation.png', fullPage: true });
  await page.reload(); await page.getByRole('button', { name: '更多玩法', exact: true }).waitFor();
  await page.clock.runFor(500);
+ await expect(page.locator('.hourly-song')).toHaveCount(0);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toContainText('第1小时的歌');
  expect(generated).toBe(1);
  await page.clock.fastForward(3590000);
  expect(generated).toBe(1);
  await page.clock.fastForward(11000);
+ await expect.poll(()=>generated).toBe(2);
+ await expect(page.locator('.hourly-song')).toContainText('第1小时的歌');
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toContainText('第2小时的歌');
  expect(generated).toBe(2);
  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
@@ -118,6 +125,8 @@ test('小人每小时主动推荐一首歌，刷新不重复，离开首页暂�
  expect(generated).toBe(2);
  await page.getByRole('button', { name: '返回首页', exact: true }).click();
  await page.clock.runFor(500);
+ await expect.poll(()=>generated).toBe(3);
+ for(let tap=0;tap<3;tap++) await page.locator('.companion').click();
  await expect(page.locator('.hourly-song')).toContainText('第3小时的歌');
  expect(generated).toBe(3);
 });

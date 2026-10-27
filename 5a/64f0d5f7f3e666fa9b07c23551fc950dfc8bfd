@@ -1,0 +1,24 @@
+src/chat.css
+  s_bc3e1980fa79c9::t_1dad33da4a6f16 5
+  s_bc3e1980fa79c9::t_b11cb25b31cd80 6,35,44-45
+tests/app.spec.ts
+  s_bc3e1980fa79c9::t_bd975ca95b325e 420
+tests/mobile-interactions.spec.ts
+  s_bc3e1980fa79c9::t_250129ecd7b7b2 91,100-101,162-163
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "5a64f0d5f7f3e666fa9b07c23551fc950dfc8bfd",
+  "prompts": {},
+  "sessions": {
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

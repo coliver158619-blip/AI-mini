@@ -1,0 +1,39 @@
+src/charge-unlock.css
+  s_bc3e1980fa79c9::t_4fdd8c48d09cd0 7,13-15,17-21,31-39,41,55,70
+src/ChargeMilestones.tsx
+  s_bc3e1980fa79c9::t_cb1365f242f7cd 1-2,11-13,15-22
+  s_bc3e1980fa79c9::t_8db5dc889b5ccd 23-24,29-33,36-37
+src/ChargeUnlock.tsx
+  s_bc3e1980fa79c9::t_4ea7031bed7ce8 2,6,8-10,12,14,21-42,50
+  s_bc3e1980fa79c9::t_b10471294bf803 43-49,51,54-57
+backend/app.py
+  s_bc3e1980fa79c9::t_2c4e0c4ed26221 32,604
+src/App.tsx
+  s_bc3e1980fa79c9::t_4ea0e683542fa7 9,285
+src/More.tsx
+  s_bc3e1980fa79c9::t_a90af28e7cbce4 5,72
+src/SparkPage.tsx
+  s_bc3e1980fa79c9::t_ddcf705371d250 47-48
+src/charging.css
+  s_bc3e1980fa79c9::t_b5d9dc0d29866c 41,85-90
+backend/star_charge.py
+  s_bc3e1980fa79c9::t_b0da2bd1108c07 42-76
+src/page-route.ts
+  s_bc3e1980fa79c9::t_9e4414f1509c34 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "eab83b45c85bb689f26b35a0bfc079e04ddb2e7f",
+  "prompts": {},
+  "sessions": {
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

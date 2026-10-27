@@ -63,12 +63,12 @@ test('播放器显示时更多玩法也完整显示，入口仍可打开', async
 test('火花入口打开独立页面，划动不会误关闭，可返回小屋', async ({ page, browserName }) => {
  test.skip(browserName !== 'chromium', '触摸手势验证使用 Chromium CDP；导航另由双浏览器测试覆盖');
  await page.goto('/');
- await page.getByRole('button', { name: /听歌续火花/ }).click();
+ await page.getByRole('button', { name: /听歌充电/ }).click();
  await expect(page).toHaveURL(/#\/spark$/);
  await expect(page.locator('.bottom-sheet')).toHaveCount(0);
  const heading = await page.locator('.relationship-header h1').boundingBox();
  await swipe(page, { x: heading!.x + 20, y: heading!.y + 10 }, { x: 0, y: 160 });
- await expect(page.getByRole('heading', { name: '听歌续火花', exact: true })).toBeVisible();
+ await expect(page.getByRole('heading', { name: '听歌充电', exact: true })).toBeVisible();
  await page.getByRole('button', { name: '返回音乐小屋' }).click();
  await expect(page.locator('.energy-card')).toBeVisible();
 });

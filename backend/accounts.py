@@ -133,6 +133,8 @@ def register_accounts(app, get_db, init_db, get_profile, now):
                     pool += [('outfit', item) for item in OUTFITS if item['characterId'] == character and item['unlockMethod'] == 'free']
                     mode, item = secrets.choice(pool)
                     room.execute('UPDATE profile SET name=? WHERE id=1', (name,))
+                    room.execute("INSERT INTO app_meta VALUES ('charge_intro_pending', '1')")
+                    room.execute("INSERT INTO app_meta VALUES ('charge_welcome_pending', '1')")
                     room.execute("UPDATE app_meta SET value=? WHERE key='appearance_mode'", (mode,))
                     room.execute('UPDATE app_meta SET value=? WHERE key=?', (item['id'], mode + '_id'))
                     if mode == 'outfit':

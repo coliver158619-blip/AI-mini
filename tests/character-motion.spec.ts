@@ -71,8 +71,8 @@ test('陪伴空间精简文案、天数和首页一致的右侧入口',async({pa
  await page.goto('/');
  const home=await page.locator('.room-shortcuts').boundingBox();
  const homeButton=await page.locator('.room-shortcut').first().boundingBox();
- await page.getByRole('button',{name:/听歌续火花/}).click();
- await page.getByRole('button',{name:'进入陪伴空间',exact:true}).click();
+ await page.getByRole('button',{name:/听歌充电/}).click();
+ await page.goto('/#/more'); await page.getByRole('button',{name:'陪伴空间',exact:true}).click();
  await expect(page.getByText('两个人，一起慢慢喜欢')).toHaveCount(0);
  await expect(page.getByText('把日子，听成我们的歌')).toHaveCount(0);
  await expect(page.locator('.space-intro')).toHaveCount(0);

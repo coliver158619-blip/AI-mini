@@ -2,27 +2,27 @@ import { expect, test, type Page } from '@playwright/test';
 
 async function space(page: Page) {
  await page.goto('/');
- await page.getByRole('button', { name: /听歌续火花/ }).click();
- await page.getByRole('button', { name: '进入陪伴空间', exact: true }).click();
+ await page.getByRole('button', { name: /听歌充电/ }).click();
+ await page.goto('/#/more'); await page.getByRole('button', { name: '陪伴空间', exact: true }).click();
  await expect(page.getByRole('heading', { name: '陪伴空间', exact: true })).toBeVisible();
 }
 
-test('共享日记保存重开、AI 失败保留、生成后手动编辑及历史日期', async ({ page, request }) => {
+test('专属日记保存重开、AI 失败保留、生成后手动编辑及历史日期', async ({ page, request }) => {
  const personalBefore = (await (await request.get('/api/diary')).json()).entries;
- await space(page); await page.getByRole('button', { name: '共享日记', exact: true }).click();
+ await space(page); await page.getByRole('button', { name: '专属日记', exact: true }).click();
  const notes = page.getByRole('textbox', { name: '两人的共同经历' });
- const body = page.getByRole('textbox', { name: '共享日记正文' });
+ const body = page.getByRole('textbox', { name: '专属日记正文' });
  await notes.fill('我们今天一起散步，聊了很多开心的小事。');
  await body.fill('亲手写下的共同回忆。');
  await page.getByRole('button', { name: '保存日记', exact: true }).click();
  await expect(page.getByRole('status')).toHaveText('共同回忆已保存。');
- await page.reload(); await page.getByRole('button', { name: /听歌续火花/ }).click(); await page.getByRole('button', { name: '进入陪伴空间', exact: true }).click(); await page.getByRole('button', { name: '共享日记', exact: true }).click();
+ await page.reload();
  await expect(body).toHaveValue('亲手写下的共同回忆。');
  await notes.fill('我们一起散步，也一起分享今天的心情。');
  await page.getByRole('button', { name: 'AI 总结共同经历' }).click();
  await expect(page.getByRole('alert')).toContainText('共同经历已保存');
  await expect(body).toHaveValue('亲手写下的共同回忆。');
- const day = await page.getByLabel('共享日记日期').inputValue();
+ const day = await page.getByLabel('专属日记日期').inputValue();
  await page.route('**/api/shared-diary/*/story', async route => {
   const saved = (await (await request.get('/api/shared-diary')).json()).entries.find((entry: { date: string }) => entry.date === day);
   const response = await request.put(`/api/shared-diary/${day}`, { data: { ...saved, body: '我们把散步时的笑声收在这一页。很平常的一天，因为有彼此的陪伴，也变得值得好好记住。' } });
@@ -38,7 +38,7 @@ test('共享日记保存重开、AI 失败保留、生成后手动编辑及历�
   await page.setViewportSize({ width, height: 852 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
  }
- await page.getByLabel('共享日记日期').fill('2026-01-01');
+ await page.getByLabel('专属日记日期').fill('2026-01-01');
  await notes.fill('补写我们一起看日出的经历。');
  await page.getByRole('button', { name: '保存日记', exact: true }).click();
  await expect(page.getByRole('status')).toHaveText('共同回忆已保存。');

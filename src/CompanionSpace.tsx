@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, BookHeart, Headphones, Heart, ListMusic, LoaderCircle, Music2 } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, BookHeart, Headphones, Heart, ListMusic, LoaderCircle, Music2, Zap } from 'lucide-react';
 import CoupleCharacters from './CoupleCharacters';
 import { api } from './api';
 import {usePairSpark} from './usePairSpark';
@@ -40,7 +40,7 @@ export default function CompanionSpace({ profile, onBack, onNotice, onDiary, onP
     <span className="space-label"><Heart size={13} fill="currentColor"/>双人小屋</span>
    </header>
    <nav className="room-shortcuts space-shortcuts" aria-label="共同回忆">
-    <button className="room-shortcut" onClick={onDiary}><BookHeart size={23}/><span>共享日记</span><i/></button>
+    <button className="room-shortcut" onClick={onDiary}><BookHeart size={23}/><span>专属日记</span><i/></button>
     <button className="room-shortcut" onClick={onPlaylist} aria-label="一起听歌单"><ListMusic size={23}/><span>一起听歌单</span></button>
    </nav>
    <section className="space-scene" aria-label="双人音乐小屋">
@@ -53,8 +53,8 @@ export default function CompanionSpace({ profile, onBack, onNotice, onDiary, onP
     <span className="space-touch-hint">轻点我们，收下一份小小的回应</span>
    </section>
    <section className="space-bottom">
-    <div className="space-energy"><span><Music2 size={14}/>双人火花</span><strong>{spark && !sparkError ? spark.value : '—'}{spark && !sparkError && <small> / {spark.next}</small>}</strong></div>
-    {spark && !sparkError ? <div className="space-energy-track" role="progressbar" aria-label="双人火花" aria-valuenow={spark.value} aria-valuemin={0} aria-valuemax={spark.next}><span style={{ width: `${spark.value / spark.next * 100}%` }}/></div> : sparkError ? <p className="space-footnote" role="alert">{sparkError} <button onClick={retrySpark}>重试</button></p> : <p className="space-footnote" role="status">正在打开两人的音乐时光…</p>}
+    <div className="space-energy"><span><Zap size={14}/>电量值</span><strong>{spark && !sparkError ? spark.value : '—'}{spark && !sparkError && <small> / {spark.next}</small>}</strong></div>
+    {spark && !sparkError ? <div className="space-energy-track" role="progressbar" aria-label="电量值" aria-valuenow={spark.value} aria-valuemin={0} aria-valuemax={spark.next}><span style={{ width: `${spark.value / spark.next * 100}%` }}/></div> : sparkError ? <p className="space-footnote" role="alert">{sparkError} <button onClick={retrySpark}>重试</button></p> : <p className="space-footnote" role="status">正在打开两人的音乐时光…</p>}
     <button className="space-listen" onClick={() => void listenTogether()} disabled={opening}>
      <span className="space-listen-icon">{opening ? <LoaderCircle className="spin" size={24}/> : <Headphones size={25}/>}</span>
      <span><strong>{opening ? '正在打开…' : '一起听'}<Music2 size={15}/></strong><small>让同一首歌，靠近两颗心</small></span><ArrowUpRight size={21}/>

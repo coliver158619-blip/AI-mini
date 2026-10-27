@@ -12,16 +12,17 @@ test('火花天数与陪伴天数一致，整套页面视觉预览',async({page,
  await page.goto('/');
  await expect(page.locator('.streak-count b')).toHaveText('161');
  await expect(page.locator('.companion-caption b')).toHaveText('161');
- await expect(page.getByRole('button',{name:'听歌续火花，已陪伴 161 天'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'听歌充电，已陪伴 161 天'})).toBeVisible();
  await expect(page.locator('.companion .character-visual')).toHaveAttribute('data-motion-ready','true');
  const capture=async(name:string)=>{await page.waitForTimeout(400);await page.screenshot({path:`test-results/pink-${name}.png`,fullPage:true,animations:'disabled'});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy()};
  await capture('home');
- await page.getByRole('button',{name:/听歌续火花/}).click();await capture('spark');
- await page.getByRole('button',{name:'进入陪伴空间',exact:true}).click();await capture('space');
- await page.getByRole('button',{name:'共享日记',exact:true}).click();await page.locator('.shared-experience textarea').waitFor();await capture('shared-diary');
+ await page.getByRole('button',{name:/听歌充电/}).click();await capture('spark');
+ await page.getByRole('button',{name:'形象',exact:true}).click();await page.locator('.wardrobe-grid').waitFor();await capture('wardrobe');
+ await page.goto('/#/more'); await page.getByRole('button',{name:'陪伴空间',exact:true}).click();await capture('space');
+ await page.getByRole('button',{name:'专属日记',exact:true}).click();await page.locator('.shared-experience textarea').waitFor();await capture('shared-diary');
  await page.goto('/');await page.getByRole('button',{name:'日记',exact:true}).click();await page.locator('.diary-book').waitFor();await capture('diary');
  await page.goto('/');await page.getByRole('button',{name:'更多玩法',exact:true}).click();await capture('more');
- for(const [name,selector,file] of [['形象','.wardrobe-grid','wardrobe'],['音乐人格','.personality-grid','personality'],['音乐报告','.report-content','reports'],['心情选歌','.recommendation-moods','mood'],['为你推荐','.recommendation-page','recommendations']] as const){
+ for(const [name,selector,file] of [['音乐形象','.personality-grid','personality'],['音乐报告','.report-content','reports'],['心情选歌','.recommendation-moods','mood'],['为你推荐','.recommendation-page','recommendations']] as const){
   await page.getByRole('button',{name,exact:true}).click();await page.locator(selector).waitFor();await capture(file);
   await page.goto('/');await page.getByRole('button',{name:'更多玩法',exact:true}).click();
  }

@@ -80,7 +80,7 @@ def register_shared_space(app, get_db, now, all_songs, json_body, valid_text, up
             WHERE p.context='together' AND p.is_demo=0 AND substr(p.listened_at,1,10)=?''', (day,))]
         named_songs = [{'title': title} for title in re.findall(r'《([^》]+)》', saved['note'])]
         context = dict(listenedSongs=songs, recommendedOnly=[{'songs': named_songs}], userWords=[], personalNote=saved['note'])
-        prompt = ('请把以下共同经历总结为80到160字的情侣共享日记，分两段，只输出正文。'
+        prompt = ('请把以下共同经历总结为80到160字的情侣专属日记，分两段，只输出正文。'
                   '用“我们”的口吻，温柔自然，保留用户记录的事实，不添加人物、出行、关系进展或歌词。'
                   '可以表达珍惜与陪伴，但不要扩写新的具体事实：素材未写天气、景物、做饭、菜品或后续活动，就绝对不能添加。'
                   '只可提及素材中的歌名；没有共同播放记录时，不要声称一起听过歌。'

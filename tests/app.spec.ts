@@ -63,7 +63,7 @@ async function modelCardsFixture(page: Page, withWeather = true) {
 test('首页小人可互动，手机没有横向溢出', async ({ page }) => {
  const errors: string[] = []; page.on('pageerror', error => errors.push(error.message));
  await page.goto('/');
- await expect(page.getByRole('button', { name: /听歌续火花/ })).toBeVisible();
+ await expect(page.getByRole('button', { name: /听歌充电/ })).toBeVisible();
  await page.getByRole('button', { name: '摸摸小人，听听他的问候' }).click();
  await expect(page.locator('.companion')).toHaveClass(/wiggle/);
  await expect(page.locator('.bubble-copy')).toContainText('被你发现');
@@ -509,7 +509,7 @@ for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 1000 
     const rect = el.getBoundingClientRect(); return rect.bottom <= innerHeight && rect.bottom >= innerHeight - 40;
    })).toBe(true);
   }
-  await page.locator('.energy-card').click();
+  await page.goto('/#/companion-energy');
   await checkPage('.personal-energy-page');
   await page.getByRole('button', { name: '返回音乐小屋' }).click();
   for (const selector of ['.room-shortcuts button:last-child', '.companion-caption > button']) {

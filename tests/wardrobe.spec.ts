@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function openWardrobe(page: Page) {
- await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+ await page.getByRole('button', { name: /听歌充电/ }).click();
  await page.getByRole('button', { name: '形象', exact: true }).click();
  await expect(page.getByRole('heading', { name: '形象衣橱' })).toBeVisible();
  await expect(page.getByRole('group', { name: '选择形象' }).getByRole('button')).toHaveCount(2);
@@ -85,7 +85,7 @@ test('两个人物的31套装扮可试穿，确认后返回首页并更新接口
  await expect(page.locator('.streak-avatar-character img')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
  expect((await (await request.get('/api/personality/image')).json()).imageName).toBe('zsh08.png');
  expect((await (await request.get('/api/bootstrap')).json()).profile.personalityId).toBe('ENTJ');
- await page.getByRole('button', { name: /听歌续火花/ }).click();
+ await page.getByRole('button', { name: /听歌充电/ }).click();
  await expect(page.locator('.streak-couple .couple-girl')).toHaveAttribute('src', '/assets/characters/web-v1/zsh08.webp');
  await expect(page.locator('.streak-couple img')).toHaveCount(2);
  await page.getByRole('button', { name: '返回音乐小屋' }).click();
@@ -115,7 +115,7 @@ test('加载和保存失败可重试，保存中防止重复提交和切换人�
  await page.route('**/api/outfits', route => failedLoad ? route.fulfill({ status: 503, json: { error: '衣橱暂时连接不上' } }) : route.continue());
  await page.goto('/'); await openWardrobeWithFailure();
  async function openWardrobeWithFailure() {
-  await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+  await page.getByRole('button', { name: /听歌充电/ }).click();
   await page.getByRole('button', { name: '形象', exact: true }).click();
  }
  await expect(page.getByRole('alert')).toContainText('衣橱暂时连接不上');

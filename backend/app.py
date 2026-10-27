@@ -27,6 +27,7 @@ from .conversations import init_conversations, register_conversations, selected_
 from .diary_story import context_for_day, generate_story, story_state
 from .diary_inputs import read_inputs, save_inputs, save_attachment
 from .shared_space import register_shared_space
+from .star_charge import register_star_charge
 from .network import lan_access
 from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID, outfit_catalog, unlocked_outfit_ids
 from .appearance import appearance_state
@@ -71,6 +72,12 @@ def init_db(app, target=None, seed_demo=None):
     with sqlite3.connect(target, timeout=10) as db:
         db.execute("PRAGMA journal_mode = WAL")
         db.executescript("""
+            CREATE TABLE IF NOT EXISTS star_diary (
+                artist_id TEXT NOT NULL, date TEXT NOT NULL, note TEXT NOT NULL DEFAULT '',
+                body TEXT NOT NULL DEFAULT '', revision INTEGER NOT NULL DEFAULT 0,
+                source TEXT NOT NULL DEFAULT 'manual', updated_at TEXT,
+                PRIMARY KEY(artist_id,date)
+            );
             CREATE TABLE IF NOT EXISTS app_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS outfit_unlocks (
                 outfit_id TEXT PRIMARY KEY, unlocked_at TEXT NOT NULL, method TEXT NOT NULL
@@ -224,7 +231,7 @@ def get_profile():
         streak += 1
         current -= timedelta(days=1)
     appearance, _ = appearance_state(db)
-    return {"name": row["name"], "days": max(1, (today - date.fromisoformat(row["joined_date"])).days + 1), "energy": row["energy"], "energyMax": 1600, "streak": streak, "fedToday": bool(db.execute("SELECT 1 FROM feed_events WHERE date = ?", (today.isoformat(),)).fetchone()), **appearance}
+    return {"chargeWelcomePending": bool(db.execute("SELECT 1 FROM app_meta WHERE key='charge_welcome_pending' AND value='1'").fetchone()), "chargeIntroPending": bool(db.execute("SELECT 1 FROM app_meta WHERE key='charge_intro_pending' AND value='1'").fetchone()), "name": row["name"], "days": max(1, (today - date.fromisoformat(row["joined_date"])).days + 1), "energy": row["energy"], "energyMax": 1600, "streak": streak, "fedToday": bool(db.execute("SELECT 1 FROM feed_events WHERE date = ?", (today.isoformat(),)).fetchone()), **appearance}
 
 
 def infer_mood(text):
@@ -592,6 +599,7 @@ def create_app(test_config=None):
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
     register_shared_space(app, get_db, now, all_songs, json_body, valid_text, upstream)
+    register_star_charge(app, get_db, now, json_body, valid_text, upstream, all_songs)
     site_sync = PersonalitySiteSync(app)
     app.extensions['personality_site_sync'] = site_sync
 
@@ -980,6 +988,20 @@ def create_app(test_config=None):
             db.execute("UPDATE profile SET name = ? WHERE id = 1", (name,))
         return jsonify(profile=get_profile())
 
+    @app.post("/api/charge/welcome")
+    def charge_welcome():
+        with get_db() as db:
+            awarded = db.execute("UPDATE app_meta SET value='0' WHERE key='charge_welcome_pending' AND value='1'").rowcount
+            if awarded:
+                db.execute("UPDATE profile SET energy=min(1600,energy+1) WHERE id=1")
+        return jsonify(profile=get_profile(), awarded=bool(awarded))
+
+    @app.post("/api/charge/intro-seen")
+    def charge_intro_seen():
+        with get_db() as db:
+            db.execute("UPDATE app_meta SET value='0' WHERE key='charge_intro_pending'")
+        return jsonify(profile=get_profile())
+
     @app.post("/api/feed")
     def feed():
         with get_db() as db:
@@ -987,7 +1009,7 @@ def create_app(test_config=None):
             fed = cursor.rowcount > 0
             if fed:
                 db.execute("UPDATE profile SET energy = min(1600, energy + 40) WHERE id = 1")
-        return jsonify(profile=get_profile(), message="收到点心啦！今天的陪伴能量 +40，谢谢你记得我。" if fed else "今天已经收到点心啦，再陪我听一首歌吧。")
+        return jsonify(profile=get_profile(), message="收到点心啦！今天的陪伴电量 +40，谢谢你记得我。" if fed else "今天已经收到点心啦，再陪我听一首歌吧。")
 
     @app.get("/api/location/search")
     def locations():

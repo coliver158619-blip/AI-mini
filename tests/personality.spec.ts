@@ -25,7 +25,7 @@ test('曲风分组、预览、保存、刷新以及首页与火花头像联动',
  await page.getByRole('button', { name: '返回首页' }).click();
  await expect(page.locator('.companion img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
  await expect(page.locator('.streak-avatar-character img')).toHaveAttribute('src', '/assets/music-images/INTJ.webp');
- await page.getByRole('button', { name: /听歌续火花/ }).click();
+ await page.getByRole('button', { name: /听歌充电/ }).click();
  await expect(page.locator('.streak-couple img')).toHaveCount(2);
  const pair = (await (await request.get('/api/bootstrap')).json()).profile.characterOutfitIds;
  await expect(page.locator('.streak-couple .couple-boy')).toHaveAttribute('src', `/assets/characters/web-v1/${pair.lyn}.webp`);
@@ -96,7 +96,7 @@ test('人格与衣橱的底部遮挡覆盖安全区和播放器预留区，列�
      await page.getByRole('button', { name: '播放窗边的晴天', exact: true }).click();
      await page.getByRole('button', { name: '关闭面板', exact: true }).click();
     }
-    await page.getByRole('button', { name: '更多玩法', exact: true }).click();
+    await page.getByRole('button', { name: menu.name === '形象' ? /听歌充电/ : '更多玩法' }).click();
     await page.getByRole('button', { name: menu.name, exact: true }).click();
     const grid = page.locator(menu.grid), footer = page.locator(menu.footer);
     await expect(grid.locator(':scope > button')).toHaveCount(menu.name === '音乐形象' ? 16 : 14);

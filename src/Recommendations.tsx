@@ -10,6 +10,8 @@ const moods = [
  { name: '专注时刻', icon: '✏️' }, { name: '陪我入睡', icon: '🌙' }, { name: '有点难过', icon: '❤️' },
 ] as const;
 type Props = {
+ fixedSongs?: Song[]; artistName?: string;
+ fallbackSongs?: Song[]; backLabel?: string;
  mode: 'personal' | 'mood'; weather: WeatherData | null;
  onBack: () => void; onLocation: () => void;
  onSongs: (songs: Song[]) => void; onIntegration: (integration: Integration) => void;
@@ -28,8 +30,8 @@ export default function Recommendations(props: Props) {
  const [loadAttempt, setLoadAttempt] = useState(0);
  const request = useRef<AbortController | null>(null);
  const callbacks = useRef(props); callbacks.current = props;
- const title = mode === 'mood' ? '心情选歌' : '为你推荐';
- const canGenerate = Boolean(weather && (mode === 'personal' || scene));
+ const title = props.artistName ? `${props.artistName}的歌` : mode === 'mood' ? '心情选歌' : '为你推荐';
+ const canGenerate = !props.fixedSongs && Boolean(weather && (mode === 'personal' || scene));
  type Result = { songs: Song[]; source: string; integration?: Integration; context?: { scene?: string; weather?: WeatherData | null } };
 
  async function generate(selectedScene: string) {
@@ -54,6 +56,7 @@ export default function Recommendations(props: Props) {
  }
 
  useEffect(() => {
+  if (props.fixedSongs) { setSongs(props.fixedSongs); setLoading(false); return; }
   setLoading(true); setError(''); setLoadFailed(false);
   const controller = new AbortController(); request.current = controller;
   // Delay one tick so StrictMode's mount check does not send a duplicate model call.
@@ -63,6 +66,8 @@ export default function Recommendations(props: Props) {
     if (result.songs.length) {
      setSongs(result.songs); setScene(result.context?.scene || '');
      callbacks.current.onSongs(result.songs);
+    } else if (callbacks.current.fallbackSongs?.length) {
+     setSongs(callbacks.current.fallbackSongs);
     } else if (mode === 'personal' && callbacks.current.weather) {
      void generate('');
     }
@@ -76,10 +81,10 @@ export default function Recommendations(props: Props) {
  }, [mode, loadAttempt]);
 
  return <main className={`recommendation-page recommendation-${mode}`}>
-  <header className="recommendation-header"><button className="recommendation-back" aria-label="返回更多玩法" onClick={props.onBack}><ArrowLeft size={22}/></button><h1>{title}</h1><button className="recommendation-change" disabled={!canGenerate || loading} onClick={() => void generate(scene)}><RefreshCw size={16}/>换一换</button></header>
+  <header className="recommendation-header"><button className="recommendation-back" aria-label={props.backLabel || '返回更多玩法'} onClick={props.onBack}><ArrowLeft size={22}/></button><h1>{title}</h1><button className="recommendation-change" disabled={!canGenerate || loading} onClick={() => void generate(scene)}><RefreshCw size={16}/>换一换</button></header>
   <button className="recommendation-context" onClick={props.onLocation} aria-label="选择天气与位置">{weather ? <WeatherIcon code={weather.code} size={21}/> : <MapPin size={21}/>}<span>{weather ? `${weather.city} · ${weather.condition} ${Math.round(weather.temperature)}°` : '选择天气与位置'}</span>{weather?.cached && <small>上次记录</small>}<ChevronRight size={16}/></button>
   {mode === 'mood' && <div className="recommendation-moods" aria-label="选择心情">{moods.map(mood => <button key={mood.name} aria-pressed={scene === mood.name} disabled={!weather || loading} onClick={() => { if (mood.name !== scene || !songs.length) void generate(mood.name); }}><span aria-hidden="true">{mood.icon}</span>{mood.name}{scene === mood.name && <i className="mood-selected" aria-hidden="true"><Check size={20}/></i>}</button>)}</div>}
-  {!loading && !songs.length && !error && (!weather ? <div className="recommendation-state"><MapPin size={34}/><p>选好城市，为你生成今天的歌单</p><button onClick={props.onLocation}>选择城市</button></div> : mode === 'mood' && !scene ? <div className="recommendation-state"><Disc3 size={34}/><p>选一种心情，听一份专属歌单</p></div> : null)}
+  {!loading && !songs.length && !error && (props.fixedSongs ? <div className="recommendation-state"><Disc3 size={34}/><p>暂时还没有这位歌手的歌曲记录</p></div> : !weather ? <div className="recommendation-state"><MapPin size={34}/><p>选好城市，为你生成今天的歌单</p><button onClick={props.onLocation}>选择城市</button></div> : mode === 'mood' && !scene ? <div className="recommendation-state"><Disc3 size={34}/><p>选一种心情，听一份专属歌单</p></div> : null)}
   {loading && <div className="recommendation-loading" role="status"><span><LoaderCircle className="spin" size={18}/>{songs.length ? '正在更新歌曲推荐…' : '正在读取歌曲推荐…'}</span>{!songs.length && [0, 1, 2].map(i => <div className="recommendation-skeleton" key={i}><i/><div><i/><i/></div></div>)}</div>}
   {error && <div className="recommendation-state" role="alert"><p>{error}</p><button disabled={(!loadFailed && !canGenerate) || loading} onClick={() => loadFailed ? setLoadAttempt(value => value + 1) : void generate(scene)}>{loadFailed ? '重新读取' : '重新推荐'}</button></div>}
   {songs.length > 0 && <div className="recommendation-cards">{songs.map((song, index) => <article className="recommendation-song" key={song.id}>

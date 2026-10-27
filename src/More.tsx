@@ -1,11 +1,11 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Music2, Sparkles, MessageCircle, Shirt, Trophy, Gift, PawPrint, Gamepad2, Heart } from 'lucide-react'
 import './more.css'
 import type { Outfit, Personality, Profile } from './types'
 
-export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality'
+export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality' | 'companion-space'
 type Props = { onBack: () => void; onAction: (action: MoreAction) => void; personality?: Personality; outfit?: Outfit; appearance?: Profile['appearance']; onLogout?: () => void; loggingOut?: boolean }
 
-// Original reference artwork, kept unmodified. Coordinates use its 877 × 1793 canvas.
+// Preserve the original icon slot proportions while updating the artwork.
 const artwork = {
   note: [255, 412, 137, 160],
   personality: [642, 414, 170, 160],
@@ -19,14 +19,9 @@ const artwork = {
 } as const
 
 function MoreArt({ kind, className = '' }: { kind: keyof typeof artwork; className?: string }) {
-  const [x, y, width, height] = artwork[kind]
-  return <span className={`more-art ${className}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true">
-    <img src="/assets/more-reference.png" alt="" draggable={false} style={{
-      width: `${877 / width * 100}%`,
-      left: `${-x / width * 100}%`,
-      top: `${-y / height * 100}%`,
-    }} />
-  </span>
+  const [, , width, height] = artwork[kind]
+  const Icon = {note:Music2,personality:Sparkles,chat:MessageCircle,shirt:Shirt,trophy:Trophy,gift:Gift,paw:PawPrint,gamepad:Gamepad2,heart:Heart}[kind]
+  return <span className={`more-art ${className}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true"><Icon strokeWidth={1.7}/></span>
 }
 
 type CardProps = {
@@ -41,7 +36,7 @@ type CardProps = {
 }
 
 function MoreCard({ action, kind, label, description, art, wide, imageUrl, onAction }: CardProps) {
-  return <button className={`more-card more-card-${action ?? kind}${wide ? ' more-card-wide' : ''}`}
+  return <button className={`more-card more-card-${action === 'companion-space' ? 'appearance' : action ?? kind}${wide ? ' more-card-wide' : ''}`}
     aria-label={label} aria-description={!action ? '暂未开放' : undefined} disabled={!action}
     onClick={() => action && onAction(action)}>
     <span className="more-card-copy"><strong>{label === 'AI聊天' ? 'AI 聊天' : label}</strong><span>{description}</span></span>
@@ -68,7 +63,7 @@ export default function More({ onBack, onAction, personality, outfit, appearance
     <section className="more-section" aria-labelledby="more-play-title">
       <h2 id="more-play-title"><MoreArt kind="gamepad" className="more-section-art" />陪伴玩法</h2>
       <div className="more-grid">
-        <MoreCard action="appearance" label="形象" description={outfit ? `${outfit.tag} · ${outfit.name}` : "选人物，再选装扮"} imageUrl={outfit?.imageUrl} art="shirt" wide onAction={onAction} />
+        <MoreCard action="companion-space" label="陪伴空间" description="两个人，一起听歌充电" imageUrl={outfit?.imageUrl} art="shirt" wide onAction={onAction} />
       </div>
     </section>
     <section className="more-section" aria-labelledby="more-events-title">

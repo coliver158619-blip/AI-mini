@@ -33,7 +33,7 @@ test('16 个形象的预览、静态回退和缩略卡片按人物主体居中',
 test('客户端链接冷启动、刷新、浏览器前后退和未知路由',async({page})=>{
  await page.goto('/#/companion-space');await expect(page.getByRole('heading',{name:'陪伴空间',exact:true})).toBeVisible();
  await page.reload();await expect(page.getByRole('heading',{name:'陪伴空间',exact:true})).toBeVisible();
- await page.getByRole('button',{name:'共享日记',exact:true}).click();await expect(page).toHaveURL(/#\/shared-diary$/);
+ await page.getByRole('button',{name:'专属日记',exact:true}).click();await expect(page).toHaveURL(/#\/shared-diary$/);
  await page.goBack();await expect(page.getByRole('heading',{name:'陪伴空间',exact:true})).toBeVisible();
  await page.goForward();await expect(page).toHaveURL(/#\/shared-diary$/);
  await page.goto('/#/invalid');await expect(page.getByRole('button',{name:'更多玩法',exact:true})).toBeVisible();

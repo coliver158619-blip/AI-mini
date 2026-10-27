@@ -1,0 +1,84 @@
+.streak-count > span { color:#e5b443; }
+.home-status { position:relative; }
+/* The guide lives in the unused area right of weather; never participates in home layout. */
+.charge-intro { position:absolute; z-index:4; display:flex; flex-direction:column; align-items:center; gap:2px; padding:4px; border:1px solid #fff9; border-radius:13px; background:linear-gradient(120deg,#fff2cbbd,#ffe4efba); color:#695342; font-size:10px; text-align:center; line-height:1.5; }
+.charge-intro > svg { align-self:flex-start; margin-left:7px; color:#db9941; fill:#fff5df; flex-shrink:0; transform:rotate(-45deg); animation:charge-point 1.4s ease-in-out infinite; }
+.charge-intro b { color:#b6793d; font-weight:600; }
+@keyframes charge-point { 0%,100% { transform:translate(2px,2px) rotate(-45deg); } 45% { transform:translate(-2px,-2px) rotate(-45deg); } }
+.home-content > .energy-card { cursor:default; }
+.spark-page .charge-share { margin-left:auto; color:#9675af; }
+.charge-task-wallet { display:flex; align-items:center; justify-content:space-between; gap:8px; background:linear-gradient(110deg,#fff5e4,#fff0f6); border-radius:15px; padding:14px 12px; }
+.charge-task-wallet > span { display:flex; align-items:center; gap:5px; font-size:11px; }
+.charge-task-wallet svg { color:#e7a834; flex-shrink:0; }
+.charge-task-wallet b { font-size:20px; color:#e38b44; }
+.charge-task-wallet button { display:flex; align-items:center; gap:3px; color:#ce823e; font-size:11px; white-space:nowrap; }
+.charge-tasks h2 { font-size:16px; margin:20px 0 7px; }
+.charge-task-note { font-size:11px; line-height:1.7; color:#9b8d9e; }
+.charge-task { display:flex; align-items:center; gap:12px; margin-top:23px; }
+.charge-reward { position:relative; width:43px; height:47px; flex-shrink:0; display:grid; place-items:center; color:#efb838; border-radius:15px; background:linear-gradient(140deg,#fff6c6,#ffe6ad); box-shadow:inset 0 1px 2px white,0 3px 6px #ecc26722; }
+.charge-reward > svg { width:29px; height:29px; }
+.charge-reward b { position:absolute; bottom:-4px; right:-5px; font-size:16px; font-weight:800; color:#e79528; text-shadow:1px 0 white,-1px 0 white,0 1px white,0 -1px white; transform:rotate(-12deg); }
+.charge-reward.pink { background:linear-gradient(140deg,#ffeaf4,#ffc9df); color:#e997b8; }
+.charge-reward.pink b { color:#dc7ca4; }
+.charge-reward.purple { background:linear-gradient(140deg,#f3eaff,#e1ceff); color:#b28ade; }
+.charge-task > div { flex:1; min-width:0; }
+.charge-task h3 { font-size:13px; font-weight:650; }
+.charge-task p { margin-top:6px; font-size:10px; color:#8d8496; line-height:1.6; }
+.charge-task small { display:flex; align-items:center; gap:3px; font-size:9px; color:#af9eaf; line-height:1.6; margin-top:3px; }
+.charge-task > button { flex-shrink:0; border-radius:24px; background:#fff0dc; color:#d58c3b; font-size:11px; font-weight:650; padding:10px 13px; }
+.spark-page .spark-number > svg,.spark-page .relationship-card-heading svg { color:#e6b24b; }
+@media(max-width:359px) { .charge-task { gap:9px; }.charge-task > button { padding:9px 10px; }.charge-task h3 { font-size:12px; }.charge-reward { width:35px; height:41px; } }
+@media(prefers-reduced-motion:reduce) { .charge-intro > svg { animation:none; } }
+.charge-mode-toggle { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:700; color:#38303e; min-height:36px; }
+.charge-growth { position:relative; }
+.charge-milestones { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin-top:12px; }
+.charge-milestone { position:relative; text-align:center; }
+.charge-milestone button { display:flex; flex-direction:column; align-items:center; width:100%; gap:5px; color:#ada3b2; font-size:10px; border-radius:10px; }
+.charge-milestone button svg { width:32px; height:32px; overflow:visible; fill:currentColor; }
+.charge-milestone button small { font-size:8px; color:#b1a1b3; }
+.charge-milestone.is-reached button { color:#cc84ae; }
+.charge-milestone .gift-lid { transform-origin:24px 20px; transition:transform .3s; }
+.charge-milestone.is-reached .gift-lid { transform:translate(-3px,-8px) rotate(-14deg); }
+.gift-spark { fill:#edbe67; }
+.charge-benefit { position:absolute; bottom:calc(100% + 12px); left:50%; transform:translateX(-50%) translateY(4px); z-index:8; width:190px; max-width:65vw; padding:13px 14px; border-radius:15px; background:#fff8fc; border:1px solid #edc8dd; box-shadow:0 8px 28px #95618d26; color:#785d7b; font-size:11px; line-height:1.8; text-align:left; opacity:0; visibility:hidden; transition:.16s ease; pointer-events:none; }
+.charge-benefit b,.charge-benefit span,.charge-benefit small { display:block; }
+.charge-benefit small { color:#a791a6; font-size:9px; margin-top:4px; }
+.charge-milestone:first-child .charge-benefit { left:0; transform:translateY(4px); }
+.charge-milestone:last-child .charge-benefit { left:auto; right:0; transform:translateY(4px); }
+.charge-milestone:focus-within .charge-benefit { opacity:1; visibility:visible; }
+@media(hover:hover) { .charge-milestone:hover .charge-benefit { opacity:1; visibility:visible; } }
+.star-charge-scene { display:grid; grid-template-columns:minmax(0,1fr) 38px minmax(0,1fr); align-items:center; max-width:430px; margin:15px auto 0; gap:5px; }
+.star-wheel-wrap { min-width:0; }
+.star-wheel-wrap > small { display:block; color:#a68ca8; font-size:9px; margin-top:7px; white-space:nowrap; }
+.star-wheel { height:330px; padding:93px 0; box-sizing:border-box; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; touch-action:pan-y; scroll-snap-type:y mandatory; scrollbar-width:none; mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent); perspective:550px; outline-offset:3px; border-radius:60px; }
+.star-wheel::-webkit-scrollbar { display:none; }
+.star-wheel-option { height:144px; scroll-snap-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; font-size:11px; color:#9d85a3; cursor:pointer; transition:opacity .3s,transform .3s; transform:scale(.72) rotateX(22deg); opacity:.45; }
+.star-wheel-option.is-selected { transform:scale(1) rotateX(0); opacity:1; color:#62466a; font-weight:650; }
+.star-wheel:not(.is-moving) .star-wheel-option:not(.is-selected) { opacity:0; pointer-events:none; }
+.star-wheel:focus-visible { outline:none; }
+.star-wheel:focus-visible .is-selected .star-avatar-ring { box-shadow:0 0 0 3px #fff,0 0 0 5px #ac80c6; }
+.star-avatar-ring { position:relative; isolation:isolate; display:grid; place-items:center; width:118px; height:118px; padding:5px; border-radius:50%; overflow:hidden; background:#f7e7f3; box-shadow:0 4px 15px #aa76b42b; }
+.star-avatar-ring::before { content:''; position:absolute; inset:-30%; background:conic-gradient(#fa9eb5,#e6b459,#83d9ce,#8caaf1,#c598ef,#fa9eb5); animation:star-ring-orbit 5s linear infinite; z-index:-1; }
+.star-avatar-crop { width:100%; height:100%; border-radius:50%; overflow:hidden; border:3px solid #fff3fa; }
+.star-avatar-ring img { width:100%; height:100%; object-fit:cover; border-radius:50%; transform:scale(1.4); transform-origin:50% 25%; }
+.star-portrait-jay img { transform:scale(2); transform-origin:50% 30%; }
+.star-portrait-gem img { transform:none; }
+.star-portrait-liu-yuning img { transform:scale(1.8); transform-origin:50% 20%; }
+.star-charge-note { position:relative; z-index:2; pointer-events:none; text-align:center; font-size:30px; line-height:1.4; background:linear-gradient(135deg,#ed8eae,#a980e7,#7acbdc); background-clip:text; -webkit-background-clip:text; color:transparent; animation:charge-note-hop 1.8s ease-in-out infinite; }
+.star-charge-companion { height:250px; width:100%; min-width:0; position:relative; }
+.star-charge-companion:focus-visible { outline:2px solid #bc91ca; outline-offset:-6px; border-radius:30px; }
+.star-charge-companion .character-visual { width:100%; height:100%; }
+.spark-page .personal-feed { background:linear-gradient(115deg,#ec9db2,#b896e7); }
+.charge-welcome { position:fixed; z-index:100; left:50%; top:42%; transform:translate(-50%,-50%); width:min(260px,80vw); padding:28px 22px 23px; text-align:center; border-radius:30px; border:1px solid #fff; background:linear-gradient(135deg,#fff8e6f5,#ffedf5f5,#f0e7fff5); box-shadow:0 16px 65px #87627a2e; pointer-events:none; animation:charge-welcome-enter 1.9s ease both; }
+.charge-welcome > div { position:relative; width:98px; height:76px; display:grid; place-items:center; margin:auto; color:#dbad45; }
+.charge-welcome svg { position:relative; z-index:1; }
+.charge-welcome-fill { position:absolute; left:18px; top:23px; width:51px; height:30px; border-radius:4px; background:linear-gradient(90deg,#ffe39c,#f6c7df); transform-origin:left; animation:battery-fill 1.3s ease-out both; }
+.charge-welcome strong { display:block; font-size:39px; color:#d68caa; animation:charge-plus 1.4s ease both; }
+.charge-welcome p { color:#9d8196; font-size:12px; margin-top:8px; }
+@keyframes star-ring-orbit { to { transform:rotate(360deg); } }
+@keyframes charge-note-hop { 0%,100% { transform:translateY(3px) rotate(-5deg); } 50% { transform:translateY(-4px) rotate(5deg); } }
+@keyframes battery-fill { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+@keyframes charge-plus { 0%,30% { opacity:0; transform:translateY(10px); } 65%,100% { opacity:1; transform:translateY(0); } }
+@keyframes charge-welcome-enter { 0% { opacity:0; } 15%,85% { opacity:1; } 100% { opacity:0; } }
+@media(max-width:359px) { .star-charge-scene { gap:6px; grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr); }.star-charge-companion{height:220px}.star-wheel-wrap > small{font-size:8px}.spark-number > strong{font-size:39px}.spark-number > svg{width:35px}.spark-number > span{font-size:10px}.charge-mode-toggle{font-size:13px} }
+@media(prefers-reduced-motion:reduce) { .star-avatar-ring::before,.star-charge-note,.charge-welcome,.charge-welcome-fill,.charge-welcome strong { animation:none; }.star-wheel-option { transition:none; } }

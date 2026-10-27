@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, BookHeart, ChevronRight, CloudRain, Coffee, Disc3, Flame, Headphones, Heart, MapPin, MessageCircle, Music2, Pause, Pencil, Play, Send, Sparkles, Sun, Volume2, X, Zap, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, BookHeart, ChevronRight, CloudRain, Coffee, Disc3, BatteryCharging, Headphones, Heart, MapPin, MessageCircle, Music2, Pause, Pencil, Play, Send, Sparkles, Sun, Volume2, X, Zap, RefreshCw } from 'lucide-react';
 import Diary from './Diary';
 import ChatPanel from './ChatPanel';
 import LanAccess from './LanAccess';
@@ -9,7 +9,8 @@ import More from './More';
 import Wardrobe from './Wardrobe';
 import Personality from './Personality';
 import SparkPage from './SparkPage';
-import CompanionEnergy from './CompanionEnergy';
+import ChargeIntro from './ChargeIntro';
+import {stars} from './StarWheel';
 import CompanionSpace from './CompanionSpace';
 import CharacterVisual from './CharacterVisual';
 import AppearanceAvatar from './AppearanceAvatar';
@@ -24,6 +25,7 @@ import { usePullToDismiss } from './usePullToDismiss';
 import { companionGreeting } from './companion-greeting';
 import { randomHomeGreeting } from './home-greetings';
 import HomeSpeechBubble from './HomeSpeechBubble';
+import './charging.css';
 import type { Bootstrap, Integration, Message, Profile, Song } from './types';
 
 const scenes = [{ name: '放松一下', icon: '☕', query: '有点累，想放松一下' }, { name: '开心加倍', icon: '☀', query: '今天很开心，推荐轻快的音乐' }, { name: '专注时刻', icon: '✎', query: '我要专注工作，推荐适合学习的音乐' }, { name: '陪我入睡', icon: '☾', query: '准备睡觉了，想听助眠音乐' }, { name: '有点难过', icon: '♡', query: '今天有点难过，陪陪我吧' }];
@@ -36,14 +38,28 @@ function Cover({ song, small = false }: { song: Song; small?: boolean }) {
 export default function App({ userId = 'legacy', onLogout, onConnectionError }: { userId?: string; onLogout?: () => Promise<void>; onConnectionError?: () => void }) {
  const playStorageKey = userId === 'legacy' ? 'music-pending-plays' : `music-pending-plays:${userId}`;
  const [loggingOut, setLoggingOut] = useState(false);
+ const [openingCharge, setOpeningCharge] = useState(false);
+ const [chargeWelcome, setChargeWelcome] = useState(false);
+ const welcomeRequest=useRef(false);
+ const [starMode,setStarMode]=useState(false);
+ const [chargeArtist,setChargeArtist]=useState('jay');
+ const [starEnergy,setStarEnergy]=useState<{artistId:string;energy:number|undefined}>();
+ const [diaryArtist,setDiaryArtist]=useState<string|undefined>();
+ const chargeSongs=useRef<Song[]|undefined>(undefined);
+ const chargeSinger=useRef<string|undefined>(undefined);
  useVisualViewport();
  const [data, setData] = useState<Bootstrap | null>(null);
+ const homeEnergy=starMode?(starEnergy?.artistId===chargeArtist?starEnergy.energy:undefined):data?.profile.energy;
+ const homeEnergyLabel=`我们的陪伴电量${starMode?`（${stars.find(star=>star.id===chargeArtist)?.name??''}）`:''}`;
  const [error, setError] = useState('');
  const [page, setPage] = usePageRoute();
  const [drawer, setDrawer] = useState<Drawer>(null);
  const canPullToDismiss = drawer === 'chat';
  const pullToDismiss = usePullToDismiss(canPullToDismiss, () => setDrawer(null));
  const weatherReturn = useRef<Page>('home');
+ const sharedReturn = useRef<Page>('companion-space');
+ const musicReturn = useRef<Page>('more');
+ const recommendationContext = useRef<'solo' | 'together'>('solo');
  const openActivities = useRef(false);
  const [weather, setWeather] = useState<WeatherData | null>(null);
  const [bubble, setBubble] = useState('');
@@ -76,6 +92,26 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
  const syncing = useRef(false);
 
  const notify = useCallback((text: string) => setToast(text), []);
+ async function openCharge() {
+  if (openingCharge) return;
+  setOpeningCharge(true);
+  try {
+   if (data?.profile.chargeIntroPending) {
+    const result = await post<{profile: Profile}>('/api/charge/intro-seen', {});
+    setData(old => old ? {...old, profile: result.profile} : old);
+   }
+   setPage('spark');
+  } catch (cause) { notify(cause instanceof Error ? cause.message : '暂时没有连接上，再点一次试试'); }
+  finally { setOpeningCharge(false); }
+ }
+ useEffect(()=>{
+  if(!data?.profile.chargeWelcomePending||welcomeRequest.current)return;
+  welcomeRequest.current=true;
+  void post<{profile:Profile;awarded:boolean}>('/api/charge/welcome',{}).then(result=>{
+   setData(old=>old?{...old,profile:result.profile}:old);
+   if(result.awarded){setChargeWelcome(true);window.setTimeout(()=>setChargeWelcome(false),1900)}
+  }).catch(()=>{welcomeRequest.current=false});
+ },[data?.profile.chargeWelcomePending]);
  const load = useCallback(async () => {
   setError('');
   try {
@@ -245,14 +281,14 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
    livePlayback.current.lastTime = element.currentTime;
    setProgress(element.duration ? element.currentTime / element.duration * 100 : 0);
   }}/>
-  {error ? <main className="connection-state"><Music2 size={42}/><h1>音乐小屋稍等一下</h1><p>{error}</p><button className="primary-button" onClick={() => void load()}><RefreshCw size={16}/>重新连接</button></main> : !data ? <main className="connection-state"><Disc3 className="spin" size={44}/><p>正在打开你的音乐小屋…</p></main> : page === 'spark' ? <SparkPage profile={data.profile} onBack={() => setPage('home')} onOpenSpace={() => setPage('companion-space')} onDiary={() => setPage('shared-diary')} onPlaylist={() => setPage('together-playlist')} onNotice={notify}/> : page === 'companion-energy' ? <CompanionEnergy profile={data.profile} onBack={() => setPage('home')} onProfile={profile => setData(old => old ? { ...old, profile } : old)} onNotice={notify} onChat={() => setDrawer('chat')} onListen={() => setPage('scenes')} onDiary={() => setPage('diary')}/> : page === 'companion-space' ? <CompanionSpace profile={data.profile} onBack={() => setPage('home')} onNotice={notify} onDiary={() => setPage('shared-diary')} onPlaylist={() => setPage('together-playlist')}/> : page === 'shared-diary' ? <SharedDiary userId={userId} onBack={() => setPage('companion-space')}/> : page === 'together-playlist' ? <TogetherPlaylist onBack={() => setPage('companion-space')} onPlay={song => play(song, 'together')} playingId={playing ? current?.id : undefined}/> : page === 'diary' ? <Diary onBack={() => setPage('home')} onPlay={play}/> : page === 'reports' ? <Reports onBack={() => setPage('more')} onPlay={play} appearance={data.profile.appearance}/> : page === 'more' ? <More loggingOut={loggingOut} onLogout={onLogout ? () => { if (loggingOut) return; setLoggingOut(true); audio.current?.pause(); flush(); void onLogout().catch(cause => { notify(cause.message); setLoggingOut(false); }); } : undefined} personality={data.profile.personality} outfit={data.profile.outfit} appearance={data.profile.appearance} onBack={() => setPage('home')} onAction={action => { if (action === 'reports' || action === 'scenes' || action === 'recommendations' || action === 'appearance' || action === 'personality') setPage(action); else setDrawer(action); }}/> : page === 'personality' ? <Personality onBack={() => setPage('more')} onProfile={profile => setData(old => old ? { ...old, profile } : old)} onSaved={() => notify('音乐形象已更新，回小屋看看新搭子吧')}/> : page === 'appearance' ? <Wardrobe onBack={() => setPage('more')} onProfile={profile => setData(old => old ? { ...old, profile } : old)} onSaved={() => { setPage('home'); notify('新装扮已穿好'); }}/> : page === 'scenes' || page === 'recommendations' ? <Recommendations mode={page === 'scenes' ? 'mood' : 'personal'} weather={weather} onBack={() => setPage('more')} onLocation={openWeather} onSongs={setRecommendations} onWeatherUpdate={setWeather} onIntegration={integration => setData(old => old ? { ...old, integration, mode: integration.state === 'connected' ? 'kugou' : integration.state === 'error' ? 'kugou-error' : old.mode } : old)} onPlay={play} onFavorite={song => void favorite(song)} favorites={favorites} playingId={playing ? current?.id : undefined}/> : <div className={`home-weather-frame${page === 'weather' ? ' weather-is-open' : ''}`}><main className="home-page" aria-hidden={page === 'weather' || undefined} inert={page === 'weather'}>
+  {error ? <main className="connection-state"><Music2 size={42}/><h1>音乐小屋稍等一下</h1><p>{error}</p><button className="primary-button" onClick={() => void load()}><RefreshCw size={16}/>重新连接</button></main> : !data ? <main className="connection-state"><Disc3 className="spin" size={44}/><p>正在打开你的音乐小屋…</p></main> : (page === 'spark' || page === 'companion-energy') ? <SparkPage profile={data.profile} starMode={starMode} artistId={chargeArtist} onMode={()=>setStarMode(old=>!old)} onArtist={setChargeArtist} onStarEnergy={setStarEnergy} onProfile={profile=>setData(old=>old?{...old,profile}:old)} onChat={()=>setDrawer('chat')} onBack={() => setPage('home')} onAppearance={() => setPage('appearance')} onListen={(songs,artist) => { chargeSongs.current=songs;chargeSinger.current=artist; musicReturn.current = 'spark'; recommendationContext.current = 'solo'; setPage('recommendations'); }} onDiary={artist => { setDiaryArtist(artist); sharedReturn.current = 'spark'; setPage('shared-diary'); }} onNotice={notify}/> : page === 'companion-space' ? <CompanionSpace profile={data.profile} onBack={() => setPage('home')} onNotice={notify} onDiary={() => { setDiaryArtist(undefined); sharedReturn.current = 'companion-space'; setPage('shared-diary'); }} onPlaylist={() => setPage('together-playlist')}/> : page === 'shared-diary' ? <SharedDiary key={diaryArtist||'shared'} artist={stars.find(s=>s.id===diaryArtist)} userId={userId} onBack={() => setPage(sharedReturn.current)}/> : page === 'together-playlist' ? <TogetherPlaylist onBack={() => setPage('companion-space')} onPlay={song => play(song, 'together')} playingId={playing ? current?.id : undefined}/> : page === 'diary' ? <Diary onBack={() => setPage('home')} onPlay={play}/> : page === 'reports' ? <Reports onBack={() => setPage('more')} onPlay={play} appearance={data.profile.appearance}/> : page === 'more' ? <More loggingOut={loggingOut} onLogout={onLogout ? () => { if (loggingOut) return; setLoggingOut(true); audio.current?.pause(); flush(); void onLogout().catch(cause => { notify(cause.message); setLoggingOut(false); }); } : undefined} personality={data.profile.personality} outfit={data.profile.outfit} appearance={data.profile.appearance} onBack={() => setPage('home')} onAction={action => { chargeSongs.current=undefined;chargeSinger.current=undefined; musicReturn.current = 'more'; recommendationContext.current = 'solo'; if (action === 'reports' || action === 'scenes' || action === 'recommendations' || action === 'appearance' || action === 'personality' || action === 'companion-space') setPage(action); else setDrawer(action); }}/> : page === 'personality' ? <Personality onBack={() => setPage('more')} onProfile={profile => setData(old => old ? { ...old, profile } : old)} onSaved={() => notify('音乐形象已更新，回小屋看看新搭子吧')}/> : page === 'appearance' ? <Wardrobe onBack={() => setPage('spark')} onProfile={profile => setData(old => old ? { ...old, profile } : old)} onSaved={() => { setPage('home'); notify('新装扮已穿好'); }}/> : page === 'scenes' || page === 'recommendations' ? <Recommendations fixedSongs={chargeSongs.current} artistName={chargeSinger.current} fallbackSongs={musicReturn.current === 'spark' ? data.songs.slice(0, 6) : undefined} backLabel={musicReturn.current === 'spark' ? '返回听歌充电' : undefined} mode={page === 'scenes' ? 'mood' : 'personal'} weather={weather} onBack={() => setPage(musicReturn.current)} onLocation={openWeather} onSongs={setRecommendations} onWeatherUpdate={setWeather} onIntegration={integration => setData(old => old ? { ...old, integration, mode: integration.state === 'connected' ? 'kugou' : integration.state === 'error' ? 'kugou-error' : old.mode } : old)} onPlay={song => play(song, recommendationContext.current)} onFavorite={song => void favorite(song)} favorites={favorites} playingId={playing ? current?.id : undefined}/> : <div className={`home-weather-frame${page === 'weather' ? ' weather-is-open' : ''}`}><main className="home-page" aria-hidden={page === 'weather' || undefined} inert={page === 'weather'}>
    <section className="room-scene">
     <header className="home-nav">
      <div className="home-status">
-      <button className="streak-pill" onClick={() => setPage('spark')} aria-label={`听歌续火花，已陪伴 ${data.profile.days} 天`}>
+      <button className="streak-pill" disabled={openingCharge} onClick={() => void openCharge()} aria-label={`听歌充电，已陪伴 ${data.profile.days} 天`}>
        <span className="streak-avatar-wrap" aria-hidden="true"><AppearanceAvatar appearance={data.profile.appearance} className="streak-avatar streak-avatar-character"/><span className="streak-headphone-badge"><Headphones size={12}/></span></span>
-       <span className="streak-copy"><strong>听歌续火花</strong><small>和{data.profile.name}一起听歌</small></span>
-       <span className="streak-count"><span aria-hidden="true">🔥</span><b>{data.profile.days}</b></span>
+       <span className="streak-copy"><strong>听歌充电</strong><small>和{data.profile.name}一起听歌</small></span>
+       <span className="streak-count"><span aria-hidden="true"><Zap size={27} fill="currentColor"/></span><b>{data.profile.days}</b></span>
       </button>
       <button className="weather-pill" onClick={openWeather}>{weather ? <WeatherIcon code={weather.code} size={14}/> : <MapPin size={14}/>}<span>{weather ? `${weather.city} ${weather.condition} ${Math.round(weather.temperature)}°` : '所在城市 · 开启天气陪伴'}</span><ChevronRight size={12}/></button>
      </div>
@@ -260,6 +296,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
       <button className="home-more-glass" aria-label="更多玩法" onClick={() => setPage('more')}><span aria-hidden="true">more</span></button>
       <div className="room-shortcuts"><button onClick={() => setPage('diary')} className="room-shortcut"><BookHeart size={23}/><span>日记</span><i/></button><button onClick={() => setDrawer('favorites')} className="room-shortcut"><Heart size={23}/><span>收藏</span></button></div>
      </div>
+     {data.profile.chargeIntroPending && !chargeWelcome && <ChargeIntro disabled={openingCharge} onClick={()=>void openCharge()}/>}
     </header>
 
     <div className="companion-stage">
@@ -272,11 +309,12 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
     </div>
    </section>
    <section className="home-content">
-    <button className="energy-card" onClick={() => setPage('companion-energy')}><span className="energy-symbol"><Zap size={24} fill="currentColor"/></span><div className="energy-body"><div><strong>我们的陪伴能量</strong><span>{data.profile.energy}<i> / {data.profile.energyMax}</i></span></div><span className="energy-track"><span style={{ width: `${Math.min(100, data.profile.energy / data.profile.energyMax * 100)}%` }}/></span></div><ChevronRight size={16}/></button>
+    <div className="energy-card"><span className="energy-symbol"><Zap size={24} fill="currentColor"/></span><div className="energy-body"><div><strong>{homeEnergyLabel}</strong><span>{homeEnergy??'—'}<i> / {data.profile.energyMax}</i></span></div><span className="energy-track" role="progressbar" aria-label={homeEnergyLabel} aria-valuemin={0} aria-valuemax={data.profile.energyMax} aria-valuenow={homeEnergy}><span style={{ width: `${Math.min(100, (homeEnergy??0) / data.profile.energyMax * 100)}%` }}/></span></div></div>
 
-    <button className="hot-activities" onClick={() => { openActivities.current = true; setPage('more'); }}><Flame size={20}/><span>热门活动</span><ChevronRight size={16}/></button>
+    <button className="hot-activities" onClick={() => { openActivities.current = true; setPage('more'); }}><Zap size={20}/><span>热门活动</span><ChevronRight size={16}/></button>
    </section>
   </main>{page === 'weather' && <Weather weather={weather} onClose={() => setPage(weatherReturn.current)} onWeather={onWeather}/>}</div>}
+  {chargeWelcome && <div className="charge-welcome" role="status" aria-label="首次充电，电量加一"><div><BatteryCharging size={74}/><span className="charge-welcome-fill"/></div><strong>+1</strong><p>初次见面，为陪伴充一格电</p></div>}
   {current && <aside className="mini-player" aria-label="音乐播放器"><div className="player-progress" style={{ width: `${progress}%` }}/><Cover song={current} small/><div className="player-meta"><strong>{current.title}</strong><small>{playing ? '正在播放' : '已暂停'} · {current.audioLabel || current.artist}</small></div><button className="icon-button" onClick={() => void favorite(current)} aria-label="收藏当前歌曲"><Heart size={19} fill={favorites.includes(current.id) ? 'currentColor' : 'none'}/></button><button className="player-toggle" aria-label={playing ? '暂停播放' : '继续播放'} onClick={() => play(current, livePlayback.current.context)}>{playing ? <Pause size={19} fill="currentColor"/> : <Play size={19} fill="currentColor"/>}</button><button className="icon-button player-close" aria-label="关闭播放器" onClick={() => { audio.current?.pause(); flush(); setCurrent(null); livePlayback.current.id = ''; }}><X size={16}/></button></aside>}
   {drawer && <div className={`sheet-backdrop${drawer === 'chat' ? ' chat-backdrop' : ''}`} onClick={e => { if (e.target === e.currentTarget) setDrawer(null); }}>
    <section ref={pullToDismiss.ref} style={pullToDismiss.style} className={`bottom-sheet ${drawer === 'chat' ? 'chat-sheet' : ''}`} aria-description={canPullToDismiss ? '下拉标题区域，或在内容顶部下拉，可关闭面板' : undefined} role="dialog" aria-modal="true" aria-label={drawer === 'chat' ? '和音乐搭子聊天' : '小屋面板'}>{drawer === 'chat' ? <ChatPanel appearance={data?.profile.appearance} messages={messages} input={input} sending={sending} error={integrationError} greeting={companionGreeting(weather?.greeting || data?.greeting)} weather={weather ? `${weather.city} · ${weather.condition}，我陪着你` : '一直在线，随时听你说'} provider={integrationLabel} commands={quickCommands} conversationId={conversationId} onInput={setInput} onSend={(value, scene) => void send(value, scene)} onClose={() => setDrawer(null)} onPlay={play} onSelect={selection => { chatDrafts.current[conversationId] = input; setConversationId(selection.conversationId); setMessages(selection.messages); setInput(chatDrafts.current[selection.conversationId] || ''); setQuickCommands([]); setChatError(''); setActiveScene(''); }}/> : <>

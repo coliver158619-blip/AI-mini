@@ -56,7 +56,7 @@ macOS 内网预览现由用户会话的 launchd 服务 `local.ai-mini.lan` 独�
 | `GET /api/health` | SQLite 及服务检查 |
 | `GET /api/bootstrap` | 用户、歌曲、主动问候、最新天气 |
 | `GET /api/listen-together/entry` | 陪伴空间的一起听跳转地址，返回 `{available,url}`；通过 `TOGETHER_LISTEN_URL` 配置，未配置时不跳转，见 [接入说明](../docs/companion-space.md) |
-| `GET /api/shared-diary` | 共享日记列表与今日空页，独立于个人日记 |
+| `GET /api/shared-diary` | 专属日记列表与今日空页，独立于个人日记 |
 | `PUT /api/shared-diary/YYYY-MM-DD` | `{note,body,revision}` 保存共同经历与可编辑正文，支持历史日期 |
 | `POST /api/shared-diary/YYYY-MM-DD/story` | `{revision}` 按已保存共同经历调用真实 AI 总结 |
 | `GET /api/together/playlist` | 共同听过的歌曲、收听次数及最近收听时间，仅计非演示 together 播放 |

@@ -37,6 +37,25 @@ class AccountsTest(unittest.TestCase):
         self.assertEqual(self.a.get('/api/bootstrap').status_code, 401)
         self.assertEqual(self.b.get('/api/bootstrap').status_code, 200)
 
+    def test_charge_intro_is_new_account_only_and_shared_across_devices(self):
+        first = self.login(self.a)
+        self.assertTrue(first['profile']['chargeIntroPending'])
+        self.a.post('/api/auth/complete')
+        self.assertTrue(self.a.get('/api/bootstrap').json['profile']['chargeIntroPending'])
+        self.assertFalse(self.a.post('/api/charge/intro-seen').json['profile']['chargeIntroPending'])
+        self.assertFalse(self.a.post('/api/charge/intro-seen').json['profile']['chargeIntroPending'])
+        self.login(self.b, gender=None)
+        self.assertFalse(self.b.get('/api/bootstrap').json['profile']['chargeIntroPending'])
+        self.a.post('/api/auth/logout')
+        self.assertEqual(self.a.post('/api/charge/intro-seen').status_code, 401)
+        self.assertTrue(self.login(self.a, '另一个昵称')['profile']['chargeIntroPending'])
+        # Existing rooms without the new metadata must not receive a first-visit prompt.
+        room = self.path.parent / 'test-rooms' / (first['user']['id'] + '.sqlite3')
+        with sqlite3.connect(room) as db:
+            db.execute("DELETE FROM app_meta WHERE key='charge_intro_pending'")
+        db.close()
+        self.assertFalse(self.b.get('/api/bootstrap').json['profile']['chargeIntroPending'])
+
     def test_initial_six_and_unlock_isolation(self):
         self.login(self.a)
         self.login(self.b, '小粉', 'female')

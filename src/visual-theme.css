@@ -1,0 +1,131 @@
+/* Shared visual layer: geometry, content, and interaction remain in each page. */
+:root {
+ --ui-ink:#292633; --ui-muted:#7b748c; --ui-violet:#9564ea; --ui-pink:#f062aa;
+ --ui-line:#eee6f7; --ui-card:#fffffff2; --ui-soft:#f4edfc;
+ --ui-shadow:0 6px 22px #8060a00b;
+ --ui-action:linear-gradient(115deg,#ef74b5,#a477ed);
+ --ui-page:radial-gradient(ellipse at 12% 3%,#f9e1f3,transparent 45%),radial-gradient(ellipse at 98% 20%,#e5ddff,transparent 55%),linear-gradient(160deg,#f7efff,#fbf9ff 55%,#fceafa);
+}
+body { background:#f6effc; color:var(--ui-ink); }
+body .app-shell { color:var(--ui-ink); box-shadow:0 0 70px #8060a010; }
+/* Home and the companion room keep their room.png backgrounds from their own styles. */
+body .app-shell:not(:has(.home-weather-frame:not(.weather-is-open),.companion-space)) { background:var(--ui-page); }
+.app-shell :is(.entry-page,.more-page,.relationship-page,.companion-space,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) {
+ color:var(--ui-ink); --ink:var(--ui-ink); --muted:var(--ui-muted); --diary-ink:var(--ui-ink); --diary-muted:var(--ui-muted); --report-ink:var(--ui-ink); --report-muted:var(--ui-muted);
+}
+.app-shell :is(.entry-page,.more-page,.relationship-page,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) { background:var(--ui-page); }
+.entry-page { background:var(--ui-page); color:var(--ui-ink); }
+body :is(button,a):focus-visible { outline-color:var(--ui-violet); }
+body :is(input,textarea):focus { outline-color:#c6a9f4; }
+body ::selection { background:#ead9ff; }
+.app-shell :is(.entry-card,.energy-card,.hot-activities,.streak-pill,.weather-pill,.room-shortcut,.more-card,.relationship-card,.space-bottom,.personality-hero,.personality-details,.personality-card,.wardrobe-preview,.recommendation-song,.recommendation-context,.report-card,.report-highlight,.report-empty,.report-insight,.together-song) {
+ background:var(--ui-card); border-color:#fff; box-shadow:var(--ui-shadow); color:var(--ui-ink);
+}
+.app-shell :is(.more-back,.relationship-header>button,.space-back,.personality-header>button,.wardrobe-back,.recommendation-back,.weather-back,.diary-icon-button,.chat-circle,.report-nav .report-icon-button) { background:#fff; border-color:#fff; box-shadow:var(--ui-shadow); color:var(--ui-ink); }
+.app-shell :is(.streak-title,.streak-count,.companion-caption>button,.energy-body strong,.weather-pill span,.room-shortcut span,.personality-intro h2,.more-card-copy strong,.charge-mode-toggle,.relationship-stats strong,.report-gauge-value strong,.report-song-meta strong) { color:var(--ui-ink); }
+.app-shell :is(.streak-copy small,.companion-caption>span,.companion-caption b,.energy-body>div>span,.personality-header>span,.personality-intro>p,.personality-details p,.personality-footer>p,.more-card-copy>span,.spark-hero>p,.relationship-eyebrow,.relationship-card-heading small,.relationship-stats small,.relationship-stats div>span,.relationship-progress-caption,.charge-task p,.charge-task-note,.charge-task small,.space-names,.space-touch-hint,.space-header>div>span,.weather-description,.weather-locate small,.diary-feedback,.shared-date,.report-song-plays,.report-song-meta>span,.report-about) { color:var(--ui-muted); }
+.app-shell :is(.energy-symbol,.streak-count>svg,.hot-activities>svg,.room-shortcut>svg,.charge-mode-toggle>svg,.spark-number>svg,.space-energy>svg,.report-ranking-note,.weather-location-symbol,.chat-session-actions button) { color:var(--ui-violet); filter:drop-shadow(0 2px 1px #b396e52a); }
+.app-shell .room-shortcut:nth-child(2)>svg { color:var(--ui-pink); }
+.app-shell .streak-headphone-badge { background:#f0e4ff; color:#9164d8; }
+.app-shell .home-more-glass { background:#ffffffd9; border-color:#fff; box-shadow:var(--ui-shadow); }
+.app-shell .home-more-glass::before { background:linear-gradient(#fff9,#fff0); }
+.app-shell .energy-track,.app-shell .relationship-progress { background:#eee5f7; }
+.app-shell .energy-track>span,.app-shell .energy-track>i,.app-shell .relationship-progress>span { background:var(--ui-action); }
+.app-shell .home-comic-bubble .bubble-outline>path:first-child { fill:#fff; }
+.app-shell .home-comic-bubble .bubble-outline>path { stroke:#a488c5; }
+.app-shell .home-comic-bubble .bubble-emphasis>path { fill:#a488c5; }
+.app-shell .home-comic-bubble,.app-shell .bubble-copy { color:var(--ui-ink); }
+.app-shell .bubble-song-copy>span { color:var(--ui-muted); }
+.app-shell .bubble-song :is(button,svg) { color:var(--ui-violet); }
+.app-shell .charge-intro { background:linear-gradient(125deg,#ffffffed,#f7e8f8eb); border-color:#fff; color:var(--ui-ink); }
+.app-shell .charge-intro b,.app-shell .charge-intro>svg { color:var(--ui-violet); }
+.app-shell .charge-intro>svg { fill:#f2e7ff; }
+.app-shell :is(.entry-primary,.relationship-primary,.personal-feed,.wardrobe-wear,.personality-select,.unlock-yes,.primary-button,.report-share,.report-primary,.diary-generate-button,.shared-actions button:last-child) { background:var(--ui-action); border-color:#ffffff80; color:#fff; box-shadow:0 4px 12px #c18cda1c; }
+.app-shell :is(.relationship-links>button,.relationship-secondary,.shared-actions button,.charge-task-wallet,.weather-locate,.weather-search,.weather-city,.weather-current,.more-logout) { background:#fff; border-color:var(--ui-line); color:var(--ui-ink); box-shadow:var(--ui-shadow); }
+.app-shell .shared-actions button:last-child { background:var(--ui-action); color:#fff; }
+.app-shell .charge-task-wallet { background:linear-gradient(115deg,#f9eafa,#efeaff); }
+.app-shell .charge-task-wallet :is(svg,b,button) { color:var(--ui-violet); }
+.app-shell .charge-task>button { background:#f0e5ff; color:#8654cc; }
+.app-shell .charge-reward { color:#9a68e7; background:linear-gradient(135deg,#eee4ff,#d9c2fc); box-shadow:inset 0 1px 1px #fff,0 3px 8px #9972c518; }
+.app-shell .charge-reward b { color:#9a68e7; }
+.app-shell .charge-reward.pink { color:#e65f9e; background:linear-gradient(135deg,#ffeaf4,#ffcce4); }
+.app-shell .charge-reward.purple { color:#4eaad2; background:linear-gradient(135deg,#e4f9ff,#c9e8ff); }
+.app-shell .spark-number>strong { background-image:linear-gradient(110deg,#ed76b6,#a373e4); }
+.app-shell .charge-milestone.is-reached button { color:#ab73d6; }
+.app-shell .gift-spark { fill:#f38dc4; }
+.app-shell .charge-benefit { background:#fff; border-color:#e8d9f8; box-shadow:0 8px 24px #8d69ab18; color:#5d4b70; }
+.app-shell .charge-welcome { background:linear-gradient(135deg,#fff,#f6e8fc,#ece5ff); box-shadow:0 16px 50px #8068a421; }
+.app-shell .charge-welcome>div,.app-shell .charge-welcome strong { color:var(--ui-violet); }
+.app-shell .charge-welcome-fill { background:var(--ui-action); }
+.app-shell .space-speech { background:#fff; border-color:#fff; color:var(--ui-muted); box-shadow:var(--ui-shadow); }
+.app-shell .space-floor { background:#bba2d41c; box-shadow:0 7px 20px #fff6; }
+.app-shell .space-label { background:#fff; border-color:#fff; color:var(--ui-violet); }
+.app-shell .more-card:enabled:hover { background:#fff; box-shadow:0 7px 25px #9972c517; }
+.app-shell .more-art { mix-blend-mode:normal; mask-image:none; }
+.app-shell .more-art>svg { width:100%; height:100%; padding:12%; color:#9967ea; fill:#e4d2ff; filter:drop-shadow(0 3px 1px #b69ada33); }
+.app-shell .more-card-reports .more-art>svg { color:#e461aa; fill:#ffd4ec; }
+.app-shell .more-card-scenes .more-art>svg { color:#46b5b8; fill:#d4f3eb; }
+.app-shell .more-card-ranking .more-art>svg { color:#7c7ce5; fill:#dedcff; }
+.app-shell .more-card-blindbox .more-art>svg { color:#e979a5; fill:#ffdeed; }
+.app-shell .more-section-art>svg { fill:none; padding:4%; }
+.app-shell .personality-hero { background:linear-gradient(140deg,#fff,#f6f1ff); }
+.app-shell .personality-stage>span { background:radial-gradient(circle,#fff,#f0eaff55 65%,transparent 70%); }
+.app-shell .personality-tags>span { background:#f3edfc; }
+.app-shell :is(.personality-footer,.wardrobe-footer) { --selection-footer-background:#f8f2fd; background:var(--selection-footer-background); }
+.app-shell .personality-select { background:var(--ui-action); color:#fff; }
+.app-shell .diary-paper,.app-shell .diary-turn-front { background:#fff; box-shadow:0 8px 22px #8e70b00b; }
+.app-shell .diary-book-cover { background:linear-gradient(130deg,#eadfff,#f4daef); }
+.app-shell .diary-page-edges { background:#f0e8f8; }
+.app-shell .diary-page-corner { background:linear-gradient(135deg,#fff,#f6f0fb 40%,#e5d8f0 50%,#fff 65%); }
+.app-shell .diary-turn-back { background:linear-gradient(#fff,#eee6f9); }
+.app-shell .diary-writing-area>textarea { color:var(--ui-ink); background:linear-gradient(#bf8aed,#bf8aed) 0 7px/3px 15px no-repeat; }
+.app-shell .diary-song-cover { background:linear-gradient(140deg,#eb94d1,#a18be9); }
+.app-shell .diary-book-toolbar button { background:#fff; color:var(--ui-muted); }
+.app-shell .diary-book-toolbar button.is-reading { background:#eee3ff; color:var(--ui-violet); }
+.app-shell :is(.diary-date-dialog,.diary-input-dialog,.report-modal,.outfit-unlock-card) { background:var(--ui-page); color:var(--ui-ink); box-shadow:0 16px 55px #7f5d9826; }
+.app-shell .shared-experience textarea,.app-shell .shared-date input,.app-shell .report-modal textarea { background:#faf7ff; color:var(--ui-ink); border-color:var(--ui-line); }
+.app-shell .report-tabs { background:#fff; }
+.app-shell .report-page .report-tabs button.report-tab-active { background:var(--ui-action); }
+.app-shell .report-main-number>strong,.app-shell .report-insight-heading>span:first-child { background-image:var(--ui-action); }
+.app-shell .report-heat-fill,.app-shell .report-artist-track i,.app-shell .report-song-track i { background:linear-gradient(0deg,#d9c3f9,#ac86eb); }
+.app-shell .report-heat-peak .report-heat-fill { background:linear-gradient(0deg,#f2add6,#e784bd); }
+.app-shell .report-heat-day,.app-shell .report-artist-track,.app-shell .report-song-track { background:#f0eaf7; color:var(--ui-muted); }
+.app-shell .report-gauge path:last-child { stroke:#ae80e8; }
+.app-shell .report-gauge path:first-child { stroke:#eee6f7; }
+.app-shell .report-trend polyline { stroke:#bb8be8; }
+.app-shell .report-trend-caption i { background:linear-gradient(90deg,#eadbff,#a579e7); }
+.app-shell .report-ranking-note,.app-shell .report-recap-art,.app-shell .report-artist-avatar { background:#eee3ff; color:#9568cf; }
+.app-shell .report-recap,.app-shell .report-tags span { background:#f6eafa; color:#9862b6; }
+.app-shell .report-tags span:nth-child(3) { background:#e5f4ff; color:#4b94c9; }
+.app-shell .report-tags span { border-color:var(--ui-line); }
+.app-shell :is(.report-small-icon,.report-stat-line b,.report-insight-icon,.report-rank-top,.report-song-play) { color:var(--ui-violet); }
+.app-shell .report-song-play { background:var(--ui-soft); }
+.app-shell .report-toast,.app-shell .toast { background:#393142ed; color:#fff; }
+.app-shell .sheet-backdrop { background:#30223844; }
+.app-shell .bottom-sheet { background:var(--ui-page); color:var(--ui-ink); }
+.app-shell .sheet-backdrop.chat-backdrop { background:#f7efff; }
+.app-shell .bottom-sheet.chat-sheet { background:var(--ui-page); color:var(--ui-ink); }
+.app-shell .chat-sheet .message-content { background:#fff; color:var(--ui-ink); }
+.app-shell .chat-sheet .chat-message.user .message-content { background:var(--ui-action); border-color:#fff6; color:#fff; box-shadow:none; }
+.app-shell .chat-sheet .chat-song { background:#f7f2fd; border-color:var(--ui-line); }
+.app-shell .chat-sheet .chat-context>.chat-provider { background:#fff; color:var(--ui-violet); box-shadow:var(--ui-shadow); }
+.app-shell .chat-session-actions button { background:#fff; box-shadow:var(--ui-shadow); }
+.app-shell .chat-composer { background:#fff; border-color:var(--ui-line); box-shadow:var(--ui-shadow); }
+.app-shell .chat-send { background:var(--ui-action); color:#fff; }
+.app-shell .mini-player { background:#fffffff5; border-color:var(--ui-line); box-shadow:0 -3px 18px #8463a510; color:var(--ui-ink); }
+.app-shell .player-progress { background:var(--ui-action); }
+.app-shell .weather-locate { background:linear-gradient(120deg,#f5edff,#fff); color:var(--ui-violet); }
+.app-shell .weather-location-symbol { background:#fff; border-color:var(--ui-line); }
+.app-shell .streak-count>span,.app-shell .companion-caption :is(svg,b),.app-shell .space-energy { color:var(--ui-violet); }
+.app-shell .space-energy-track { background:#eee5f7; }
+.app-shell .space-energy-track>span { background:var(--ui-action); }
+.app-shell .space-listen,.app-shell .personality-footer>button,.app-shell .chat-form>button { background:var(--ui-action); color:#fff; box-shadow:0 4px 12px #c18cda1c; }
+.app-shell .chat-form>input { background:#fff; border-color:var(--ui-line); color:var(--ui-ink); }
+.app-shell .chat-sun { color:#ed73b1; }
+.app-shell .chat-tag { color:#a276e8; }
+.app-shell .diary-book-cover,.app-shell .diary-page-edges { box-shadow:0 8px 24px #a879d41c; }
+.app-shell :is(.shared-experience,.shared-experience small,.shared-writing-label,.diary-signature,.report-state p,.report-modal p,.report-letter,.report-letter-sign) { color:var(--ui-muted); border-color:var(--ui-line); }
+.app-shell :is(.report-state h2,.report-modal h2) { color:var(--ui-ink); }
+.app-shell .report-modal-symbol { background:var(--ui-soft); color:var(--ui-violet); }
+.app-shell :is(.shared-body-label,.shared-body-label span,.shared-signature) { color:var(--ui-muted); }
+.app-shell .shared-actions button:last-child { box-shadow:0 4px 12px #c18cda1c; }

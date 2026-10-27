@@ -1,0 +1,151 @@
+src/visual-theme.css
+  s_bc3e1980fa79c9::t_d941a87985be2b 1-9,13,15,17-34,37-94,96-99,103-118
+  s_44fa422e891a30::t_c2e22b2c70b46a 10,14,16
+  s_44fa422e891a30::t_de449b17e95435 11-12
+  s_bc3e1980fa79c9::t_06055e35d5184d 95,119-125,127-129
+  s_bc3e1980fa79c9::t_61f945db51cef8 100-102
+  s_bc3e1980fa79c9::t_78e75906afab97 126
+  s_bc3e1980fa79c9::t_67b9233cb47a8f 35-36,130-131
+backend/star_charge.py
+  s_bc3e1980fa79c9::t_29a8376fb4f988 56
+  s_bc3e1980fa79c9::t_7108516b736de0 48,61,74,88
+  s_bc3e1980fa79c9::t_f65fc66c460d76 57-58
+  s_bc3e1980fa79c9::t_dabae3962b8935 1-47,49-55,59-60,62-73,75-87,89-110
+tests/companion-space.spec.ts
+  s_bc3e1980fa79c9::t_7a24ae9e1df124 5-6,21,52
+  s_bc3e1980fa79c9::t_b72aeb692d84be 13,17-18,28
+tests/accounts.spec.ts
+  s_bc3e1980fa79c9::t_5944dafb38dfe9 5,8,11-12,16,26-58,62-70,149
+  s_bc3e1980fa79c9::t_d941a87985be2b 102-106
+  s_bc3e1980fa79c9::t_7c0fc6f0e18fd8 113-117,147-148
+  s_bc3e1980fa79c9::t_e1dc1ece95fc41 6-7,9-10,13-14,18,59-61,71-79,81-89,107-109,111-112,118-124,129-146,150,153
+  s_bc3e1980fa79c9::t_202f03fd4bc342 90-98,125-128
+  s_bc3e1980fa79c9::t_29a8376fb4f988 80,99-101,110
+  s_bc3e1980fa79c9::t_100f92e0cb3280 15,17,19-25,151-152,154
+src/charging.css
+  s_bc3e1980fa79c9::t_f810120679cb0c 83
+  s_bc3e1980fa79c9::t_c2f2cf37af34f5 4,53,55,60,62-63
+  s_bc3e1980fa79c9::t_4e457ac5f6cf6c 1-2,6,8-31
+  s_bc3e1980fa79c9::t_cca2f4d972e281 32-49,51-52,54,56,61,68,70-82,84
+  s_bc3e1980fa79c9::t_63aa339ed635a4 3,5,7
+  s_bc3e1980fa79c9::t_23b884e1e95160 50,57-59,67,69
+  s_bc3e1980fa79c9::t_7c0fc6f0e18fd8 64-66
+src/ChargeMilestones.tsx
+  s_44fa422e891a30::t_bd8a0b952baae0 1-3,10-20,22,24,26,30
+  s_bc3e1980fa79c9::t_be6758d39374cb 4-9,21,23,25,27-29,31-32
+tests/relationship.spec.ts
+  s_bc3e1980fa79c9::t_7c0fc6f0e18fd8 3,5,7,10-11,14-17,22-23,29-31,33-37
+  s_bc3e1980fa79c9::t_2205314c5456d0 38-39,42,45,47-48,51-52,54-63
+src/charge-unlock.css
+  s_44fa422e891a30::t_0ab4431eb3c912 28-30
+  s_44fa422e891a30::t_de449b17e95435 1-27,31-57
+src/More.tsx
+  s_bc3e1980fa79c9::t_0db5c87ff68c25 8
+  s_bc3e1980fa79c9::t_58cf6c41021fb8 1,5
+  s_bc3e1980fa79c9::t_ba27dfe08c7a38 22-24,39,66
+src/SharedDiary.tsx
+  s_bc3e1980fa79c9::t_dabae3962b8935 13,16-17
+  s_bc3e1980fa79c9::t_7108516b736de0 14-15
+  s_bc3e1980fa79c9::t_58a01f4e612b72 25,35-37,43,45-46,48-51,53-54
+playwright.charge.config.ts
+  s_bc3e1980fa79c9::t_5cd162527ee4b6 1-8
+src/SparkPage.tsx
+  s_bc3e1980fa79c9::t_2c56f08c8f56e2 30,41,43,49
+  s_bc3e1980fa79c9::t_462f54c245ebf0 34-35
+  s_bc3e1980fa79c9::t_be6758d39374cb 6,26,42,47
+  s_bc3e1980fa79c9::t_278f6dd9614921 2
+  s_bc3e1980fa79c9::t_c047d5598281bd 1,3-5,7,12-17,19-22,27-29,31,40,45,48
+  s_bc3e1980fa79c9::t_29a8376fb4f988 46,51
+  s_44fa422e891a30::t_bd8a0b952baae0 38
+  s_bc3e1980fa79c9::t_262e89b283709b 10-11
+  s_bc3e1980fa79c9::t_58318f1c740335 23-25
+  s_bc3e1980fa79c9::t_40eb7099ff7e33 52-54
+  s_44fa422e891a30::t_7258c9135f723a 55-61
+src/CompanionSpace.tsx
+  s_bc3e1980fa79c9::t_be6758d39374cb 2
+  s_bc3e1980fa79c9::t_f5a32d0d14df60 43,56-57
+src/ChargeIntro.tsx
+  s_bc3e1980fa79c9::t_e81814c55de977 1-23
+src/App.tsx
+  s_bc3e1980fa79c9::t_0db5c87ff68c25 28,41-42,45
+  s_bc3e1980fa79c9::t_63aa339ed635a4 2,12-13,46
+  s_bc3e1980fa79c9::t_3a316c2924cc42 43
+  s_44fa422e891a30::t_3ed5e6e3921a67 44,47-49,52-53,60-62,95-114,284,288,290-291,299,312,314,317
+src/ChargeUnlock.tsx
+  s_44fa422e891a30::t_de449b17e95435 1-27
+backend/seed_star_demo.py
+  s_bc3e1980fa79c9::t_f65fc66c460d76 1-93
+tests/shared-space.spec.ts
+  s_bc3e1980fa79c9::t_be6758d39374cb 5
+  s_bc3e1980fa79c9::t_78e75906afab97 6
+  s_bc3e1980fa79c9::t_c104a7bfe94e89 10,12,14,19,25,41
+backend/test_star_charge.py
+  s_bc3e1980fa79c9::t_ea2a578301c71c 82-97
+  s_bc3e1980fa79c9::t_95f56e364c3931 1-51,65-81,98-100
+  s_bc3e1980fa79c9::t_40e2375c72c48a 52-64
+src/StarWheel.tsx
+  s_bc3e1980fa79c9::t_bcf01ef414385e 13,15,17,19,23-24,27-30
+  s_bc3e1980fa79c9::t_23b884e1e95160 1,11-12,16,18,20-22,25-26
+  s_bc3e1980fa79c9::t_c2f2cf37af34f5 2-10,14,31-32
+backend/accounts.py
+  s_bc3e1980fa79c9::t_df9b01fc14f804 136-137
+backend/app.py
+  s_bc3e1980fa79c9::t_930d32469d53a2 30,75-80,234,602,991-1004,1012
+backend/shared_space.py
+  s_bc3e1980fa79c9::t_318f034f510b7d 83
+backend/test_accounts.py
+  s_bc3e1980fa79c9::t_977c1e62f38c23 40-58
+src/CompanionEnergy.tsx
+  s_bc3e1980fa79c9::t_3ed16699eb3968 25,30-32,37-39
+src/Recommendations.tsx
+  s_bc3e1980fa79c9::t_cfa1f740249121 13-14,33-34,59,69-70,84,87
+src/Wardrobe.tsx
+  s_bc3e1980fa79c9::t_09cf00b9084c40 95
+src/main.tsx
+  s_bc3e1980fa79c9::t_492ffd5db5521e 8
+src/types.ts
+  s_bc3e1980fa79c9::t_54d0cb6ef94c37 7
+tests/app.spec.ts
+  s_bc3e1980fa79c9::t_be70435ffecb92 66,512
+tests/character-motion.spec.ts
+  s_bc3e1980fa79c9::t_8cbadac124e424 74-75
+tests/mobile-interactions.spec.ts
+  s_bc3e1980fa79c9::t_c771b015b788ef 66,71
+tests/music-interaction.spec.ts
+  s_bc3e1980fa79c9::t_c20d9d363b6953 36
+tests/personality.spec.ts
+  s_bc3e1980fa79c9::t_1da4598f825c02 28,99
+tests/pink-theme.spec.ts
+  s_bc3e1980fa79c9::t_4d91294d0fb7db 15,19-22,25
+tests/wardrobe.spec.ts
+  s_bc3e1980fa79c9::t_ff593e876db63d 4,88,118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "d490b396ff8f4e482455caa12697adbbcee08fbd",
+  "prompts": {},
+  "humans": {
+    "h_8ff5910b74b80c": {
+      "author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  },
+  "sessions": {
+    "s_44fa422e891a30": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15c64-c4af-7263-95c6-220797e3b8db",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

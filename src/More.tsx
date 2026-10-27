@@ -1,11 +1,11 @@
-import { ChevronLeft, ChevronRight, Music2, Sparkles, MessageCircle, Shirt, Trophy, Gift, PawPrint, Gamepad2, Heart } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import './more.css'
 import type { Outfit, Personality, Profile } from './types'
 
 export type MoreAction = 'reports' | 'scenes' | 'chat' | 'recommendations' | 'appearance' | 'personality' | 'companion-space' | 'rankings'
 type Props = { onBack: () => void; onAction: (action: MoreAction) => void; personality?: Personality; outfit?: Outfit; appearance?: Profile['appearance']; onLogout?: () => void; loggingOut?: boolean }
 
-// Preserve the original icon slot proportions while updating the artwork.
+// Original illustration crops; keep the current entries and actions.
 const artwork = {
   note: [255, 412, 137, 160],
   personality: [642, 414, 170, 160],
@@ -19,9 +19,14 @@ const artwork = {
 } as const
 
 function MoreArt({ kind, className = '' }: { kind: keyof typeof artwork; className?: string }) {
-  const [, , width, height] = artwork[kind]
-  const Icon = {note:Music2,personality:Sparkles,chat:MessageCircle,shirt:Shirt,trophy:Trophy,gift:Gift,paw:PawPrint,gamepad:Gamepad2,heart:Heart}[kind]
-  return <span className={`more-art ${className}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true"><Icon strokeWidth={1.7}/></span>
+  const [x, y, width, height] = artwork[kind]
+  return <span className={`more-art ${className}`} style={{ aspectRatio: `${width} / ${height}` }} aria-hidden="true">
+    <img src="/assets/more-reference.png" alt="" draggable={false} style={{
+      width: `${877 / width * 100}%`,
+      left: `${-x / width * 100}%`,
+      top: `${-y / height * 100}%`,
+    }} />
+  </span>
 }
 
 type CardProps = {

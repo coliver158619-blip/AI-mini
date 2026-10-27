@@ -9,7 +9,7 @@
 .unlock-dots { display:flex; justify-content:center; gap:10px; margin-top:18px; }
 .unlock-dots i { width:7px; height:7px; border-radius:50%; background:#e4d6fa; }
 .unlock-dots i.is-current { background:#9865e8; }
-.unlock-art { position:relative; flex:1 0 auto; width:100%; min-height:250px; height:clamp(250px,42dvh,410px); max-height:410px; isolation:isolate; }
+.unlock-art { position:relative; flex:1 0 auto; width:100%; min-height:250px; height:clamp(250px,37dvh,370px); max-height:410px; isolation:isolate; }
 .unlock-gift { position:absolute; width:90%; height:100%; left:5%; bottom:0; overflow:visible; filter:drop-shadow(0 9px 10px #b38bd338); }
 .unlock-lid { transform-origin:160px 200px; animation:unlock-pop 1.8s cubic-bezier(.2,.7,.2,1) both; }
 .unlock-box-light { animation:unlock-glow 1.8s .5s both; }
@@ -39,7 +39,7 @@
 .unlock-error { color:#a34879; font-size:12px; line-height:1.6; margin-bottom:12px; }
 .charge-unlock .unlock-actions { display:block; padding-top:24px; text-align:center; }
 .charge-unlock .unlock-accept { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; min-height:54px; padding:12px 18px; border-radius:30px; color:white; background:linear-gradient(110deg,#9665eb,#ef8aca); font-size:18px; font-weight:700; box-shadow:0 10px 24px #c18ade26,inset 0 1px 1px #fff8; }
-.charge-unlock .unlock-replay { min-height:44px; margin-top:8px; padding:10px 20px; color:#8e80a2; font-size:13px; background:transparent; }
+.charge-unlock .unlock-replay { display:block; width:max-content; min-height:44px; margin:8px auto 0; padding:10px 20px; color:#8e80a2; font-size:13px; background:transparent; }
 .unlock-ticket { width:88px; height:114px; border:2px solid white; border-radius:16px; background:linear-gradient(130deg,#fff4f1,#f3d8ff); display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; transform:rotate(-12deg); box-shadow:0 8px 20px #bd83df2b; }
 .unlock-ticket b { font-size:29px; }
 .unlock-ribbon { position:absolute; top:48%; width:34%; height:38px; border-top:14px solid #e5a0e5; border-radius:50%; animation:unlock-ribbon 2.2s .3s both; }

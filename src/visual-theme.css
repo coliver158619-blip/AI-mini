@@ -10,20 +10,20 @@ body { background:#f6effc; color:var(--ui-ink); }
 body .app-shell { color:var(--ui-ink); box-shadow:0 0 70px #8060a010; }
 /* Home and the companion room keep their room.png backgrounds from their own styles. */
 body .app-shell:not(:has(.home-weather-frame:not(.weather-is-open),.companion-space)) { background:var(--ui-page); }
-.app-shell :is(.entry-page,.more-page,.relationship-page,.companion-space,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) {
+.app-shell :is(.entry-page,.relationship-page,.companion-space,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) {
  color:var(--ui-ink); --ink:var(--ui-ink); --muted:var(--ui-muted); --diary-ink:var(--ui-ink); --diary-muted:var(--ui-muted); --report-ink:var(--ui-ink); --report-muted:var(--ui-muted);
 }
-.app-shell :is(.entry-page,.more-page,.relationship-page,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) { background:var(--ui-page); }
+.app-shell :is(.entry-page,.relationship-page,.personality-page,.wardrobe-page,.recommendation-page,.diary-screen,.report-page,.weather-page,.connection-state) { background:var(--ui-page); }
 .entry-page { background:var(--ui-page); color:var(--ui-ink); }
 body :is(button,a):focus-visible { outline-color:var(--ui-violet); }
 body :is(input,textarea):focus { outline-color:#c6a9f4; }
 body ::selection { background:#ead9ff; }
-.app-shell :is(.entry-card,.energy-card,.hot-activities,.streak-pill,.weather-pill,.room-shortcut,.more-card,.relationship-card,.space-bottom,.personality-hero,.personality-details,.personality-card,.wardrobe-preview,.recommendation-song,.recommendation-context,.report-card,.report-highlight,.report-empty,.report-insight,.together-song) {
+.app-shell :is(.entry-card,.energy-card,.hot-activities,.streak-pill,.weather-pill,.room-shortcut,.relationship-card,.space-bottom,.personality-hero,.personality-details,.personality-card,.wardrobe-preview,.recommendation-song,.recommendation-context,.report-card,.report-highlight,.report-empty,.report-insight,.together-song) {
  background:var(--ui-card); border-color:#fff; box-shadow:var(--ui-shadow); color:var(--ui-ink);
 }
-.app-shell :is(.more-back,.relationship-header>button,.space-back,.personality-header>button,.wardrobe-back,.recommendation-back,.weather-back,.diary-icon-button,.chat-circle,.report-nav .report-icon-button) { background:#fff; border-color:#fff; box-shadow:var(--ui-shadow); color:var(--ui-ink); }
-.app-shell :is(.streak-title,.streak-count,.companion-caption>button,.energy-body strong,.weather-pill span,.room-shortcut span,.personality-intro h2,.more-card-copy strong,.charge-mode-toggle,.relationship-stats strong,.report-gauge-value strong,.report-song-meta strong) { color:var(--ui-ink); }
-.app-shell :is(.streak-copy small,.companion-caption>span,.companion-caption b,.energy-body>div>span,.personality-header>span,.personality-intro>p,.personality-details p,.personality-footer>p,.more-card-copy>span,.spark-hero>p,.relationship-eyebrow,.relationship-card-heading small,.relationship-stats small,.relationship-stats div>span,.relationship-progress-caption,.charge-task p,.charge-task-note,.charge-task small,.space-names,.space-touch-hint,.space-header>div>span,.weather-description,.weather-locate small,.diary-feedback,.shared-date,.report-song-plays,.report-song-meta>span,.report-about) { color:var(--ui-muted); }
+.app-shell :is(.relationship-header>button,.space-back,.personality-header>button,.wardrobe-back,.recommendation-back,.weather-back,.diary-icon-button,.chat-circle,.report-nav .report-icon-button) { background:#fff; border-color:#fff; box-shadow:var(--ui-shadow); color:var(--ui-ink); }
+.app-shell :is(.streak-title,.streak-count,.companion-caption>button,.energy-body strong,.weather-pill span,.room-shortcut span,.personality-intro h2,.charge-mode-toggle,.relationship-stats strong,.report-gauge-value strong,.report-song-meta strong) { color:var(--ui-ink); }
+.app-shell :is(.streak-copy small,.companion-caption>span,.companion-caption b,.energy-body>div>span,.personality-header>span,.personality-intro>p,.personality-details p,.personality-footer>p,.spark-hero>p,.relationship-eyebrow,.relationship-card-heading small,.relationship-stats small,.relationship-stats div>span,.relationship-progress-caption,.charge-task p,.charge-task-note,.charge-task small,.space-names,.space-touch-hint,.space-header>div>span,.weather-description,.weather-locate small,.diary-feedback,.shared-date,.report-song-plays,.report-song-meta>span,.report-about) { color:var(--ui-muted); }
 .app-shell :is(.energy-symbol,.streak-count>svg,.hot-activities>svg,.room-shortcut>svg,.charge-mode-toggle>svg,.spark-number>svg,.space-energy>svg,.report-ranking-note,.weather-location-symbol,.chat-session-actions button) { color:var(--ui-violet); filter:drop-shadow(0 2px 1px #b396e52a); }
 .app-shell .room-shortcut:nth-child(2)>svg { color:var(--ui-pink); }
 .app-shell .streak-headphone-badge { background:#f0e4ff; color:#9164d8; }
@@ -41,7 +41,7 @@ body ::selection { background:#ead9ff; }
 .app-shell .charge-intro b,.app-shell .charge-intro>svg { color:var(--ui-violet); }
 .app-shell .charge-intro>svg { fill:#f2e7ff; }
 .app-shell :is(.entry-primary,.relationship-primary,.personal-feed,.wardrobe-wear,.personality-select,.unlock-yes,.primary-button,.report-share,.report-primary,.diary-generate-button,.shared-actions button:last-child) { background:var(--ui-action); border-color:#ffffff80; color:#fff; box-shadow:0 4px 12px #c18cda1c; }
-.app-shell :is(.relationship-links>button,.relationship-secondary,.shared-actions button,.charge-task-wallet,.weather-locate,.weather-search,.weather-city,.weather-current,.more-logout) { background:#fff; border-color:var(--ui-line); color:var(--ui-ink); box-shadow:var(--ui-shadow); }
+.app-shell :is(.relationship-links>button,.relationship-secondary,.shared-actions button,.charge-task-wallet,.weather-locate,.weather-search,.weather-city,.weather-current) { background:#fff; border-color:var(--ui-line); color:var(--ui-ink); box-shadow:var(--ui-shadow); }
 .app-shell .shared-actions button:last-child { background:var(--ui-action); color:#fff; }
 .app-shell .charge-task-wallet { background:linear-gradient(115deg,#f9eafa,#efeaff); }
 .app-shell .charge-task-wallet :is(svg,b,button) { color:var(--ui-violet); }
@@ -60,14 +60,6 @@ body ::selection { background:#ead9ff; }
 .app-shell .space-speech { background:#fff; border-color:#fff; color:var(--ui-muted); box-shadow:var(--ui-shadow); }
 .app-shell .space-floor { background:#bba2d41c; box-shadow:0 7px 20px #fff6; }
 .app-shell .space-label { background:#fff; border-color:#fff; color:var(--ui-violet); }
-.app-shell .more-card:enabled:hover { background:#fff; box-shadow:0 7px 25px #9972c517; }
-.app-shell .more-art { mix-blend-mode:normal; mask-image:none; }
-.app-shell .more-art>svg { width:100%; height:100%; padding:12%; color:#9967ea; fill:#e4d2ff; filter:drop-shadow(0 3px 1px #b69ada33); }
-.app-shell .more-card-reports .more-art>svg { color:#e461aa; fill:#ffd4ec; }
-.app-shell .more-card-scenes .more-art>svg { color:#46b5b8; fill:#d4f3eb; }
-.app-shell .more-card-ranking .more-art>svg { color:#7c7ce5; fill:#dedcff; }
-.app-shell .more-card-blindbox .more-art>svg { color:#e979a5; fill:#ffdeed; }
-.app-shell .more-section-art>svg { fill:none; padding:4%; }
 .app-shell .personality-hero { background:linear-gradient(140deg,#fff,#f6f1ff); }
 .app-shell .personality-stage>span { background:radial-gradient(circle,#fff,#f0eaff55 65%,transparent 70%); }
 .app-shell .personality-tags>span { background:#f3edfc; }

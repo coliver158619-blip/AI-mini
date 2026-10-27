@@ -62,6 +62,28 @@ class StarChargeTest(unittest.TestCase):
             self.assertEqual(stats['minutes'],total//60)
             self.assertEqual(stats['songs'],1)
 
+    def test_rewards_require_explicit_claim_and_are_isolated_and_idempotent(self):
+        url='/api/charge/rewards/total'
+        with closing(sqlite3.connect(self.room)) as db, db:
+            db.execute('UPDATE profile SET energy=800 WHERE id=1')
+        self.assertEqual(self.a.get(url).json['claimed'], [])
+        self.assertEqual(self.a.post(url,json={'stage':1600}).status_code,409)
+        self.assertEqual(self.a.post(url,json={'stage':400}).json['claimed'],[400])
+        self.assertTrue(self.a.post(url,json={'stage':400}).json['alreadyClaimed'])
+        self.assertEqual(self.a.get(url).json['claimed'],[400])
+        self.assertEqual(self.b.get(url).json['claimed'],[])
+        self.assertEqual(self.a.get('/api/charge/rewards/jay').json['claimed'],[])
+        self.assertEqual(self.a.post('/api/charge/rewards/jay',json={'stage':400}).status_code,409)
+        with closing(sqlite3.connect(self.room)) as db, db:
+            db.execute("INSERT INTO songs VALUES ('reward-hours','测试曲','周杰伦','#fff','[]',NULL)")
+            db.executemany("INSERT INTO plays(song_id,seconds,listened_at,mood) VALUES ('reward-hours',3600,'2026-10-27','开心')", [()]*400)
+        self.assertEqual(self.a.post('/api/charge/rewards/jay',json={'stage':400}).json['claimed'],[400])
+        self.assertEqual(self.a.get('/api/charge/rewards/joker').json['claimed'],[])
+        for invalid in [True,-1,1,'400',None]:
+            self.assertEqual(self.a.post(url,json={'stage':invalid}).status_code,400)
+        self.assertEqual(self.a.get('/api/charge/rewards/unknown').status_code,400)
+        self.assertEqual(self.app.test_client().get(url).status_code,401)
+
     def test_diaries_are_isolated_versioned_and_keep_text_on_ai_failure(self):
         day = date.today().isoformat()
         url = f'/api/stars/jay/diary/{day}'

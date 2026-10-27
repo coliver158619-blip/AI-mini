@@ -11,7 +11,7 @@ from flask import g, jsonify, request
 _NAMES = '''刘宇宁 张韶涵 周杰伦 陈奕迅 林俊杰 孙燕姿 五月天 许嵩 王菲 邓紫棋 张杰 周深 毛不易 薛之谦 王一博 肖战 易烊千玺 王俊凯 王源 刘亦菲 赵丽颖 杨紫 杨幂 迪丽热巴 胡歌 白鹿 赵露思 檀健次 成毅 龚俊 张碧晨 梁静茹 蔡依林 刘若英 梁咏琪 莫文蔚 田馥甄 蔡健雅 陈绮贞 魏如萱 郁可唯 黄丽玲 王心凌 杨丞琳 李宇春 张靓颖 周笔畅 尚雯婕 袁娅维 单依纯 黄霄雲 陈粒 房东的猫 告五人 落日飞车 苏打绿 吴青峰 张悬 万芳 张惠妹 伍佰 任贤齐 李宗盛 罗大佑 朴树 许巍 郑钧 汪峰 崔健 赵雷 李健 陈楚生 陆虎 王铮亮 张远 苏醒 王栎鑫 汪苏泷 徐良 胡夏 许飞 何洁 吉克隽逸 金志文 金玟岐 胡彦斌 陶喆 王力宏 萧敬腾 潘玮柏 吴克群 张信哲 张学友 刘德华 黎明 郭富城 谭咏麟 李克勤 许冠杰 陈慧娴 叶倩文 林忆莲 梅艳芳 容祖儿 杨千嬅 卫兰 卢巧音 郑秀文 陈慧琳 谢安琪 关心妍 周慧敏 彭羚 张敬轩 方大同 侧田 陈柏宇 洪卓立 林宥嘉 萧煌奇 韦礼安 卢广仲 八三夭 茄子蛋 动力火车 信乐团 飞儿乐团 张震岳 热狗 蛋堡 艾怡良 刘柏辛 陈婧霏 刘恋 黄龄 旅行团 乐队的夏天 好妹妹 水木年华 南征北战 鹿先森乐队 声音碎片 痛仰 新裤子 刺猬 逃跑计划 二手玫瑰 达达乐队 回春丹 五条人 康姆士 霓虹花园 椅子乐团 温蒂漫步 理想混蛋 夏日入侵企画 橘子海 丢火车 海龟先生 马赛克 达闻西 棱镜 岛屿心情 陈鸿宇 马頔 宋冬野 好好先生 阿肆 花粥 陈一发儿 曾轶可 魏晨 李荣浩 张艺兴 华晨宇 刘雨昕 孟美岐 吴宣仪 宋茜 宋雨琦 张韶轩'''.split()[:128]
 _ALIASES = {'刘宇宁': 'liuyuning lyn', '张韶涵': 'zhangshaohan zsh angela', '周杰伦': 'zhoujielun zjl jay', '陈奕迅': 'chenyixun cyx eason', '林俊杰': 'linjunjie ljj jj', '孙燕姿': 'sunyanzi syz stefanie', '五月天': 'wuyuetian wyt mayday', '许嵩': 'xusong xs vae'}
 _COLORS = ['#eadffa', '#ffe0eb', '#dfeefa', '#e0f1e8', '#ffecd7', '#e7e5fa']
-_PORTRAITS = {item['id']: item for item in json.loads((Path(__file__).resolve().parent.parent / 'public/assets/star-portraits/sources.json').read_text())['portraits']}
+_PORTRAITS = {item['id']: item for item in json.loads((Path(__file__).resolve().parent.parent / 'public/assets/star-portraits/sources.json').read_text(encoding='utf-8'))['portraits']}
 
 def portrait(id_):
     item = _PORTRAITS[id_]

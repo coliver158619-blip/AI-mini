@@ -28,6 +28,7 @@ from .diary_story import context_for_day, generate_story, story_state
 from .diary_inputs import read_inputs, save_inputs, save_attachment
 from .shared_space import register_shared_space
 from .network import lan_access
+from .rankings import register_rankings
 from .outfits import CHARACTERS, DEFAULT_OUTFIT_ID, OUTFITS, OUTFITS_BY_ID, outfit_catalog, unlocked_outfit_ids
 from .appearance import appearance_state
 from .personalities import GROUPS, PERSONALITIES, PERSONALITIES_BY_ID, personality_for_id
@@ -592,6 +593,7 @@ def create_app(test_config=None):
     upstream = KugouClient(mode=app.config.get("PET_CHAT_MODE"))
     app.extensions["kugou"] = upstream
     register_shared_space(app, get_db, now, all_songs, json_body, valid_text, upstream)
+    register_rankings(app, get_profile)
     site_sync = PersonalitySiteSync(app)
     app.extensions['personality_site_sync'] = site_sync
 

@@ -68,7 +68,7 @@
 .more-card-personality .more-card-art { width: calc(170 * var(--more-unit)); right: calc(18 * var(--more-unit)); top: calc(64 * var(--more-unit)); }
 .more-card-chat .more-card-art { width: calc(280 * var(--more-unit)); right: calc(51 * var(--more-unit)); top: calc(14 * var(--more-unit)); }
 .more-card-appearance .more-card-art { width: calc(208 * var(--more-unit)); right: calc(64 * var(--more-unit)); top: calc(19 * var(--more-unit)); }
-.more-card-ranking .more-card-art { width: calc(150 * var(--more-unit)); right: calc(16 * var(--more-unit)); top: calc(59 * var(--more-unit)); }
+.more-card-ranking .more-card-art, .more-card-rankings .more-card-art { width: calc(150 * var(--more-unit)); right: calc(16 * var(--more-unit)); top: calc(59 * var(--more-unit)); }
 .more-card-blindbox .more-card-art { width: calc(167 * var(--more-unit)); right: calc(12 * var(--more-unit)); top: calc(55 * var(--more-unit)); }
 .more-card-scenes .more-card-art { width: calc(168 * var(--more-unit)); right: calc(12 * var(--more-unit)); bottom: calc(18 * var(--more-unit)); }
 

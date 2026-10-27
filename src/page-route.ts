@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-const pages = ['home', 'spark', 'companion-energy', 'diary', 'reports', 'more', 'scenes', 'recommendations', 'weather', 'appearance', 'personality', 'companion-space', 'shared-diary', 'together-playlist'] as const;
+const pages = ['home', 'rankings', 'spark', 'companion-energy', 'diary', 'reports', 'more', 'scenes', 'recommendations', 'weather', 'appearance', 'personality', 'companion-space', 'shared-diary', 'together-playlist'] as const;
 export type Page = typeof pages[number];
 const readPage = (): Page => {
  const value = window.location.hash.replace(/^#\/?/, '');

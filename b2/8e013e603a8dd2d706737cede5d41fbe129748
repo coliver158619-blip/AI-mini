@@ -1,0 +1,30 @@
+src/charge-battery.css
+  s_2b64828ee1e143::t_65fde57ced921d 14-16,37
+  s_2b64828ee1e143::t_093a8bccdf4a41 1-3,6-9,11,17,19-28,30-35
+  s_2b64828ee1e143::t_187752a48f3250 4-5,10,12-13,18,29,36
+src/ChargeBattery.tsx
+  s_2b64828ee1e143::t_187752a48f3250 10
+  s_2b64828ee1e143::t_093a8bccdf4a41 1-5,7,9,11-22
+  s_2b64828ee1e143::t_65fde57ced921d 6,8
+tests/charge-battery.spec.ts
+  s_2b64828ee1e143::t_7f030ef032ae54 1-10,12-17,21-47
+  s_2b64828ee1e143::t_65fde57ced921d 11,18-20
+src/App.tsx
+  s_2b64828ee1e143::t_e1403e6ba95167 30,293
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "b28e013e603a8dd2d706737cede5d41fbe129748",
+  "prompts": {},
+  "sessions": {
+    "s_2b64828ee1e143": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1737e-b5c1-7623-ad61-28afcce943cd",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

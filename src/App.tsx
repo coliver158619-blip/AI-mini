@@ -27,6 +27,7 @@ import { companionGreeting } from './companion-greeting';
 import { randomHomeGreeting } from './home-greetings';
 import HomeSpeechBubble from './HomeSpeechBubble';
 import './charging.css';
+import ChargeBattery from './ChargeBattery';
 import type { Bootstrap, Integration, Message, Profile, Song } from './types';
 
 const scenes = [{ name: '放松一下', icon: '☕', query: '有点累，想放松一下' }, { name: '开心加倍', icon: '☀', query: '今天很开心，推荐轻快的音乐' }, { name: '专注时刻', icon: '✎', query: '我要专注工作，推荐适合学习的音乐' }, { name: '陪我入睡', icon: '☾', query: '准备睡觉了，想听助眠音乐' }, { name: '有点难过', icon: '♡', query: '今天有点难过，陪陪我吧' }];
@@ -289,7 +290,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
       <button className="streak-pill" disabled={openingCharge} onClick={() => void openCharge()} aria-label={`听歌充电，已陪伴 ${data.profile.days} 天`}>
        <span className="streak-avatar-wrap" aria-hidden="true"><AppearanceAvatar appearance={data.profile.appearance} className="streak-avatar streak-avatar-character"/><span className="streak-headphone-badge"><Headphones size={12}/></span></span>
        <span className="streak-copy"><strong>听歌充电</strong><small>和{data.profile.name}一起听歌</small></span>
-       <span className="streak-count"><span aria-hidden="true"><Zap size={27} fill="currentColor"/></span><b>{data.profile.days}</b></span>
+       <ChargeBattery days={data.profile.days}/>
       </button>
       <button className="weather-pill" onClick={openWeather}>{weather ? <WeatherIcon code={weather.code} size={14}/> : <MapPin size={14}/>}<span>{weather ? `${weather.city} ${weather.condition} ${Math.round(weather.temperature)}°` : '所在城市 · 开启天气陪伴'}</span><ChevronRight size={12}/></button>
      </div>

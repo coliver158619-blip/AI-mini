@@ -1,0 +1,37 @@
+.charge-battery {
+ --battery-line:#b9a1d6;
+ position:relative; isolation:isolate; display:inline-flex; align-items:center; justify-content:center;
+ flex-shrink:0; gap:1px; min-width:54px; height:24px; margin:0 5px 0 2px; padding:0 5px;
+ border:1px solid var(--battery-line); border-radius:7px;
+ background:linear-gradient(120deg,#fffaf0,#f3eaff); box-shadow:inset 0 1px 0 #fff;
+}
+.charge-battery::after {
+ content:''; position:absolute; left:calc(100% + 2px); top:50%; transform:translateY(-50%);
+ width:3px; height:9px; border-radius:0 3px 3px 0; background:var(--battery-line);
+}
+.charge-battery b { color:#635276; font-size:16px; font-weight:750; letter-spacing:-.5px; line-height:1; font-variant-numeric:tabular-nums; }
+.charge-battery-track { position:absolute; inset:1px; overflow:hidden; border-radius:5px; background:#fffaf5; pointer-events:none; }
+.charge-battery-fill { display:block; height:100%; background:linear-gradient(110deg,#e5d1ff,#c6a3ec); transition:width .5s ease; }
+.charge-battery--max .charge-battery-fill { background:linear-gradient(110deg,#f2d698,#d8b5ef); }
+.charge-battery b,.charge-battery-bolt { position:relative; z-index:1; }
+.charge-battery-bolt { flex-shrink:0; color:var(--ui-violet,#9564ea); }
+.charge-battery-arcs { position:absolute; inset:-1px; width:calc(100% + 2px); height:calc(100% + 2px); overflow:visible; pointer-events:none; stroke:#aa7ce3; stroke-width:1; stroke-linecap:round; stroke-linejoin:round; }
+.charge-battery-arcs > * { vector-effect:non-scaling-stroke; }
+.charge-battery-orbit { stroke-dasharray:8 42; animation:battery-orbit 3.6s linear infinite; }
+.charge-battery-spark { animation:battery-spark 2.6s ease-in-out infinite; }
+.spark-bottom { animation-delay:-1.3s; }
+.charge-battery--surge,.charge-battery--max { --battery-line:#aa83d4; background:linear-gradient(120deg,#fff5df,#f4e4ff); box-shadow:0 0 8px #b58cdb40,inset 0 1px 0 #fff; }
+.charge-battery--surge .charge-battery-arcs,.charge-battery--max .charge-battery-arcs { filter:drop-shadow(0 0 2px #b485e080); }
+.charge-battery--surge .charge-battery-orbit { animation-duration:2.8s; stroke-dasharray:12 21; }
+.spark-side { animation-delay:-.7s; }
+.charge-battery-arcs .orbit-gold { stroke:#dcb15f; stroke-dasharray:4 46; animation-direction:reverse; }
+.charge-battery--max { --battery-line:#c8a361; background:linear-gradient(115deg,#ffedc4,#f4deff 65%,#fff3d6); animation:battery-glow 3s ease-in-out infinite; }
+.charge-battery--max .charge-battery-orbit { stroke-dasharray:15 18; animation-duration:2.2s; stroke-width:1.3; }
+.charge-battery--max .orbit-gold { stroke-dasharray:8 17; animation-duration:3s; }
+.charge-battery--max .charge-battery-bolt { color:#a477d5; filter:drop-shadow(0 0 2px #d1a2f5); }
+.charge-battery-stars { stroke:#d3a047; animation:battery-spark 3s ease-in-out infinite reverse; }
+@keyframes battery-orbit { to { stroke-dashoffset:-100; } }
+@keyframes battery-spark { 0%,100% { opacity:.2; transform:translateY(0); } 40% { opacity:1; transform:translateY(-1px); } 65% { opacity:.4; transform:translateY(1px); } }
+@keyframes battery-glow { 0%,100% { box-shadow:0 0 6px #c9a06040,0 0 10px #b384d933,inset 0 1px 0 #fff; } 50% { box-shadow:0 0 10px #e3b95470,0 0 16px #b384d959,inset 0 1px 0 #fff; } }
+@media(max-width:374px) { .charge-battery { min-width:50px; height:23px; padding-inline:4px; }.charge-battery b { font-size:14px; } }
+@media(prefers-reduced-motion:reduce) { .charge-battery,.charge-battery * { animation:none; transition:none; } }

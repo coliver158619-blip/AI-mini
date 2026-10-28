@@ -1,0 +1,58 @@
+src/companion-space.css
+  s_2b64828ee1e143::t_0e69d2fad09686 1
+tests/loading-speed.spec.ts
+  s_2b64828ee1e143::t_0ddebe4f405f17 1-14,19-22
+  s_2b64828ee1e143::t_57ed3e326e136b 15-18
+src/appearance-avatar.css
+  s_2b64828ee1e143::t_57ed3e326e136b 4
+backend/test_static_assets.py
+  s_2b64828ee1e143::t_0ddebe4f405f17 1-58
+backend/static_assets.py
+  s_2b64828ee1e143::t_0255641309073c 1-42
+index.html
+  s_2b64828ee1e143::t_8a2d8088684964 2
+src/CharacterVisual.tsx
+  s_bc3e1980fa79c9::t_28e1cdcba0bd13 17
+src/StarWheel.tsx
+  s_2b64828ee1e143::t_b3ff09d6499b24 29
+src/responsive.css
+  s_2b64828ee1e143::t_56a33af32bdf66 30
+src/styles.css
+  s_2b64828ee1e143::t_02057e0eeda864 2
+tests/fullscreen.spec.ts
+  s_2b64828ee1e143::t_5ac78e2157e9ed 173
+tests/home-repair.spec.ts
+  s_2b64828ee1e143::t_a04c7779178000 24
+backend/app.py
+  s_2b64828ee1e143::t_9638ae4b8463b1 24,1096,1098
+src/App.tsx
+  s_2b64828ee1e143::t_43f3190c472921 120-127,234
+src/ChatPanel.tsx
+  s_2b64828ee1e143::t_4447d0984781b8 21
+src/chat.css
+  s_2b64828ee1e143::t_656843d0970afe 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "ab512b43c74d57fa114782d227b76b584d7f2d56",
+  "prompts": {},
+  "sessions": {
+    "s_2b64828ee1e143": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1737e-b5c1-7623-ad61-28afcce943cd",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    },
+    "s_bc3e1980fa79c9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a16c54-3cf9-79e1-a2f7-9837beb46867",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "陈楷 <oliverchen@tencentmusic.com>"
+    }
+  }
+}

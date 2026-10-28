@@ -21,6 +21,7 @@ from flask import Flask, current_app, g, jsonify, request, send_file, send_from_
 from werkzeug.exceptions import HTTPException
 
 from .audio import generate_preview
+from .static_assets import frontend_file
 from .accounts import register_accounts
 from .chat_text import clean_assistant_text
 from .conversations import init_conversations, register_conversations, selected_id
@@ -1092,9 +1093,9 @@ def create_app(test_config=None):
     def frontend(path):
         dist = ROOT / "dist"
         if path and (dist / path).is_file():
-            return send_from_directory(dist, path)
+            return frontend_file(dist, path)
         if (dist / "index.html").is_file():
-            return send_from_directory(dist, "index.html")
+            return frontend_file(dist, "index.html")
         return jsonify(message="后端已启动；开发预览请启动 npm run dev，或先运行 npm run build。"), 200
 
     start_diary_scheduler(app)

@@ -1,4 +1,4 @@
-.companion-space { container-type:inline-size; color:#70574c; background-color:#fcf5ec; background-image:linear-gradient(180deg,#fff8eea8,transparent 38%,#fff4ee70 68%,#fcf5ec 96%),url('/assets/room.png'); background-size:cover; background-position:center top; }
+.companion-space { container-type:inline-size; color:#70574c; background-color:#fcf5ec; background-image:linear-gradient(180deg,#fff8eea8,transparent 38%,#fff4ee70 68%,#fcf5ec 96%),url('/assets/room-v1.webp'); background-size:cover; background-position:center top; }
 .companion-space-content { position:relative; min-height:var(--page-height); padding:20px clamp(18px,5cqw,36px) 20px; display:grid; grid-template-rows:auto minmax(380px,1fr) auto; gap:20px; }
 .space-header { display:flex; align-items:center; gap:12px; }
 .space-back { flex-shrink:0; width:42px; height:42px; display:grid; place-items:center; border-radius:50%; background:#fffcf2c9; border:1px solid #fff; box-shadow:0 4px 16px #a77c5c0c; }

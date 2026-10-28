@@ -26,7 +26,7 @@ export default function StarWheel({value,onChange}:{value:string;onChange:(id:st
    if(position<count||position>=count*2){recenter.current=(count+selected)*step;element.scrollTo({top:recenter.current,behavior:'instant'});}
   },120)}}>
   {Array.from({length:count*3},(_,i)=>{const star=stars[i%count],clone=i<count||i>=count*2;return <div key={i} id={clone?undefined:`star-${star.id}`} role={clone?'presentation':'option'} aria-hidden={clone||undefined} aria-selected={clone?undefined:value===star.id} aria-label={clone?undefined:star.name} className={`star-wheel-option star-portrait-${star.id}${value===star.id?' is-selected':''}`} onClick={()=>move(i)}>
-   <span className="star-avatar-ring"><span className="star-avatar-crop"><img src={`/assets/stars/${star.id}.png`} alt={clone?'':star.name} draggable={false}/></span></span><span>{star.name}</span>
+   <span className="star-avatar-ring"><span className="star-avatar-crop"><img src={`/assets/stars/${star.id}-v1.webp`} alt={clone?'':star.name} draggable={false}/></span></span><span>{star.name}</span>
   </div>})}
  </div><small>上下滑动 · 选择你的音乐星光</small></div>;
 }

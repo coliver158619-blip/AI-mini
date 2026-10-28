@@ -14,7 +14,7 @@ export default function CharacterVisual({id,src,alt,imageClass='',animated=false
   const stop=()=>{cancelAnimationFrame(animation.current);running.current=false;renderer.current?.draw('idle');setAction('idle')};
   const visibility=()=>{if(document.hidden)stop()};
   const lost=(event:Event)=>{event.preventDefault();stop();setReady(false)};
-  const image=new Image();image.src=atlas.src;
+  const image=new Image();image.fetchPriority='low';image.src=atlas.src;
   image.decode().then(()=>{if(active){renderer.current=createCharacterFrames(target,image,id,centerSubject);setReady(!!renderer.current)}}).catch(()=>{});
   target.addEventListener('contextlost',lost);document.addEventListener('visibilitychange',visibility);
   return()=>{active=false;cancelAnimationFrame(animation.current);running.current=false;renderer.current=null;target.removeEventListener('contextlost',lost);document.removeEventListener('visibilitychange',visibility)};

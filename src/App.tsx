@@ -117,10 +117,14 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
  const load = useCallback(async () => {
   setError('');
   try {
-   const [bootstrap, history] = await Promise.all([api<Bootstrap & { weather?: WeatherData }>('/api/bootstrap'), api<{ messages: Message[]; conversationId: string }>('/api/messages')]);
-   setData(bootstrap); const greeting = randomHomeGreeting(recentGreetings.current); recentGreetings.current = [greeting]; setBubble(greeting); setMessages(history.messages); setConversationId(history.conversationId); setRename(bootstrap.profile.name);
-   setFavorites(bootstrap.songs.filter(s => s.favorite).map(s => s.id));
-   if (bootstrap.weather) setWeather(bootstrap.weather);
+   await Promise.all([
+    api<Bootstrap & { weather?: WeatherData }>('/api/bootstrap').then(bootstrap => {
+     setData(bootstrap); const greeting = randomHomeGreeting(recentGreetings.current); recentGreetings.current = [greeting]; setBubble(greeting); setRename(bootstrap.profile.name);
+     setFavorites(bootstrap.songs.filter(s => s.favorite).map(s => s.id));
+     if (bootstrap.weather) setWeather(bootstrap.weather);
+    }),
+    api<{ messages: Message[]; conversationId: string }>('/api/messages').then(history => { setMessages(history.messages); setConversationId(history.conversationId); }),
+   ]);
   } catch (e) { if (onConnectionError) onConnectionError(); else setError(e instanceof Error ? e.message : '连接失败'); }
  }, [onConnectionError]);
  useEffect(() => { void load(); }, [load]);
@@ -227,6 +231,7 @@ export default function App({ userId = 'legacy', onLogout, onConnectionError }: 
 
  const send = async (message: string, scene = '') => {
   if (!message.trim() || sending) return;
+  if (!conversationId) { notify('聊天记录正在加载，请稍等一下'); return; }
   setDrawer('chat'); setSending(true); setInput(''); setChatError(''); setActiveScene(scene);
   const userMessage: Message = { role: 'user', content: message.trim(), id: `pending-${Date.now()}` };
   setMessages(old => [...old, userMessage]);

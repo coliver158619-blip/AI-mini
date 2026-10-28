@@ -27,7 +27,7 @@ body { padding: 0; background: #fcf7ee; }
 .app-shell:has(.home-weather-frame:not(.weather-is-open)) {
   background-color: #fcf7ee;
   /* Tint, bottom fade and room share one full-size canvas, including safe areas. */
-  background-image: linear-gradient(to top, #fcf7ee, #fcf7ee calc(var(--safe-bottom) + var(--player-space)), transparent calc(var(--safe-bottom) + var(--player-space) + 140px)), linear-gradient(180deg, #fffbef45 0%, transparent 40%, transparent 77%, #fcf7ee 100%), url('/assets/room.png');
+  background-image: linear-gradient(to top, #fcf7ee, #fcf7ee calc(var(--safe-bottom) + var(--player-space)), transparent calc(var(--safe-bottom) + var(--player-space) + 140px)), linear-gradient(180deg, #fffbef45 0%, transparent 40%, transparent 77%, #fcf7ee 100%), url('/assets/room-v1.webp');
   background-position: center top; background-size: cover; background-repeat: no-repeat;
 }
 .app-shell.with-player { --player-space: 85px; }

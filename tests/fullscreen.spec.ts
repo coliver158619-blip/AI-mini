@@ -170,7 +170,7 @@ test('天气昼夜景观延伸至四边安全区', async ({ page }) => {
 
 test('首页蒙版覆盖整张背景，安全区和内容交界没有色差接缝', async ({ page }) => {
  // A flat room fixture isolates tint seams from texture and natural image edges.
- await page.route('**/assets/room.png', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path fill="#536d82" d="M0 0h100v100H0z"/></svg>' }));
+ await page.route('**/assets/room-v1.webp', route => route.fulfill({ contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><path fill="#536d82" d="M0 0h100v100H0z"/></svg>' }));
  for (const device of [
   { width: 393, height: 852, top: 59, bottom: 34, left: 0, right: 0 },
   { width: 320, height: 568, top: 20, bottom: 0, left: 0, right: 0 },

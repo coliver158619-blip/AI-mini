@@ -21,7 +21,7 @@ for(const size of [{width:393,height:852,top:59,bottom:34},{width:393,height:700
   const g=await geometry();expect(g.center).toBeCloseTo(size.width/2,0);expect(g.weatherGap).toBeGreaterThanOrEqual(12);expect(g.buttonsOverlap).toBe(false);expect(g.figureGap>=0||g.beside).toBe(true);expect(g.captionGap).toBeGreaterThanOrEqual(-1);expect(g.scroll).toBe(false);
   expect(await page.locator('.companion').boundingBox()).toEqual(initial);
  }
- expect(await page.locator('.app-shell').evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('/assets/room.png');
+ expect(await page.locator('.app-shell').evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('/assets/room-v1.webp');
  await page.screenshot({path:`test-results/home-repair-${test.info().project.name}-${size.width}-${size.height}.png`,animations:'disabled'});
 });
 

@@ -18,6 +18,7 @@ export default function ChatPanel(props: Props) {
  const [historyOpen, setHistoryOpen] = useState(false);
  const [busy, setBusy] = useState(false);
  const [error, setError] = useState('');
+ if (!props.conversationId) return <div className="chat-history-loading"><p role="status">正在加载聊天记录…</p><button onClick={props.onClose}>返回小屋</button></div>;
  async function openHistory() {
   if (props.sending || busy) return;
   setHistoryOpen(true); setBusy(true); setError('');
